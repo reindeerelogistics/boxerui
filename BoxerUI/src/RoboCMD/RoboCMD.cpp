@@ -107,7 +107,6 @@ class RoboCMD{
             break;
 
         }//switch (com_)
-
         msg_.insert(msg_.end(), msg.begin(),msg.end());
     }//genMsg()
 
