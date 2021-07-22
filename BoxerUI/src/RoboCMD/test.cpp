@@ -7,10 +7,9 @@ int main(){
 
     RoboCMD <short,short,short,short> cmd;
 
-    cmd.set(0x00,16384);
+    cmd.set(0x01,-75,100,-100,0);
 
     cmd.disMsg();
-
 
 return 0;
 }

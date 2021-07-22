@@ -22,7 +22,7 @@ class RoboCMD{
 
     //************************* Temp class varriables *************************//
     char com_ = -1;
-    t_data data_ = -1;
+    t_data data_ = -1; // Does not work
     t_max max_ = -1;
     t_min min_ = -1;
     t_zero zero_ = -1;
@@ -35,6 +35,7 @@ class RoboCMD{
         min_ = -1;
         zero_ = -1;
         dir_ = -1;
+        com_= -1;
     }
 
     void format(uint8_t com, t_data data, t_max max, t_min min, t_zero zero){
@@ -46,6 +47,7 @@ class RoboCMD{
             data_ = abs(data);
             max_ = max;
             min_ = min;
+            com_ = com;
 
             break;
             case 0x06: case 0x07: case 0x08:
@@ -54,6 +56,7 @@ class RoboCMD{
             data_ = abs(data);
             max_= max;
             min_= min;
+            com_= com;
 
             break;
 
@@ -76,13 +79,14 @@ class RoboCMD{
                 val = 0;
 
             }else if(zero_ != max_ && zero_ != min_){
-                val = (data_>zero_)? abs((data_-zero_)/(max_-zero_)) : abs((data_-zero_)/(zero_-min_));
-            
+                val = (data_>zero_)? (abs(data_)-zero_)/(max_-zero_) : (abs(data_)-zero_)/(zero_-min_);
+                printf("value: %d\n", val);
+
             }else if (zero_ == min_){
-                val = abs((data_-zero_)/(max_-zero_));
+                val = (abs(data_)-zero_)/(max_-zero_);
 
             }else if (zero_ == max_){
-                val = abs((data_-zero_)/(zero_-min_));
+                val = (abs(data_)-zero_)/(zero_-min_);
 
             }
 
@@ -102,6 +106,7 @@ class RoboCMD{
 
                     case 0x08 ... 0x08: //commands of form [scaler(8-bit)]
                     msg.push_back((uint8_t)(val));
+                    break;
                 }//switch(com_)
 
             break;
@@ -109,6 +114,7 @@ class RoboCMD{
         }//switch (com_)
 
         msg_.insert(msg_.end(), msg.begin(),msg.end());
+
     }//genMsg()
 
 
@@ -185,10 +191,12 @@ class RoboCMD{
 
     void disMsg(){
         
-        cout<<"message size: "<<msg_.size()<<endl;
+        printf("Total message size: %d\n", msg_.size());
 
-    for(unsigned int i = 0; i<msg_.size();i++){
-        cout<< " "<<msg_.at(i);
+    for(int i = 0; i<msg_.size(); i++){
+
+        printf("%d ", msg_.at(i));
     }
+
     }
 };
