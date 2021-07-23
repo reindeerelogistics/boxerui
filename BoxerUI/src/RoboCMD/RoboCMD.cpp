@@ -2,6 +2,7 @@
 #include <limits>
 #include <stdlib.h>
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -72,21 +73,25 @@ class RoboCMD{
 
             case 0x00 ... 0x08:
 
-            uint16_t val;
+            uint16_t val = 0;
 
 
             if(data_ == zero_){
                 val = 0;
 
             }else if(zero_ != max_ && zero_ != min_){
-                val = (data_>zero_)? (abs(data_)-zero_)/(max_-zero_) : (abs(data_)-zero_)/(zero_-min_);
-                printf("value: %d\n", val);
+
+                val = (data_>zero_)? 
+                        round((double)(data_-zero_)/(max_-zero_)* numeric_limits<uint16_t>::max()) : 
+                        round((double)(data_-min_)/(zero_-min_)* numeric_limits<uint16_t>::max());
+
+                printf("value: %d\n max: %d\n", val,numeric_limits<uint16_t>::max());
 
             }else if (zero_ == min_){
-                val = (abs(data_)-zero_)/(max_-zero_);
+                val = round((double)(data_-zero_)/(max_-zero_)* numeric_limits<uint16_t>::max());
 
             }else if (zero_ == max_){
-                val = (abs(data_)-zero_)/(zero_-min_);
+                val = round((double)(data_-min_)/(zero_-min_)* numeric_limits<uint16_t>::max());
 
             }
 
@@ -196,6 +201,8 @@ class RoboCMD{
 
         printf("%d ", msg_.at(i));
     }
+
+    printf("\nuint16: %d", ((uint16_t)msg_.at(2) << 8) | msg_.at(3));
 
     }
 };
