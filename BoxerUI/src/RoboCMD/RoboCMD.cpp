@@ -193,16 +193,28 @@ class RoboCMD{
         
     }//set(uint8_t com, t_data data)
 
+
+/* ***** DEBUG *****
     void disMsg(){
         
         printf("Total message size: %d\n", msg_.size());
 
     for(int i = 0; i<msg_.size(); i++){
 
-        printf("%d ", msg_.at(i));
+        printf("%#x ", msg_.at(i));
     }
 
-    printf("\nuint16: %d", ((uint16_t)msg_.at(2) << 8) | msg_.at(3));
+    printf("\nuint16 of byte 2&3: %d", ((uint16_t)msg_.at(2) << 8) | msg_.at(3));
 
+    }
+  ***** DEBUG ***** */
+ 
+    vector<uint8_t> getMsg(){
+        return msg_;
+    }
+
+    void clrMsg(){	
+        clrTmp();
+        vector<uint8_t>().swap(msg_);
     }
 };
