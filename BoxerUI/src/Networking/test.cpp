@@ -3,14 +3,15 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "node.cpp"
+//#include "node.cpp"
+#include "server.cpp"
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-
+/*
 void addToHeap(char* arry, char value, int max) {
     int i = 0;
 
@@ -61,4 +62,29 @@ int main() {
 //
 //   Backend::addressToChars(identity, name, address);
 //   printf("Full identity:\n%s\n%s\n%s\n", identity + 2, identity + 9, identity + 18);
+}
+*/
+
+int main() {
+    unsigned char name[10] = "Bob";
+    sockaddr_in Address;
+    Address.sin_family = AF_INET;
+    Address.sin_port = htons(8000);
+    Address.sin_addr.s_addr = INADDR_ANY;
+
+    unsigned char name2[10] = "Ricky";
+    sockaddr_in Address2;
+    Address2.sin_family = AF_INET;
+    Address2.sin_port = htons(8001);
+    Address2.sin_addr.s_addr = INADDR_ANY;
+
+    addNode(name, Address);
+    addNode(name2, Address2);
+
+    addToDict(searchNodes(name), 1);
+    addToDests(1, searchNodes(name), searchNodes(name2), 0);
+
+    printNamesInDests(searchNodes(name), 1);
+
+    return 0;
 }
