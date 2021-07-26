@@ -23,7 +23,7 @@ class RoboCMD{
 
     //************************* Temp class varriables *************************//
     char com_ = -1;
-    t_data data_ = -1; // Does not work
+    t_data data_ = -1; 
     t_max max_ = -1;
     t_min min_ = -1;
     t_zero zero_ = -1;
@@ -31,12 +31,12 @@ class RoboCMD{
     //*************************//
 
     void clrTmp(){
-        data_ = -1;
-        max_ = -1;
-        min_ = -1;
-        zero_ = -1;
-        dir_ = -1;
-        com_= -1;
+        data_ = 0;
+        max_ = 0;
+        min_ = 0;
+        zero_ = 0;
+        dir_ = 0;
+        com_= 0;
     }
 
     void format(uint8_t com, t_data data, t_max max, t_min min, t_zero zero){
@@ -194,7 +194,7 @@ class RoboCMD{
     }//set(uint8_t com, t_data data)
 
 
-/* ***** DEBUG *****
+// ***** DEBUG *****
     void disMsg(){
         
         printf("Total message size: %d\n", msg_.size());
@@ -207,7 +207,7 @@ class RoboCMD{
     printf("\nuint16 of byte 2&3: %d", ((uint16_t)msg_.at(2) << 8) | msg_.at(3));
 
     }
-  ***** DEBUG ***** */
+  //***** DEBUG ***** */
  
     vector<uint8_t> getMsg(){
         return msg_;
