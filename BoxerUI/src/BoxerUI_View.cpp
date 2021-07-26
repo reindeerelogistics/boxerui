@@ -1,21 +1,11 @@
 #include "BoxerUI_View.h"
 
-
-#include <iostream>
-
-#include "TextTheme.h"
-#include "resource/icons/IconFontCppHeaders/IconsFontAwesome5Brands.h"
-#include "resource/icons/IconFontCppHeaders/IconsMaterialDesign.h"
-
-using namespace ImGui;
-using namespace std;
-
-
 void BoxerUI_View::appFrameRate() {
 	{ ImGui::Begin("Application Framerate");                          // Create a window called "Hello, world!" and append into it.
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End(); }
 }
+
 void BoxerUI_View::showdemos() {//bool show_demo_window) {
 
 	bool show_another_window = false;
@@ -42,6 +32,7 @@ void BoxerUI_View::showdemos() {//bool show_demo_window) {
 		ImGui::End();
 	}
 }
+
 void BoxerUI_View::displaySensors(double temperature, double battery) {
 	static int counter = 0;
 	static bool setTempBttn = false;
@@ -59,23 +50,23 @@ void BoxerUI_View::displaySensors(double temperature, double battery) {
 			//static char *tableHeader[] = { "Sensors","Current","Max","Min" };
 			//static char* sensors[] = { "Temperature","Battery","Tires","Min", "Min" };
 			//titleStyle();
-			TableSetupColumn("Sensors", ImGuiTableColumnFlags_WidthStretch);
-			TableSetupColumn("Values", ImGuiTableColumnFlags_WidthStretch);
-			TableHeadersRow();
-			TableNextRow();
-			TableNextColumn();
+			ImGui::TableSetupColumn("Sensors", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("Values", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableHeadersRow();
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
 			//ImGui::PushFont(title_style);
-			Text("Temperature");
+			ImGui::Text("Temperature");
 			//ImGui::PopFont();
 			//ImGui::PushFont(default_font);
-			TableNextColumn(); Text("%f", temperature);
-			TableNextRow();
-			TableNextColumn(); Text("Battery"); TableNextColumn();
-			Text("%f", battery);
+			ImGui::TableNextColumn(); ImGui::Text("%f", temperature);
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn(); ImGui::Text("Battery"); ImGui::TableNextColumn();
+			ImGui::Text("%f", battery);
 
 			ImGui::EndTable(); }
 
-		if (Button("change temperature")) {
+		if (ImGui::Button("change temperature")) {
 			//boxerController.setModelTemperature(19.3);
 			setTempBttn = true;
 			//pid = CreateProcess();
@@ -98,6 +89,7 @@ void BoxerUI_View::displaySensors(double temperature, double battery) {
 		ImGui::End();
 	}
 }
+
 void BoxerUI_View::plotStream() {
 
 	bool show_imgui_style_editor = false;
@@ -132,6 +124,7 @@ void BoxerUI_View::plotStream() {
 	ImGui::End();
 	ImPlot::DestroyContext();
 }
+
 void BoxerUI_View::indexwindow(bool* boxer_analytics) {//, int ui_window_width, int ui_window_height) {
 	bool p_open = true;
 
@@ -155,10 +148,10 @@ void BoxerUI_View::indexwindow(bool* boxer_analytics) {//, int ui_window_width, 
 	//ImGui::GetMainViewport()->Size.x;
 	//ImGui::GetWindowSize()->Size.x;
 	//ImGui::GetWindowViewPort()->Size.x;
-	//cout << ImGui::GetCurrentWindow()->Size.x << endl << ImGui::GetCurrentWindow()->Size.y;
+	//std::cout << ImGui::GetCurrentWindow()->Size.x << std::endl << ImGui::GetCurrentWindow()->Size.y;
 
 
-	Begin("Index", &p_open, flags);//, indexFlags);
+	ImGui::Begin("Index", &p_open, flags);//, indexFlags);
 	const ImVec2 pos = ImVec2(viewport->WorkPos.x + (viewport->WorkSize.x * 0.15), viewport->WorkPos.y + (viewport->WorkSize.y * 0.15));
 	ImGui::SetNextWindowPos(pos);// pos);
 	//ImGui::SetNextWindowPos);
@@ -166,54 +159,43 @@ void BoxerUI_View::indexwindow(bool* boxer_analytics) {//, int ui_window_width, 
 	//ImGui::SameLine(ImGui::GetWindowWidth() / 2);
 	ImGui::BeginChild("identification", ImVec2(0.0f, 0.0f), false);// , ImGuiWindowFlags_AlwaysAutoResize);
 
-	PushFont(ImGui::GetFont()->ContainerAtlas->Fonts[1]);
-	Text("Boxr");
-	PopFont();
+	ImGui::PushFont(ImGui::GetFont()->ContainerAtlas->Fonts[1]);
+	ImGui::Text("Boxr");
+	ImGui::PopFont();
 
 	ImGuiInputTextFlags signin_flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_NoUndoRedo;
 	static char username[64], password[64];
 	ImGui::InputTextWithHint("Username", "Username", username, IM_ARRAYSIZE(username), signin_flags);
 	ImGui::SameLine(); HelpMarker("Enter your credentials here");
-	//cout << IsItemEdited() ? "True" : "False";
+	//std::cout << IsItemEdited() ? "True" : "False";
 	ImGui::InputTextWithHint("Password", "Password", password, IM_ARRAYSIZE(password), signin_flags |= ImGuiInputTextFlags_Password);
 	//ImGui::InputText("password (clear)", password, IM_ARRAYSIZE(password));
 
-	Spacing();
-	if (Button("Login", ImVec2(65, 30))) {
+	ImGui::Spacing();
+	if (button("Login")) {
 		*boxer_analytics = false;
-		cout << *boxer_analytics << endl;
+		std::cout << *boxer_analytics << std::endl;
 	}
-	SameLine(185);
+	
+	ImGui::SameLine(185);
 	//Indent(80.0f);
-	if (Button("Register", ImVec2(65, 30))) {
+	if (ImGui::Button("Register", ImVec2(65, 30))) {
 		//*boxer_analytics = false;
-		cout << *boxer_analytics << endl;
+		std::cout << *boxer_analytics << std::endl;
 	}
-	EndChild();
-	End();
+	ImGui::EndChild();
+	ImGui::End();
 }
 
 bool BoxerUI_View::sideNav() {
-	static bool toggle_settings = false;
-
-	//ImGui::EndFrame();
-	//ImGui::Render();
-	//if (ImGuiConfigFlags_ViewportsEnable) {
-	//ImGui::UpdatePlatformWindows();
-	
-	//ImGui::RenderPlatformWindowsDefault();
-	//}
-	//ImGui::NewFrame();
-
+	static bool toggle_settings = false,index_window=false;
 	ImGui::Begin("##sideNav");
-	//See FAQ regarding ID for swapping items. Keyboard
-	//ImFont* font1 = io.Fonts->AddFontFromFileTTF("font.ttf", size_pixels);
-
-
 
 	{
 		//Settings
-		if (ImGui::Button(ICON_MD_SETTINGS "##settings")) { toggle_settings = !toggle_settings; }
+		ImGui::PushFont(ImGui::GetFont()->ContainerAtlas->Fonts[0]);
+		if (button(ICON_MD_SETTINGS "##settings")) { toggle_settings = !toggle_settings; }
+		ImGui::PopFont();
 		if (toggle_settings)
 			toggle_settings = settings();
 		//ImGui::Rect()
@@ -223,16 +205,19 @@ bool BoxerUI_View::sideNav() {
 	}
 
 	{
-		static float temp_size = ImGui::GetFontSize() * 2;
-		//PushFont(ImGui::GetFont()->ContainerAtlas->Fonts[2]);
-		 
+		//static float temp_size = ImGui::GetFontSize() * 2;
+
+		ImGui::PushFont(ImGui::GetFont()->ContainerAtlas->Fonts[0]);
 		ImGui::Text("%s##Home", ICON_MD_HOME);
-		//PopFont();
+		//if (navButton("%s##Home" ICON_MD_HOME))
+			//index_window=!index_window;
+		//indexwindow(&index_window);
+		ImGui::PopFont();
 	}
 
 
 	ImGui::End();
-	
+
 	return toggle_settings;
 }
 
@@ -251,8 +236,6 @@ bool BoxerUI_View::settings() {//settings that will replace the sideNav upon tog
 	ImGuiIO& io = ImGui::GetIO();*/
 	ImFont* font1 = ImGui::GetFont();// = io.Fonts->Fonts[0];
 
-	int size_font = 55;
-	//BoxerUI_View::boxerUI_fonts[1]->IsLoaded();
 	ImGui::Begin("Settings", 0, flags);
 
 	ImGui::PushFont(font1->ContainerAtlas->Fonts[1]);//BoxerUI_View::boxerUI_font);
@@ -261,16 +244,15 @@ bool BoxerUI_View::settings() {//settings that will replace the sideNav upon tog
 	//BoxerUI_View::boxerUI_fonts[2].b
 	ImGui::Text("%s among %d items", ICON_FA_GOOGLE_WALLET, 2);
 	ImGui::Button(ICON_FA_BUFFER " Search");
-	//texttheme.title("Settings", &size_font, font);
 
 
 
 
 	ImGui::AlignTextToFramePadding();
-	if (ArrowButton("##left", ImGuiDir_Left))
+	if (ImGui::ArrowButton("##left", ImGuiDir_Left))
 		in_settings = false;
-	Spacing();
-	Text("Setting"); SameLine();
+	ImGui::Spacing();
+	ImGui::Text("Setting"); ImGui::SameLine();
 	HelpMarker("Set values here");
 	static bool keyboard = false;
 
@@ -282,19 +264,19 @@ bool BoxerUI_View::settings() {//settings that will replace the sideNav upon tog
 	if (ImGui::Checkbox("Keyboard", &keyboard))// &flags, ImGuiItemStatusFlags_Focused))
 	{
 		//keyboard = !keyboard;
-		cout << keyboard << endl;
+		std::cout << keyboard << std::endl;
 
 
 	}
 	//keyboard ? input_type = InputType::Keyboard : input_type = InputType::None;
-	/*else{cout << "Keyboard Not Selected" << endl;
+	/*else{std::cout << "Keyboard Not Selected" << std::endl;
 		}*/
 
 		keyboard ? io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard : ImGuiConfigFlags_NavEnableGamepad;
 		
 		//keyboard?input_type = InputType::Keyboard:input_type = InputType::None;
 		//ImGuiConfigFlags_NavEnableGamepad = !ImGuiConfigFlags_NavEnableGamepad;
-		/*else{cout << "Keyboard Not Selected" << endl;
+		/*else{std::cout << "Keyboard Not Selected" << std::endl;
 			}*/
 	
 
@@ -311,27 +293,6 @@ bool BoxerUI_View::settings() {//settings that will replace the sideNav upon tog
 	ImGui::End();
 	
 	return in_settings;
-}
-
-
-void BoxerUI_View::resetFrame() {
-	//Current frame is discarded and renders a new one upon call.
-	ImGui::EndFrame();
-	ImGui::UpdatePlatformWindows();
-	ImGui::Render();
-	ImGui::NewFrame();
-}
-void BoxerUI_View::HelpMarker(const char* desc)
-{
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted(desc);
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
 }
 
 void BoxerUI_View::indexView() {

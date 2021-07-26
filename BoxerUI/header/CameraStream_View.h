@@ -1,6 +1,7 @@
 #pragma once
 #include "Boxer.h"
 #include "BoxerUI_View.h"
+#include "Components_View.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp> //Note: no need to include these headers in the working file. These will be handled automatically by linker
 
@@ -33,7 +34,7 @@ using CameraMap = std::map <int, std::vector<cv::Mat >>;
 #define NUM_CAMERAS 4
 #define FREEZE_FRAME_IMG (NUM_CAMERAS+1)
 
-class CameraStream : public BoxerUI_View
+class CameraStream : public Components_View
 {
 
 private:
