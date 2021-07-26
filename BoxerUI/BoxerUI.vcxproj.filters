@@ -87,7 +87,10 @@
     <ClCompile Include="src\Inputs_Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextTheme.cpp">
+    <ClCompile Include="src\TextTheme.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components_View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="header\Inputs_Model.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Components_View.h">
+      <Filter>Include Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

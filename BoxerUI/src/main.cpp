@@ -3,17 +3,12 @@
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 #include "Boxer.h"
-//#include "Inputs.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include <stdio.h>
-//#include <sys/types.h>
 #include "imconfig.h"
 
 #include "BoxerUI_Controller.h"
 #include "TextTheme.h"
-#include "resource/icons/IconFontCppHeaders/IconsFontAwesome5Brands.h"
-#include "resource/icons/IconFontCppHeaders/IconsMaterialDesign.h"
 
 
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -46,7 +41,6 @@ using namespace gl;
 
 // Include glfw3.h after our OpenGL definitions
 #include <GLFW/glfw3.h>
-#define NUM_FONTS 4
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 // Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
@@ -54,61 +48,35 @@ using namespace gl;
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
-static void glfw_error_callback(int error, const char *description)
+static void glfw_error_callback(int error, const char* description)
 {
 	fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
-void setFonts(ImFont* fonts) {
 
-	//fonts->AddFontDefault();
-	static const char* font_names[NUM_FONTS] = {
-		"resource\\fonts\\Poppins-Regular.ttf","resource\\icons\\Font Awesome 5 Brands - Regular - 400.otf",
-		"resource\\icons\\MaterialIcons-Regular.ttf",
-		"resource\\fonts\\PantonDemo-Black.otf",
-		
-	};
-
-	const ImWchar icon_ranges[] = { ICON_MIN_FAB,ICON_MAX_FAB,ICON_MIN_MD,ICON_MAX_MD, 0 };
-	ImFontConfig config;
-	config.MergeMode = true;
-	//config.PixelSnapH = true;
-	config.GlyphMinAdvanceX = 13.0f;
-
-	for (size_t i = 0; IM_ARRAYSIZE(font_names); i++)
-	{
-		std::cout << font_names[i] << std::endl;
-		i < 2 ? fonts->ContainerAtlas->AddFontFromFileTTF(font_names[i], 18.0f, &config, icon_ranges) :
-			fonts->ContainerAtlas->AddFontFromFileTTF(font_names[i], i == 2 ? 55.0f : 25);//F
-		 IM_ASSERT(fonts != NULL);
-	}
-
-	fonts->ContainerAtlas->Build();
-}
-
-int main(int, char **)
+int main(int, char**)
 {
 	// Setup window
 	glfwSetErrorCallback(glfw_error_callback);
 	if (!glfwInit())
 		return 1;
 
-		// Decide GL+GLSL versions
+	// Decide GL+GLSL versions
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 	// GL ES 2.0 + GLSL 100
-	const char *glsl_version = "#version 100";
+	const char* glsl_version = "#version 100";
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 #elif defined(__APPLE__)
 	// GL 3.2 + GLSL 150
-	const char *glsl_version = "#version 150";
+	const char* glsl_version = "#version 150";
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // 3.2+ only
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);		   // Required on Mac
 #else
 	// GL 3.0 + GLSL 130
-	const char *glsl_version = "#version 130";
+	const char* glsl_version = "#version 130";
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_TRUE);
@@ -119,10 +87,10 @@ int main(int, char **)
 
 	// Create window with graphics context
 	int ui_window_width = 1280, ui_window_height = 720;
-	GLFWwindow *window = glfwCreateWindow(ui_window_width, ui_window_height, "Reheindeer Robotics - BoxerUI", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(ui_window_width, ui_window_height, "Reheindeer Robotics - BoxerUI", NULL, NULL);
 	glfwGetWindowSize(window, &ui_window_width, &ui_window_height);
 
-	GLFWmonitor *monitor = glfwGetWindowMonitor(window);
+	GLFWmonitor* monitor = glfwGetWindowMonitor(window);
 	//const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
 	//glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
@@ -156,8 +124,8 @@ int main(int, char **)
 	glbinding::Binding::initialize();
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLBINDING3)
 	bool err = false;
-	glbinding::initialize([](const char *name)
-						  { return (glbinding::ProcAddress)glfwGetProcAddress(name); });
+	glbinding::initialize([](const char* name)
+		{ return (glbinding::ProcAddress)glfwGetProcAddress(name); });
 #else
 	bool err = false; // If you use IMGUI_IMPL_OPENGL_LOADER_CUSTOM, your loader is likely to requires some form of initialization.
 #endif
@@ -170,7 +138,7 @@ int main(int, char **)
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO &io = ImGui::GetIO();
+	ImGuiIO& io = ImGui::GetIO();
 	(void)io;
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -188,7 +156,7 @@ int main(int, char **)
 	//ImGui::StyleColorsClassic();
 
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-	ImGuiStyle &style = ImGui::GetStyle();
+	ImGuiStyle& style = ImGui::GetStyle();
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		style.WindowRounding = 0.0f;
@@ -212,10 +180,21 @@ int main(int, char **)
 	//fonts.AddFontFromFileTTF("resource\\fonts\\Poppins-Regular.ttf", 14.0f, 0, fonts.GetGlyphRangesDefault());
 	//fonts.AddFontDefault();
 
-	io.Fonts->AddFontDefault();
-	ImFont* x=io.Fonts->AddFontDefault();
-	ImFontAtlas* fonts={};
-	setFonts(x);
+	//io.Fonts->AddFontDefault();
+	//ImFont* x = io.Fonts->AddFontDefault();
+	//x->ContainerAtlas =io.Fonts;
+	//ImFontAtlas* fonts =  io.Fonts;
+
+	TextTheme texttheme;
+	texttheme.setFont();
+
+	//io.Fonts = x->ContainerAtlas;
+	//x->ContainerAtlas->Build();
+	//io.Fonts = x->ContainerAtlas;
+
+
+	//fonts->AddFontFromFileTTF("resource\\fonts\\PantonDemo-Black.otf", 55.0f);
+	//io.Fonts->Build();
 	// = io.Fonts->Fonts->AddFontDefault();
 	//x->ContainerAtlas=fonts;// = io.Fonts->Fonts->AddFontDefault();
 	//x->ContainerAtlas = &fonts;
@@ -278,7 +257,7 @@ int main(int, char **)
 	BoxerUI_Controller boxerController = BoxerUI_Controller(); // = BoxerUI_Controller(boxerView, boxerModel);
 															   //boxerController.payloadRecv();
 
-	
+
 	// Main loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -299,21 +278,23 @@ int main(int, char **)
 		// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
 
 		{
-			/*if (show_index_window)
+			if (show_index_window)
 			{
 				boxerController.displayIndexWindow(&show_index_window);
 			}
-			else*/
+			else
 			{
 				//SetNextWindowViewport();
 				ImGui::ShowStyleEditor();
+				ImGui::ShowUserGuide();
+				ImGui::ShowFontSelector("Font_selector");
 				//ImFont* x = ImGui::GetFont();
 				//ImGui::PushFont(x);
 				//ImGui::Text("Settings");
 				//ImGui::PopFont();
 
 				boxerController.inputHandlerModel();
-				boxerController.cameraView();
+				//boxerController.cameraView();
 				boxerController.indexView();
 			}
 		}
@@ -332,7 +313,7 @@ int main(int, char **)
 		//  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
-			GLFWwindow *backup_current_context = glfwGetCurrentContext();
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
