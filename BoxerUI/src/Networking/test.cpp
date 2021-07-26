@@ -65,7 +65,7 @@ int main() {
 }
 */
 
-int main() {
+void addClients() {
     unsigned char name[10] = "Bob";
     sockaddr_in Address;
     Address.sin_family = AF_INET;
@@ -82,9 +82,11 @@ int main() {
     addNode(name2, Address2);
 
     addToDict(searchNodes(name), 1);
-    addToDests(1, searchNodes(name), searchNodes(name2), 0);
+    addToDests(searchNodes(name), searchNodes(name2), 1);
 
     printNamesInDests(searchNodes(name), 1);
+}
 
-    return 0;
+int main() {
+    addClients();
 }
