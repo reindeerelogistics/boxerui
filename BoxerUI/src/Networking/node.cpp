@@ -62,10 +62,33 @@ void Node::addToTable(char* name_to_add) {
 //the lookupTable, can not manually enter only what is in lookup 
 //table
 //trade names
+void identify(int index) {
+    sockaddr_in device = Backend::tableToAddress(index);
+    sendto(Backend::sockfd, &Backend::name, sizeof(Backend::name), 0, (struct sockaddr*)&device, sizeof(device));
+    int ack = -1;
+    recvfrom(Backend::sockfd, &ack, sizeof(ack), 0, (struct sockaddr*)&device, &sock_length);
+
+    if(ack != 1) {
+        perror("Failed to reach server\n");
+        exit(0);
+    }
+}
+
 void Node::connectTo(int index, int instruction) {
     sockaddr_in device = Backend::tableToAddress(index);
     while(true)
     sendto(Backend::sockfd, &instruction, sizeof(instruction), 0, (struct sockaddr*)&device, sizeof(device));
+
+}
+
+void queryDevices(char* query) {
+    sendto(Backend::sockfd, &query, sizeof(query), 0, (struct sockaddr*)&Backend::server_addr, sock_length);
+
+    int size;
+    recvfrom(Backend::sockfd, &size, sizeof(size), 0, (struct sockaddr*)&Backend::server_addr, &sock_length);
+
+    char result[size][30];
+    recvfrom(Backend::sockfd, &result, sizeof(result), 0, (struct sockaddr*)&Backend::server_addr, &sock_length);
 
 }
 
@@ -74,48 +97,42 @@ void Node::connectTo(int index, int instruction) {
 
 struct epoll_event epollInit(int fd) {
     struct epoll_event event;
-    event.events = EPOLLIN; // | EPOLLEXCLUSIVE;
+    event.events = EPOLLIN | EPOLLEXCLUSIVE;
     event.data.fd = fd;
 
     return event;
 }
 
-void listenStream(socklen_t sock_l, int t_thread) {
+//Thread function callback
+void listenStream(int t_thread) {
+    socklen_t sock_l;
     struct sockaddr_in device;
-
-    int fd = Backend::sockfd;
     struct epoll_event events[1];
-    events[0] = epollInit(fd);
+
+    events[0] = epollInit(Backend::sockfd);
     int epfd = epoll_create1(0);
-    int res = epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &events[0]);
+    epoll_ctl(epfd, EPOLL_CTL_ADD, Backend::sockfd, &events[0]);
 
     int data;
     while(true) {
         epoll_wait(epfd, events, 1, -1);
-        recvfrom(fd, &data, sizeof(data), MSG_DONTWAIT, (struct sockaddr*)&device, &sock_l);
-        //read(events[0].data.fd, &data, sizeof(data));
+        recvfrom(Backend::sockfd, &data, sizeof(data), MSG_DONTWAIT, (struct sockaddr*)&device, &sock_l);
 
         printf("Data recieved: %d, from thread %d\n", data, t_thread);
     }
 }
 
 void Node::listen() {
-   std::thread thread1(listenStream, sock_length, 1);
+   std::thread thread1(listenStream, 1);
    thread1.detach();
 
-   std::thread thread2(listenStream, sock_length, 2);
+   std::thread thread2(listenStream, 2);
    thread2.detach();
 
-   std::thread thread3(listenStream, sock_length, 3);
+   std::thread thread3(listenStream, 3);
    thread3.detach();
    while(true) {}
 }
-
-
-void initStream(int fd, socklen_t sock_l, struct sockaddr_in device, int data) {
-
-}
-
 
 //internal use only
 //
