@@ -1,13 +1,17 @@
 #pragma once
 
-#include "implot.h"
 #include <iostream>
+#include "implot.h"
 #include "Inputs_Model.h"
-//#include "BoxerUI_Controller.h"
+#include "TextTheme.h"
+#include "Components_View.h"
+
+#include "resource/icons/IconFontCppHeaders/IconsFontAwesome5Brands.h"
+#include "resource/icons/IconFontCppHeaders/IconsMaterialDesign.h"
 
 //#define _BOXERUI_TEST
 
-class BoxerUI_View
+class BoxerUI_View :public Components_View
 {
 	
 public:
@@ -17,15 +21,10 @@ public:
 	static void plotStream();
 	static void indexwindow(bool* boxer_analytics);
 
-	static bool sideNav();
+	bool sideNav();
 
-	static bool settings();
-
-	//Do !!NOT!! use within Begin()/BeginChild() window
-	static void resetFrame();
-
+	bool settings();
 	
 	void indexView();
-protected:
-	static void HelpMarker(const char* desc);
+
 };

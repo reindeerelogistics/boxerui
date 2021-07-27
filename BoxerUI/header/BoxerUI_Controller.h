@@ -24,8 +24,18 @@
 
 class BoxerUI_Controller
 {
+	/*BoxerUI_Controller(BoxerUI_View boxerView, BoxerUI_Model boxerModel) {
+		this->boxerModel = boxerModel;
+		this->boxerView = boxerView;
+	}*/
+
+	/*BoxerUI_Controller(ImFont fonts) {
+		this->boxerfonts = fonts;
+	}*/
+	
 private:
-	BoxerUI_View boxerView;
+	
+	BoxerUI_View boxerView;// = BoxerUI_View(boxerfonts);
 	BoxerUI_Model boxerModel;
 	CameraStream camera_stream;
 #ifndef _WIN32
@@ -33,7 +43,7 @@ struct sockaddr_in serveraddr;
 	int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 #endif // !_WIN32
 
-	
+public:	
 
 	cv::Mat current_frame = cv::Mat(100, 100, CV_8UC4);
 	
@@ -51,7 +61,7 @@ struct sockaddr_in serveraddr;
 	void updateBSView();
 	void plotView();
 	void navView();
-public:
+
 	void displayIndexWindow(bool *boxer_analytics);
 	void cameraView();
 	void indexView();

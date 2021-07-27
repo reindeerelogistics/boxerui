@@ -1,26 +1,51 @@
 #pragma once
+#include "Boxer.h"
+#include "resource/icons/IconFontCppHeaders/IconsFontAwesome5Brands.h"
+#include "resource/icons/IconFontCppHeaders/IconsMaterialDesign.h"
+#include <map>
 
-//extern ImGuiIO& io;
-//ImGuiIO& io = ImGui::GetIO();
 
 
-enum TextTheme {
-	Title=20,
-	Subtitle,
-	Body,
-	Caption,
-	Custom=12
+enum class FontStyle {
+	PantonDemo_Black,
+	PantonDemo_Light,
+	Poppins_Regular,
+	Poppins_Medium,
+	Custom_Font
 };
 
-void titleStyle(ImFont* title_style, float font_size=Title, const ImFontConfig* font_cfg = NULL, const ImWchar* glyph_ranges = NULL) {
-	const char* font_type = "resource\\fonts\\PantonDemo-Black.otf"; 
-	//title_style = io.Fonts->AddFontFromFileTTF(font_type, font_size);
-}
+enum class IconStyle {
+	MaterialIcons_Regular,
+	MaterialIconsOutlined_Regular,
+	FontAwesome_Regular,
+	Custom_Font
+};
 
-void customStyle(ImFontConfig config, float font_size=Custom) {//TODO: Complete building a default fontstyle model
+using TextStyleMap = std::map<FontStyle, const char*>;
+using IconStyleMap = std::map<IconStyle, const char*>;
 
-	config.OversampleH = 2;
-	config.OversampleV = 1;
-	config.GlyphExtraSpacing.x = 1.0f;
-	//ImFont* font = io.Fonts->AddFontFromFileTTF("font.ttf", font_size, &config);
-}
+/** @brief This text theme follows material design type scalling guidelines(https://material.io/design/typography/the-type-system.html#type-scale)
+@note fonts are loaded in the following order
+**/
+struct TextTheme {
+
+	void setFont();
+private:
+	ImGuiIO& io = ImGui::GetIO();
+
+	ImFont* font_default;
+
+	ImFontConfig config_icon, config_font;
+
+	TextStyleMap createFontMap();
+
+	IconStyleMap createIconMap();
+
+	void headline(const TextStyleMap* m);
+	void subtitle(const TextStyleMap* m);
+	void body(const TextStyleMap* m);
+	void button(const TextStyleMap* m);
+
+	//ICONS
+	void icons(const IconStyleMap* map, const ImWchar* icon_ranges);
+};

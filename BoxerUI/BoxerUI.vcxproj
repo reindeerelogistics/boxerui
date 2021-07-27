@@ -175,8 +175,10 @@
     <ClCompile Include="src\BoxerUI_Model.cpp" />
     <ClCompile Include="src\BoxerUI_View.cpp" />
     <ClCompile Include="src\CameraStream_View.cpp" />
+    <ClCompile Include="src\Components_View.cpp" />
     <ClCompile Include="src\Inputs_Model.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\TextTheme.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Boxer.h" />
@@ -184,6 +186,7 @@
     <ClInclude Include="header\BoxerUI_Model.h" />
     <ClInclude Include="header\BoxerUI_View.h" />
     <ClInclude Include="header\CameraStream_View.h" />
+    <ClInclude Include="header\Components_View.h" />
     <ClInclude Include="header\Inputs_Model.h" />
     <ClInclude Include="header\TextTheme.h" />
     <ClInclude Include="libs\imgui\backends\imgui_impl_glfw.h" />
