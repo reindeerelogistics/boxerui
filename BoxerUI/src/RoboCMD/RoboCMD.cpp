@@ -1,14 +1,33 @@
+/**
+ * @file RoboCMD.cpp
+ * @author Ramsey Yaghi (ramsey.yaghi@ontariotechu.net)
+ * @brief a package to deal with encoding and decoding command messages for a robot. Protocol defined externally.
+ * @version 0.1 alpha
+ * @date 2021-07-28
+ *
+ */
+
 #include <vector>
 #include <limits>
 #include <stdlib.h>
 #include <iostream>
 #include <cmath>
+#include <math.h>
 
 using namespace std;
 
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
 
+/**
+ * @class RoboCMD
+ * @brief An object to deal with encoding and decoding messages following externally defined protocol. 
+ * 
+ * @tparam t_data data type of data that will be pased in
+ * @tparam t_max data type of max. may be used for scalling.
+ * @tparam t_min data type of min. may be used for scalling.
+ * @tparam t_zero data type of zero. may be used for scalling.
+ */
 
 template <typename t_data, typename t_max, typename t_min, typename t_zero>
 class RoboCMD{
@@ -17,26 +36,32 @@ class RoboCMD{
     //************************* Default class varriables *************************//
     const uint8_t d_zero = 0;
     const uint8_t d_min = 0;
+    const uint8_t roundPlace = 4;
 
     //************************* class varriables *************************//
     vector<uint8_t> msg_;
 
-    //************************* Temp class varriables *************************//
     char com_ = -1;
-    t_data data_ = -1; 
-    t_max max_ = -1;
-    t_min min_ = -1;
-    t_zero zero_ = -1;
+    uint16_t val_ = 0;
     char dir_ = -1;
+
+    //************************* Temp class varriables *************************//
+
+    t_data data_ = 0; 
+    t_max max_ = 0;
+    t_min min_ = 0;
+    t_zero zero_ = 0;
+
     //*************************//
 
     void clrTmp(){
+        com_= -1;
+        val_ = 0;
+        dir_ = -1;
         data_ = 0;
         max_ = 0;
         min_ = 0;
         zero_ = 0;
-        dir_ = 0;
-        com_= 0;
     }
 
     void format(uint8_t com, t_data data, t_max max, t_min min, t_zero zero){
@@ -85,7 +110,7 @@ class RoboCMD{
                         round((double)(data_-zero_)/(max_-zero_)* numeric_limits<uint16_t>::max()) : 
                         round((double)(data_-min_)/(zero_-min_)* numeric_limits<uint16_t>::max());
 
-                printf("value: %d\n max: %d\n", val,numeric_limits<uint16_t>::max());
+                //printf("value: %d\n max: %d\n", val,numeric_limits<uint16_t>::max());
 
             }else if (zero_ == min_){
                 val = round((double)(data_-zero_)/(max_-zero_)* numeric_limits<uint16_t>::max());
@@ -95,7 +120,10 @@ class RoboCMD{
 
             }
 
+            val_ = val;
+
             msg.push_back(com_);
+
 
                 switch(com_){
                     case 0x00 ... 0x05: //Commands of form [direction] [scaler(16-bit)]
@@ -120,6 +148,31 @@ class RoboCMD{
         msg_.insert(msg_.end(), msg.begin(),msg.end());
 
     }//genMsg()
+
+
+    void decodeMsg(){
+
+         com_ = msg_.at(0);
+
+        switch(com_){
+            case -1:break;
+
+            case 0x00 ... 0x05: //Commands of form [direction] [scaler(16-bit)]
+
+                dir_ = msg_.at(1);
+                val_ = ((uint16_t)msg_.at(2) << 8) | msg_.at(3);
+                
+            break;
+
+            case 0x06 ... 0x07: //commands of form [scaler(16-bit)]
+                val_ = ((uint16_t)msg_.at(1) << 8) | msg_.at(2);
+            break;
+
+            case 0x08 ... 0x08: //commands of form [scaler(8-bit)]
+                val_ = (uint16_t)msg_.at(1);
+            break;
+        }
+    }//decodeMsg()
 
 
     public:
@@ -194,7 +247,7 @@ class RoboCMD{
     }//set(uint8_t com, t_data data)
 
 
-// ***** DEBUG *****
+/***** DEBUG *****
     void disMsg(){
         
         printf("Total message size: %d\n", msg_.size());
@@ -209,12 +262,78 @@ class RoboCMD{
     }
   //***** DEBUG ***** */
  
+    /**
+     * returns current message stored.
+     * @return returns current message stored as vector<uint8_t>
+     */ 
     vector<uint8_t> getMsg(){
         return msg_;
     }
 
+
+    /**
+     *  clears stored data in object. Clears class varriables and emptys vector to size 0. 
+     */ 
     void clrMsg(){	
         clrTmp();
         vector<uint8_t>().swap(msg_);
     }
+
+
+    /**
+     * clears stored data in object and sets it to data stored in message. 
+     * clears current data, sets class message to passed in message, and decodes class variables from message data. 
+     * @param msg the new message you wish to set. 
+     */ 
+    void setMsg(vector<uint8_t> msg){
+        clrMsg();
+        msg_.swap(msg);
+        decodeMsg();
+    }
+
+
+    /**
+     * generate scaller representation of value stored in val_. 
+     * generates scaller as float with precision defined in "roundPlace". default accuracy of %0.1 (4 decimal places). 
+     * @return returns scaller as float. 
+     */ 
+    float getScaller(){
+        switch(com_){
+        case 0x00 ... 0x07:
+            return roundf(((float)val_)/numeric_limits<uint16_t>::max()*pow(10,roundPlace))/pow(10,roundPlace);
+            break;
+        default:
+            return -1;
+        break;
+
+        }
+    }
+
+
+    /**
+     * return 16-bit represenation of value stored in message. 
+     * @return returns "val_" of type uint16_t. 
+     */ 
+    uint16_t getVal(){
+        return val_;
+    }
+
+
+    /**
+     * returns direction stored in message. 
+     * @return returns "dir_" of type char. 
+     */ 
+    char getDir(){
+        return dir_;
+    }
+
+
+    /**
+     * returns command code stored in message. 
+     * @return returns "com_" of type char. 
+     */ 
+    char getCom(){
+        return com_;
+    }
+
 };
