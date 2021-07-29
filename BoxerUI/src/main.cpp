@@ -175,73 +175,8 @@ int main(int, char**)
 	// - Read 'docs/FONTS.md' for more instructions and details.
 	// - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
 
-
-
-	//fonts.AddFontFromFileTTF("resource\\fonts\\Poppins-Regular.ttf", 14.0f, 0, fonts.GetGlyphRangesDefault());
-	//fonts.AddFontDefault();
-
-	//io.Fonts->AddFontDefault();
-	//ImFont* x = io.Fonts->AddFontDefault();
-	//x->ContainerAtlas =io.Fonts;
-	//ImFontAtlas* fonts =  io.Fonts;
-
 	TextTheme texttheme;
-	texttheme.setFont();
-
-	//io.Fonts = x->ContainerAtlas;
-	//x->ContainerAtlas->Build();
-	//io.Fonts = x->ContainerAtlas;
-
-
-	//fonts->AddFontFromFileTTF("resource\\fonts\\PantonDemo-Black.otf", 55.0f);
-	//io.Fonts->Build();
-	// = io.Fonts->Fonts->AddFontDefault();
-	//x->ContainerAtlas=fonts;// = io.Fonts->Fonts->AddFontDefault();
-	//x->ContainerAtlas = &fonts;
-	//fonts->Fonts[0] = ;
-	{
-		//TODO create an array that will read the contents of the resource/fonts and add to an ImFont array
-	//ImFont* fonts[NUM_FONTS];
-	//static const char* font_names[NUM_FONTS] = { "PantonDemo-Black.otf", "Poppins-Regular.ttf" };
-	//const char* font_names[2] = { "PantonDemo-Black.otf", "Poppins-Regular.ttf" };
-
-
-
-	//for (size_t i = 0; i < 2; i++)
-	//{
-	//	char font_path[100] = "resource\\fonts\\";
-	//	strcat_s(font_path, font_names[i]);
-	//	//d::cout << font_path << std::endl;
-	//	//intf("%s", font_path);
-	//	// git rm -r --cached BoxerUI/libs/imgui/
-	//	fonts[i] = io.Fonts->AddFontFromFileTTF(font_path, 55);
-	//}
-	}
-	//fonts = io.Fonts[0]->AddFont();
-	//_fonts.AddFontFromFileTTF("Fonts\fontawesome-webfont.ttf", 14.0f, &icons_config, icons_ranges);
-	//_fonts.GetTexDataAsRGBA32;
-	//io.Fonts->AddFontFromFileTTF("resource\\icons\\Font Awesome 5 Brands-Regular-400.otf", 18.0f, &config, icon_ranges);
-	//io.Fonts->AddFontFromFileTTF("resource\\icons\\MaterialIcons-Regular.ttf", 18.0f, &config, icon_ranges);
-	//io.Fonts->AddFontFromFileTTF("resource\\fonts\\PantonDemo-Black.otf", 55.0f);// , & config, icon_ranges);// , io.Fonts->GetGlyphRangesDefault());
-	//io.Fonts->AddFontFromFileTTF("resource\\fonts\\Poppins-Regular.ttf", 35.0f);// , & config, icon_ranges);// , io.Fonts->GetGlyphRangesDefault());
-	//io.Fonts->GetTexDataAsRGBA32(&pixel_data, &width, &height, &bytes_per_pixel);
-
-	//setFonts(fonts);
-	//io.Fonts = x->ContainerAtlas;
-	//io.Fonts->Build();
-	//font->ContainerAtlas->AddFontFromFileTTF("resource\\fonts\\PantonDemo-Black.otf", 13.0f, &config);// , io.Fonts->GetGlyphRangesDefault());
-	//font->ContainerAtlas->AddFontFromFileTTF("resource\\icons\\Font Awesome 5 Brands-Regular-400.otf", 13.0f, &config , icon_ranges);
-	//font->ContainerAtlas->Build();
-	//font.GetTexDataAsRGBA32(&pixel_data, &width, &height, &bytes_per_pixel);
-	//fonts.AddFont(&config);
-	//font->ContainerAtlas->Fonts[0].;
-	//io.Fonts->Fonts[0];
-
-	//io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
-	//io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-	//io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-	//io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
-	//ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
+	texttheme.setFont();	
 	//IM_ASSERT(font != NULL);
 
 	// Our state
@@ -278,23 +213,18 @@ int main(int, char**)
 		// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
 
 		{
-			if (show_index_window)
+			/*if (show_index_window)
 			{
 				boxerController.displayIndexWindow(&show_index_window);
 			}
-			else
+			else*/
 			{
-				//SetNextWindowViewport();
 				ImGui::ShowStyleEditor();
 				ImGui::ShowUserGuide();
 				ImGui::ShowFontSelector("Font_selector");
-				//ImFont* x = ImGui::GetFont();
-				//ImGui::PushFont(x);
-				//ImGui::Text("Settings");
-				//ImGui::PopFont();
 
 				boxerController.inputHandlerModel();
-				//boxerController.cameraView();
+				boxerController.cameraView();
 				boxerController.indexView();
 			}
 		}

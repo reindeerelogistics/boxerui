@@ -13,6 +13,7 @@
 #include <thread>
 #include <chrono>
 #include <algorithm>
+#include <queue>
 
 #ifdef _WIN32
 

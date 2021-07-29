@@ -9,9 +9,8 @@
 #include <GLFW/glfw3.h>
 
 #include <future>
-
 #include <map>
-#include <vector>
+#include <queue>
 
 #ifdef _WIN32
 
@@ -23,7 +22,7 @@
 #include <signal.h>
 #endif
 
-using CameraMap = std::map <int, std::vector<cv::Mat >>;
+using CameraMap = std::map <int, std::queue<cv::Mat >>;
 
 //#ifndef CAMERASTREAM_VIEW_H_
 //...
@@ -31,13 +30,12 @@ using CameraMap = std::map <int, std::vector<cv::Mat >>;
 //Preprocessor. Checks if the symbol has been not bee ndefined. Use #pragma, it includes the symbol once
 
 #define BUFFER_SIZE 5
-#define NUM_CAMERAS 4
+#define NUM_CAMERAS 2
 #define FREEZE_FRAME_IMG (NUM_CAMERAS+1)
 
 class CameraStream : public Components_View
 {
 
-private:
 	static bool freeze_frame, enhance;
 
 	void dispFrame(cv::Mat* frame);
@@ -58,7 +56,7 @@ private:
 	void swapCamViews();
 
 public:
-	std::vector<cv::VideoCapture> vid_captures = std::vector<cv::VideoCapture>(5);
+	std::vector<cv::VideoCapture> vid_captures = std::vector<cv::VideoCapture>(NUM_CAMERAS);
 	
 	cv::Mat frame= cv::Mat(100, 100, CV_8UC4);
 
@@ -67,6 +65,8 @@ public:
 	static CameraMap payload_frames;
 	
 	std::future<CameraMap> cam_futures;
+
+	std::vector<std::thread> cam_threads;
 
 	/** @brief This method establishes the properties of each individual camera based on its initialization from initCamera() method
 	@param camera we are receiving stream from (indicated as an integer value),

@@ -136,15 +136,14 @@ ImGuiIO& io = ImGui::GetIO();
 			std::cout << "Window not in focus" << std::endl;
 		}
 
-		freeze_frame ? freezeFrame() : setCamContext(*camera);
-		//: setCamContext(*camera);
+		freeze_frame ? freezeFrame() : setCamContext();
 		ImGui::EndChild();
 		ImGui::SameLine();
 	}
 
 	{ //Queue of streams on side child window
 		ImGui::BeginChild("childCams", ImVec2(0.0f, 0.0f), true);
-		for (int i = 0; i < NUM_CAMERAS; i++)
+		for (int i = 0; i < payload_frames.size(); i++)
 		{
 			if ((*camera) == i)
 			{ //i.e. if the current index camera is in context, skip it in iteration and set its context to secondary in the side queue
@@ -400,8 +399,12 @@ void CameraStream::destroyCamera(int* index)
 #else
 void CameraStream::setCamContext(int context)
 {
-	BindCVMat2GLTexture(&payload_frames[context][context]);
-	payload_frames[context][context].~Mat();
+	if (payload_frames[context].size()>10)
+	{
+
+	BindCVMat2GLTexture(&payload_frames[context].front());
+	payload_frames[context].pop();
+	}
 }
 
 #endif

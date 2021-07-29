@@ -26,10 +26,10 @@ void BoxerUI_Model::setBattery(double battery)
 {
 	this->BoxerUI_Model::battery = battery;
 }
-void BoxerUI_Model::inputHandler(){//InputType input_type=InputType::None) {
-	
+void BoxerUI_Model::inputHandler() {//InputType input_type=InputType::None) {
+
 	//ImGui::Begin("##input");
-	
+
 	input.keyboardInputHandler();
 
 	//ImGui::End();
@@ -61,34 +61,28 @@ void* BoxerUI_Model::cameraPayloadRecv(void* args)
 }
 
 
-CameraMap BoxerUI_Model::cameraStreamProc(std::shared_future<CameraMap> f, std::vector<cv::VideoCapture>& vid, bool& is_camera_on)
+void BoxerUI_Model::cameraStreamProc(CameraMap& cam_map, cv::VideoCapture& vid, int cam_index, bool& cam_stream)
 { // Collect frames from network here and add send to controller to add onto frame buffers in CameraStream::streamCamera()
-	CameraMap cam_map = f.get();
 
-	if (is_camera_on)
-	{//If camera is open populate the payload_frames vector
-		auto start = std::chrono::high_resolution_clock::now();
+	cv::Mat temp;
+	//cv::cuda::GpuMat temp_gpu;
 
-		for (int j = 0; j < 5; j++)
+	{//If camera is open populate the payload_frames queue
+
+
+		if ((vid).isOpened())
 		{
-			if ((vid)[j].isOpened())
+			std::cout << "Camera Opened: " << cam_index << std::endl;
+			while (cam_stream)
 			{
-				std::cout << "Camera Opened" << std::endl;
-
-				(vid)[j].retrieve(cam_map[j][0]);
+				//temp_gpu.upload(temp);
+				(vid).retrieve(temp);
+				//temp_gpu.download(temp);
+				cam_map[cam_index].push(temp);
 			}
 
 		}
-
-		auto stop = std::chrono::high_resolution_clock::now();
-		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-
-		// To get the value of duration use the count()
-		// member function on the duration object
-		std::cout << "In model: " << duration.count() << std::endl;
 	}
-
-	return cam_map;
 }
 
 void BoxerUI_Model::print(const char* text)
