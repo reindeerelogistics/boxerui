@@ -2,7 +2,7 @@
 
 bool CameraStream::freeze_frame = false;
 bool CameraStream::enhance = false;
-CameraMap CameraStream::payload_frames = {};
+std::shared_ptr<CameraMap> CameraStream::payload_frames = std::make_shared<CameraMap>() ;
 
 void CameraStream::dispFrame(cv::Mat *frame)
 {
@@ -123,18 +123,18 @@ ImGuiIO& io = ImGui::GetIO();
 		//You can use the "##" or "###" markers to use the same label with different id, or same id with different label.See documentation at the top of this file.
 		ImGui::BeginChild("Camera_Viewport##cam_viewport", ImVec2((ImGui::GetCurrentWindow()->ContentSize.x) * 0.75f, 0.0f), true);
 
-		if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootWindow)) {
-			io.WantCaptureKeyboard = false;
-			//input_type = InputType::Gamepad;
-			//Dispatch inputs to Boxer_Inputs
-			std::cout << "Window in focus" << std::endl;
-		}
-		else {
+		//if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootWindow)) {
+		//	io.WantCaptureKeyboard = false;
+		//	//input_type = InputType::Gamepad;
+		//	//Dispatch inputs to Boxer_Inputs
+		//	std::cout << "Window in focus" << std::endl;
+		//}
+		//else {
 
-			io.WantCaptureKeyboard = true;
-			//Dispatch Inputs to BoxerUI_Inputs
-			std::cout << "Window not in focus" << std::endl;
-		}
+		//	io.WantCaptureKeyboard = true;
+		//	//Dispatch Inputs to BoxerUI_Inputs
+		//	std::cout << "Window not in focus" << std::endl;
+		//}
 
 		freeze_frame ? freezeFrame() : setCamContext();
 		ImGui::EndChild();
@@ -143,7 +143,7 @@ ImGuiIO& io = ImGui::GetIO();
 
 	{ //Queue of streams on side child window
 		ImGui::BeginChild("childCams", ImVec2(0.0f, 0.0f), true);
-		for (int i = 0; i < payload_frames.size(); i++)
+		for (int i = 0; i < (*payload_frames).size(); i++)
 		{
 			if ((*camera) == i)
 			{ //i.e. if the current index camera is in context, skip it in iteration and set its context to secondary in the side queue
@@ -399,11 +399,11 @@ void CameraStream::destroyCamera(int* index)
 #else
 void CameraStream::setCamContext(int context)
 {
-	if (payload_frames[context].size()>10)
+	if ((*payload_frames)[context].size()>10)
 	{
 
-	BindCVMat2GLTexture(&payload_frames[context].front());
-	payload_frames[context].pop();
+	BindCVMat2GLTexture(&(*(payload_frames))[context].front());
+	(*payload_frames)[context].pop();
 	}
 }
 

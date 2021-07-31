@@ -61,11 +61,12 @@ void* BoxerUI_Model::cameraPayloadRecv(void* args)
 }
 
 
-void BoxerUI_Model::cameraStreamProc(CameraMap& cam_map, cv::VideoCapture& vid, int cam_index, bool& cam_stream)
+void BoxerUI_Model::cameraStreamProc(std::shared_ptr<CameraMap>& cam_map, cv::VideoCapture& vid, int cam_index, bool& cam_stream)
 { // Collect frames from network here and add send to controller to add onto frame buffers in CameraStream::streamCamera()
 
 	cv::Mat temp;
-	//cv::cuda::GpuMat temp_gpu;
+	cv::cuda::GpuMat temp_gpu(temp);
+	//cv::cuda::
 
 	{//If camera is open populate the payload_frames queue
 
@@ -73,16 +74,19 @@ void BoxerUI_Model::cameraStreamProc(CameraMap& cam_map, cv::VideoCapture& vid, 
 		if ((vid).isOpened())
 		{
 			std::cout << "Camera Opened: " << cam_index << std::endl;
-			while (cam_stream)
+			//while (cam_stream)
 			{
 				//temp_gpu.upload(temp);
-				(vid).retrieve(temp);
-				//temp_gpu.download(temp);
-				cam_map[cam_index].push(temp);
+				(vid).retrieve(temp_gpu);
+				temp_gpu.download(temp);
+				(*cam_map)[cam_index].push(temp);
 			}
 
 		}
 	}
+	//cv::cuda::Stream strm;
+	//strm.
+	temp.~Mat();
 }
 
 void BoxerUI_Model::print(const char* text)

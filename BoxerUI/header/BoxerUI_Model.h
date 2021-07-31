@@ -10,6 +10,7 @@
 #include <chrono>
 #include <algorithm>
 #include <opencv2/core/cuda.hpp>
+#include <opencv2/core/core.hpp>
 
 
 #ifdef _WIN32
@@ -45,7 +46,7 @@ public:
 	void inputHandler();
 	
 	 //static CameraMap cameraStreamProc(std::shared_future<CameraMap> f, std::vector<cv::VideoCapture>& vid, bool& is_camera_on);
-	 static void cameraStreamProc(CameraMap& f, cv::VideoCapture& vid, int cam_index,bool& cam_stream);
+	 static void cameraStreamProc(std::shared_ptr<CameraMap>& f, cv::VideoCapture& vid, int cam_index,bool& cam_stream);
 
 protected:
 	void print(const char* text);

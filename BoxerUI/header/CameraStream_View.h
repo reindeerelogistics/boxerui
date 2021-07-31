@@ -62,7 +62,7 @@ public:
 
 	static bool show_camera;
 
-	static CameraMap payload_frames;
+	static std::shared_ptr<CameraMap> payload_frames;
 	
 	std::future<CameraMap> cam_futures;
 

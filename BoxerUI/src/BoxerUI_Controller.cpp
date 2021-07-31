@@ -131,13 +131,14 @@ void BoxerUI_Controller::cameraView()
 				//var = cv::VideoCapture(1, cv::CAP_DSHOW);
 				//var.set(cv::CAP_PROP_FPS, 30.0);
 
-				camera_stream.payload_frames.insert({ i,temp });// = temp;
+				(*camera_stream.payload_frames).insert({ i,temp });// = temp;
 				i++;
 			}
 
-			for (size_t i = 0; i < camera_stream.payload_frames.size(); i++)
+			for (size_t i = 0; i < (*camera_stream.payload_frames).size(); i++)
 			{//vector of threads based on camera size
-				camera_stream.cam_threads.push_back(std::thread(boxerModel.cameraStreamProc, std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera)));
+				//camera_stream.cam_threads.push_back(std::thread(boxerModel.cameraStreamProc, std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera)));
+				boxerModel.cameraStreamProc(std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera));
 			}
 		}
 	}
