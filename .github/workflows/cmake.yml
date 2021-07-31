@@ -29,6 +29,13 @@ jobs:
     - name: get-cmake
       uses: lukka/get-cmake@v3.21.1
     
+    - name: Restore vcpkg and its artifacts.
+      uses: actions/cache@v2
+      
+    - name: Show content of workspace at its completion
+      run: find $RUNNER_WORKSPACE
+      shell: bash
+    
     - name: run-cmake
       uses: lukka/run-cmake@v3.4
     
