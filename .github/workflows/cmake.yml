@@ -28,6 +28,16 @@ jobs:
     
     - name: get-cmake
       uses: lukka/get-cmake@v3.21.1
+      
+    - name: Setup OpenCV
+      uses: Dovyski/setup-opencv-action@v1
+      with: 
+        opencv-version: 4.5.1
+        opencv-extra-modules: ON
+        CMAKE_BUILD_TYPE: DEBUG
+        BUILD_NEW_PYTHON_SUPPORT: OFF
+        WITH_V4L: ON
+        WITH_OPENGL: ON
     
     - name: run-cmake
       uses: lukka/run-cmake@v3.4
