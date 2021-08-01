@@ -10,6 +10,7 @@ int main(){
     setServerAddress("184.146.119.106", 8000);
     joinServer();
 
+
     uint8_t name[] = "Ramsey";
     uint8_t sign = '+';
     uint8_t op = '1';
