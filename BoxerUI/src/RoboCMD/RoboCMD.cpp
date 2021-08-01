@@ -12,6 +12,7 @@
 #include <iostream>
 #include <cmath>
 #include <math.h>
+#include "../Networking/uiBackend.cpp"
 
 using namespace std;
 
@@ -101,7 +102,7 @@ class RoboCMD{
         }//switch (com)
     }//format(uint8_t com, t_data data, t_max max, t_min min, t_zero zero)
 
-    
+
 
     void genMsg(){
 
