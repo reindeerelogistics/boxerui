@@ -22,9 +22,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@master
-      with:
-        submodules: true
+    - uses: actions/checkout@v2
+#       with:
+#         submodules: true
     
     - name: get-cmake
       uses: lukka/get-cmake@v3.21.1
