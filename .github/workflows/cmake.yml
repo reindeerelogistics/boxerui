@@ -25,9 +25,8 @@ jobs:
     - uses: actions/checkout@v2
     
     - name: Checkout Submodules
-      run: git submodule update --init --recursive
-#       with:
-#         submodules: true
+      with:
+        submodules: true
     
     - name: get-cmake
       uses: lukka/get-cmake@v3.21.1
