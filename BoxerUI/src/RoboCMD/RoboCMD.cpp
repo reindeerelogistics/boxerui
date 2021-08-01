@@ -262,7 +262,7 @@ class RoboCMD{
 //***** DEBUG *****
     void disMsg(){
         
-        printf("Total message size: %d\n", msg_.size());
+        printf("Total message size: %d\n", (int) msg_.size());
 
     for(int i = 0; i<msg_.size(); i++){
 

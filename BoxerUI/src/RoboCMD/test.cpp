@@ -14,7 +14,7 @@ int main(){
     uint8_t name[] = "Ramsey";
     uint8_t sign = '+';
     uint8_t op = '1';
-    uint8_t dests[] = "Aaron";
+    uint8_t dests[] = "Jeff";
     mutateDestinations(name, '+', '1', dests);
 
     RoboCMD <float,float,float,float> cmd;
