@@ -1,3 +1,4 @@
+
 #include <vector>
 #include <string.h>
 #include <iostream>
@@ -19,12 +20,13 @@ int main() {
     Address.sin_addr.s_addr = inet_addr("0.0.0.0");
     int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
-    uint8_t array[20] = "Ricky";
+    uint8_t array[20] = "Mike";
     copyName(UI.name, array, 0);
 
     setServerAddress("0.0.0.0", 8000);
     joinServer();
     recvFromClient();
 }
+
 
 

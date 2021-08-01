@@ -1,14 +1,16 @@
+
 #include <vector>
 #include <string.h>
 #include <iostream>
 #include <cstdlib>
 
-#include "../../node.cpp"
+#include "../../uiBackend.cpp"
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+
 
 int main() {
     struct sockaddr_in Address;
@@ -18,19 +20,12 @@ int main() {
     Address.sin_addr.s_addr = inet_addr("0.0.0.0");
     int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
-    uint8_t name[] = " 0 Jeff";
-    name[0] = sizeof(name);
-    sendto(sockfd, name, sizeof(name), 0, (struct sockaddr*)&Address, sizeof(Address));
+    uint8_t array[20] = "Jeff";
+    copyName(UI.name, array, 0);
 
-    uint8_t uid;
-    recvfrom(sockfd, &uid, sizeof(uint8_t), 0, (struct sockaddr*)&Address, &addr_len);
-    printf("UID: %d\n", uid);
-
-    uint8_t data;
-    recvfrom(sockfd, &data, sizeof(uint8_t), 0, (struct sockaddr*)&Address, &addr_len);
-    printf("Jeff recieved: %d\n", data);
-
+    setServerAddress("0.0.0.0", 8000);
+    joinServer();
+    recvFromClient();
 }
-
 
 

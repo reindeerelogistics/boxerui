@@ -47,7 +47,7 @@ struct epoll_event epollInit(int fd) {
 }
 
 struct Node {
-    uint8_t* name;
+    uint8_t name[20] = "";
     uint8_t uid;
     int temperature;
 
@@ -66,9 +66,33 @@ struct Destinations {
 // global list of hosts for all
 struct Node* Nodes = (struct Node*)calloc(10, sizeof(struct Node));
 
+uint64_t getSize(uint8_t* size_buffer) {
+    uint64_t large = 0;
+    int i = 0;
+
+    while(i < 8) {
+        large |= (uint64_t)size_buffer[i] << (56 - (8*i));
+        i += 1;
+    }
+    printf("Returning converted value\n");
+
+    return large;
+}
+
+void copyName(uint8_t* name, uint8_t* nameToCopy, int index) {
+    int i = 0;
+    while(i < 20) {
+        if(nameToCopy[i] == '\0')
+            break;
+
+        name[index] = nameToCopy[i];
+        i += 1;
+        index += 1;
+    }
+}
 
 void addNode(uint8_t* name, struct sockaddr_in address, socklen_t len) {
-    Nodes[node_index].name = name;
+    copyName(Nodes[node_index].name, name, 0);
     Nodes[node_index].uid = uid_index;
     Nodes[node_index].Address = address;
     Nodes[node_index].temperature = 100;
@@ -169,6 +193,7 @@ struct Node* authenticateNode(char uid, sockaddr_in Address) {
     struct Node* Client = searchNodes(uid);
     if(Client == 0) {
         perror("Client had wrong uid: REJECTED\n");
+        printf("UID: %d or %c\n", uid, uid);
         return 0;
     } 
     if(Client->Address.sin_port != Address.sin_port) {
@@ -202,17 +227,38 @@ void initialConnect(uint8_t* msg, sockaddr_in Address, socklen_t len) {
 }
 
 void sendToDestinations(uint8_t* msg, struct Node** Destinations) {
+    int j = 0;
+    printf("Message server is sending\n");
+    while(j < 20) {
+        if(msg[j] == '\0') {
+            printf("[NULL]");
+        } else{
+        printf("%c", msg[j]);
+        }
+            j += 1;
+    }
+    printf("\n");
+
     int i = 0;
     while(true) {
         if(Destinations[i] == 0)
             break;
-        sendto(sockfd, &msg[0], sizeof(msg[0]), 0, (struct sockaddr*)&Destinations[i]->Address, Destinations[i]->len);
-        printf("\n Server sent msg: %d to client: %s\n", msg[0], Destinations[i]->name);
+        sendto(sockfd, msg, getSize(msg), 0, (struct sockaddr*)&Destinations[i]->Address, Destinations[i]->len);
+        printf("\n Server sent msg: %s to client: %s\n", msg, Destinations[i]->name);
+        printf("First dec of msg: %d\n", msg[0]);
+        printf("Size: %" PRIu64 "\n", getSize(msg));
         i += 1;
     }
 }
 
 void passData(uint8_t* msg, sockaddr_in Address) {
+    int j = 0;
+    printf("Message server is sending\n");
+    while(msg[j] != '\0') {
+        printf("%c", msg[j]);
+            j += 1;
+    }
+    printf("\n");
     struct Node* Client = authenticateNode(msg[0], Address);
     if(Client == 0) {
         //notify client he was not permitted
@@ -278,6 +324,7 @@ void mutateDestination(uint8_t* val, struct sockaddr_in Client) {
 
     printf("Protocol: %s\n", msg);
     char sign = readVal(&msg);
+    printf("Sign: %c\n", sign);
     printf("Protocol: %s\n", msg);
     Node* MutatingNode = readNode(&msg);
     printf("Protocol: %s\n", msg);
@@ -293,7 +340,9 @@ void mutateDestination(uint8_t* val, struct sockaddr_in Client) {
     printf("Looked for nodes destinations\n\n");
 
     Node* NodeInDest;
-    while(msg[0] != '\0') {
+    while(true) {
+        if(msg[0] == '\0')
+            break;
         NodeInDest = readNode(&msg);
         printf("Protocol: %s\n", msg);
         if(sign == '+') {
@@ -341,9 +390,6 @@ void chooseDirection(uint8_t* msg, sockaddr_in Address, socklen_t len) {
 }
 
 
-uint64_t getSize(uint8_t* size_buffer) {
-    return (uint64_t)size_buffer[0] << 56 | (uint64_t)size_buffer[1] << 48 | (uint64_t)size_buffer[2] << 40 | (uint64_t)size_buffer[3] << 32 | (uint64_t)size_buffer[4] << 24 | (uint64_t)size_buffer[5] << 16 | (uint64_t)size_buffer[6] << 8 | size_buffer[7];
-}
 
 void serverThread() {
     //epoll stuff
@@ -355,26 +401,32 @@ void serverThread() {
     int epfd = epoll_create1(0);
     epoll_ctl(epfd, EPOLL_CTL_ADD, sockfd, &events[0]);
 
-    uint8_t* size_buffer;;
+    uint8_t array[8];
 
     while(true) {
 
         epoll_wait(epfd, events, 1, -1);
-        recvfrom(events[0].data.fd, size_buffer, sizeof(uint64_t), MSG_PEEK | MSG_DONTWAIT, NULL, NULL);
-        uint64_t size = getSize(size_buffer);
+        recvfrom(events[0].data.fd, array, sizeof(uint8_t)*8, MSG_PEEK | MSG_DONTWAIT, NULL, NULL);
+        uint64_t size = getSize(array);
 
-        uint8_t* data = (uint8_t*)calloc(size, sizeof(uint8_t));
+        printf("Size: %" PRIu64 "\n", size);
+
+        uint8_t data[size];
         recvfrom(events[0].data.fd, data, size, MSG_DONTWAIT, (struct sockaddr*)&Client, &len);
 
         char ip[30];
         char port[10];
         getnameinfo((struct sockaddr*)&Client, len, ip, sizeof(ip), port, sizeof(port), NI_NUMERICSERV);
         printf("Client address %s:%s\n", ip, port);
-        printf("Size: %" PRIu64 "\n", size);
-        printf("Msg: %s\n", data);
-        printf("Called chooseDirection\n");
+        printf("\nEntire payload\n> ");
+        int j = 0;
+        while(j < size) {
+            printf("%d", data[j]);
+            j += 1;
+        }
+        printf("\nCalled chooseDirection\n");
         printf("Node index: %d\n", node_index);
-        chooseDirection(data + 1, Client, len);
+        chooseDirection(data + 8, Client, len);
     }
 
 }
@@ -385,3 +437,11 @@ void spawnThread() {
 }
 
 
+void addSize(uint8_t* array, uint64_t size) {
+    int i = 7;
+
+    while(i > -1) {
+        array[i] = (uint8_t)(size >> (7 - i)*(8));
+        i -= 1;
+    }
+}
