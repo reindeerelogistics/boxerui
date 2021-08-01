@@ -6,13 +6,10 @@
  * @date 2021-07-28
  */
 
-#include <vector>
 #include <limits>
 #include <stdlib.h>
-#include <iostream>
 #include <cmath>
-#include <math.h>
-#include "../Networking/uiBackend.cpp"
+#include "../Networking/uiBackend.cpp"s
 
 using namespace std;
 
