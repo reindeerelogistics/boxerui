@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "../../uiBackend.cpp"
+#include "../../../RoboCMD/RoboCMD.cpp"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -25,7 +25,12 @@ int main() {
 
     setServerAddress("0.0.0.0", 8000);
     joinServer();
-    recvFromClient();
+    
+    RoboCMD <float, float, float, float> cmd;
+    cmd.setMsg(recvFromClient());
+    cmd.disMsg();
+
+
 }
 
 

@@ -127,7 +127,8 @@ void joinServer() {
     recvUID();
 }
 
-void recvFromClient() {
+std::vector<uint8_t> recvFromClient() {
+
     socklen_t addr_size;
 
     uint8_t array[8];
@@ -138,6 +139,7 @@ void recvFromClient() {
 
     uint8_t data[size];
     recvfrom(sock, data, size, 0, (sockaddr*)&ServerAddress, &addr_size);
-    printMsg(data, size);
+    //printMsg(data, size);
 
+    return std::vector<uint8_t>(data, data + sizeof data / sizeof data[0]);
 }
