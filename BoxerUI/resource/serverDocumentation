@@ -1,0 +1,62 @@
+
+multi thread
+epoll for all threads to listen on sockets
+compare swap for threads to update intrusive linked lsit on master thread
+master thread reads the linked list as que
+master thread updates ui
+
+
+////Networking Core
+- Node
+    A entity that is aphiliated with a single device that permits communication between the device and other nodes. A node has its own state and stores the last state of other known nodes in its lookup table. Nodes discover other nodes by the Discovery Process which is triggered when a node is spawned or terminated. Nodes CAN NOT create other nodes, they can only communicate by sending data. Nodes do not know anything in real time, only the last state of a node on comunication. A node will terminate itself when it loses connection with its aphiliated device, this is done in the Termination Process. Nodes spawn fingers to handle data streams from and to their aphiliated device.
+- Finger
+    A entitiy that serves to send and or recive information on a constant protocal. A finger kills itself when the node asks or when the stream has failed and no recovery has been decided.
+- Spawner
+    A entity that spawns a new node when there are no more avialable nodes.
+    
+
+//Standard Values
+- Naming Convention
+    Every device which has a connection to a server will have to give a name on authentication the server will then recieve a message from the server about the status of the operation. This name will be added to the lookup tables on all the nodes in the server with the devices ip e.g. Server7:70.123.54.3. If the name the device wants already exists in the lookup the server will tell the device this and close the connection. 
+- Node State
+    The state of a node is defined by # variables and # constants. When a constant is required to be changed the node will have to be terminated and a new node will have to be used. Variables can be changed constantly and will call Device Discovery each time a state is changed.
+    Variable 1: Life : Defines if a node is aphiliated with a device. If not then DEAD. If so then ALIVE.
+    Variable 2: Lookup Table : Stores the state, address, and name of other known nodes.
+    Variable 3: Listening : The node is waiting for a device to request to be aphiliated.
+    Variable 4: Node Count : The amount of nodes this node is in communication with.
+    Constant 1: Name : The name the node was assigned by its aphiliated device.
+    Constant 2: Personnal Address : The address the node has on its host server.
+    Constant 3: Device Address : The address of the connected device.
+    Constant 4: Server Address : The public address of the server.
+    Constant 5: Data : The type of data the node will be recieving from its aphiliated device and sending to other nodes.
+- Device Port
+    The port on the server dedicated for listening to devices to connect. Can only be used by one node at a time. used with Device listen call.
+
+//Server Layout
+- Server Distribution
+    Allow mupltiple servers to comunicate with eachother each having their own clients. Servers can connect to each other at any time
+- Server Node !!!!Issue as this requires server hops to pass data
+    A server node is a regular node but its aphiliated device is a server. These nodes also have all the aphiliated servers nodes populated in its lookup table but there local addresses are the actuall address of the server. This node uses the server data stream which means the only data that is passed and recieved is only regarding node state.
+
+
+//Procedures
+- Device Listen
+    Waits for a device to request aphiliation. Utilizes the listen port when this procedure is active, when the procedure ends by a device connecting or the node terminating the port is no longer in use by the node. The node does not respond to other nodes when it is in this state as it is considered DEAD as there is no aphiliated device. If a request is recieved the node calls Device Connect.
+- Device Connect
+    When a device has requested to be connected the node waits for the information the device must send to set the nodes state.
+- Discovery Process
+    A procedure that occurs when a node is spawned or terminated. A discovery process is triggered by a single node and can only update the nodes which are contained in its personall lookup table. This process will tell all the known nodes which nodes are belived Dead and Alive. If a node disagrees with this decision wich is only possible if it was one of the nodes that was belived dead then it will send a response saying its Alive and a new Discovery process will be done.
+- Discovery for servers
+    Since every node on each server is updated when a device's state (Alive/Dead) changes all Alive servers will be informed of this devices state as they are aswell just a node.
+- Termination Process
+    When a node tries to contact its aphiliated device and a response does not come in at a reasonable time the connection is dropped and the node informes all other nodes to update their lookup table. After this the node then terminates.
+- Node Listen
+- Node Connect
+    
+
+//Data Types
+- Video Stream
+    Overhead: rows, columns.
+    Stream: Dynamic length Binary structure.
+- Commands
+    

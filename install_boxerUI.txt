@@ -1,7 +1,0 @@
-If running BoxerUI_app for the first time, you might need to install its dependencies first.
-The included shell script will ensure you have the dependencies required. 
-There is a likelihood you might not have execution rights.
-Copy and paste this (excluding the quotes) "chmod +x Boxer_Install.sh; ./Boxer_Install.sh" in your terminal to have execution rights and run the script.
-
-If it isn't your first time installing BoxerUI_app and you have the dependencies on your machine. 
-You may run the BoxerUI_app by copy/pasting "./BoxerUI_app" in your terminal

@@ -23,5 +23,5 @@ static int streamCamera(int capture_camera) {
 
 	frame.release();
 
-
+return 0;
 }

@@ -79,11 +79,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
-    <OutDir>.\Debug\$(Platform)\out\</OutDir>
-    <IntDir>$(Solution)\$(Configuration)\$(Platform)\</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration)\$(Platform)\out\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\$(Platform)\out\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -119,14 +121,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)header\imgui;$(ProjectDir)header\imgui\backends;$(ProjectDir)header\imgui\examples\libs\;$(ProjectDir)header\imgui\examples\libs\glfw\include;$(ProjectDir)header\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)header\imgui\examples\libs\gl3w;$(ProjectDir)header\implot;$(ProjectDir)header\jsoncpp;$(ProjectDir)header\jsoncpp\json;C:\Program Files\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\imgui\examples\libs\gl3w;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;C:\Program Files\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)header\imgui;$(ProjectDir)header\imgui\backends;$(ProjectDir)header\imgui\examples\libs\glfw;$(ProjectDir)header\imgui\examples\libs\glfw\include;$(ProjectDir)header\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)header\implot;$(ProjectDir)header\jsoncpp;$(ProjectDir)header\jsoncpp\json;C:\Program Files\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\glfw;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;C:\Program Files\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;opencv_world451d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>
@@ -144,51 +146,67 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\imgui\examples\libs\gl3w;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;C:\Program Files\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\glfw;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;C:\Program Files\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;opencv_world451.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="header\imgui\backends\imgui_impl_glfw.cpp" />
-    <ClCompile Include="header\imgui\backends\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="header\imgui\examples\libs\gl3w\GL\gl3w.c" />
-    <ClCompile Include="header\imgui\imgui.cpp" />
-    <ClCompile Include="header\imgui\imgui_demo.cpp" />
-    <ClCompile Include="header\imgui\imgui_draw.cpp" />
-    <ClCompile Include="header\imgui\imgui_tables.cpp" />
-    <ClCompile Include="header\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="header\implot\implot.cpp" />
-    <ClCompile Include="header\implot\implot_demo.cpp" />
-    <ClCompile Include="header\implot\implot_items.cpp" />
-    <ClCompile Include="header\jsoncpp\jsoncpp.cpp" />
-    <ClCompile Include="src\Boxer_FW\src\BoxerUI\camera_stream.cpp" />
+    <ClCompile Include="libs\imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="libs\imgui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="libs\imgui\examples\libs\gl3w\GL\gl3w.c" />
+    <ClCompile Include="libs\imgui\imgui.cpp" />
+    <ClCompile Include="libs\imgui\imgui_demo.cpp" />
+    <ClCompile Include="libs\imgui\imgui_draw.cpp" />
+    <ClCompile Include="libs\imgui\imgui_tables.cpp" />
+    <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="libs\implot\implot.cpp" />
+    <ClCompile Include="libs\implot\implot_demo.cpp" />
+    <ClCompile Include="libs\implot\implot_items.cpp" />
+    <ClCompile Include="libs\jsoncpp\jsoncpp.cpp" />
+    <ClCompile Include="src\BoxerUI_Controller.cpp" />
+    <ClCompile Include="src\BoxerUI_Model.cpp" />
+    <ClCompile Include="src\BoxerUI_View.cpp" />
+    <ClCompile Include="src\CameraStream_View.cpp" />
+    <ClCompile Include="src\Components_View.cpp" />
+    <ClCompile Include="src\Inputs_Model.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\TextTheme.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="header\imgui\backends\imgui_impl_glfw.h" />
-    <ClInclude Include="header\imgui\backends\imgui_impl_opengl3.h" />
-    <ClInclude Include="header\imgui\imconfig.h" />
-    <ClInclude Include="header\imgui\imgui.h" />
-    <ClInclude Include="header\imgui\imgui_internal.h" />
-    <ClInclude Include="header\imgui\imstb_rectpack.h" />
-    <ClInclude Include="header\imgui\imstb_textedit.h" />
-    <ClInclude Include="header\imgui\imstb_truetype.h" />
-    <ClInclude Include="header\implot\implot.h" />
-    <ClInclude Include="header\implot\implot_internal.h" />
-    <ClInclude Include="header\jsoncpp\json\json-forwards.h" />
-    <ClInclude Include="header\jsoncpp\json\json.h" />
-    <ClInclude Include="src\BoxerUI_Controller.h" />
-    <ClInclude Include="src\BoxerUI_Model.h" />
-    <ClInclude Include="src\BoxerUI_Sockets.h" />
-    <ClInclude Include="src\BoxerUI_View.h" />
-    <ClInclude Include="src\resource.h" />
+    <ClInclude Include="header\Boxer.h" />
+    <ClInclude Include="header\BoxerUI_Controller.h" />
+    <ClInclude Include="header\BoxerUI_Model.h" />
+    <ClInclude Include="header\BoxerUI_View.h" />
+    <ClInclude Include="header\CameraStream_View.h" />
+    <ClInclude Include="header\Components_View.h" />
+    <ClInclude Include="header\Inputs_Model.h" />
+    <ClInclude Include="header\TextTheme.h" />
+    <ClInclude Include="libs\imgui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="libs\imgui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="libs\imgui\imconfig.h" />
+    <ClInclude Include="libs\imgui\imgui.h" />
+    <ClInclude Include="libs\imgui\imgui_internal.h" />
+    <ClInclude Include="libs\imgui\imstb_rectpack.h" />
+    <ClInclude Include="libs\imgui\imstb_textedit.h" />
+    <ClInclude Include="libs\imgui\imstb_truetype.h" />
+    <ClInclude Include="libs\implot\implot.h" />
+    <ClInclude Include="libs\implot\implot_internal.h" />
+    <ClInclude Include="libs\jsoncpp\json\json-forwards.h" />
+    <ClInclude Include="libs\jsoncpp\json\json.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\BoxerUI.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resource\fonts\PantonDemo-Black.otf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
