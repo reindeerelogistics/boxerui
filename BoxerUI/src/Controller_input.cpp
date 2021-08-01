@@ -88,13 +88,18 @@ std::map<std::string, std::string> BoxerUI_Inputs::getConfig()
 void BoxerUI_Inputs::button(const unsigned char *buttons, const char *desc, int button_val, const char *cmd)
 {
 	std::string NA = "NA";
+		unsigned int x;
+	std::stringstream ss;
+	ss << std::hex << getConfig().find(desc)->second;
+	ss >> x;
+	float b = (float)x;
 
 	if (getConfig().find(desc)->second != NA)
 	{
 		if (GLFW_PRESS == buttons[button_val])
 		{
 			//std::cout << cmd << getConfig().find(desc)->second << std::endl;
-			send(getConfig().find(desc)->second, 75.0f, 100.0f, -100.0f, 0.0f);
+			send(b, 75.0f, 100.0f, -100.0f, 0.0f);
 		}
 	}
 }
@@ -102,6 +107,11 @@ void BoxerUI_Inputs::button(const unsigned char *buttons, const char *desc, int 
 void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val, const char *cmd)
 {
 	std::string NA = "NA";
+	unsigned int x;
+	std::stringstream ss;
+	ss << std::hex << getConfig().find(desc)->second;
+	ss >> x;
+	float b = (float)x;
 	if (getConfig().find(desc)->second != NA)
 	{
 
@@ -109,7 +119,7 @@ void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val,
 		{
 
 			//std::cout << cmd << getConfig().find(desc)->second << " Value " << -axes[axes_val] << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
-			send(getConfig().find(desc)->second, -axes[axes_val], 1.0f, -1.0f, 0.0f);
+			send(b, -axes[axes_val], 1.0f, -1.0f, 0.0f);
 		}
 		else
 		{
@@ -117,7 +127,7 @@ void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val,
 			{
 
 				//std::cout << cmd << getConfig().find(desc)->second << " Value " << axes[axes_val] << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
-				send(getConfig().find(desc)->second, axes[axes_val], 1.0f, -1.0f, 0.0f);
+				send(b, axes[axes_val], 1.0f, -1.0f, 0.0f);
 			}
 		}
 	}
@@ -126,6 +136,11 @@ void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val,
 void BoxerUI_Inputs::trigger(const float *axes, const char *desc, int axes_val, const char *cmd)
 {
 	std::string NA = "NA";
+	unsigned int x;
+	std::stringstream ss;
+	ss << std::hex << getConfig().find(desc)->second;
+	ss >> x;
+	float b = (float)x;
 	if (getConfig().find(desc)->second != NA)
 	{
 
@@ -133,10 +148,11 @@ void BoxerUI_Inputs::trigger(const float *axes, const char *desc, int axes_val, 
 		{
 
 			//std::cout << cmd << getConfig().find(desc)->second << " Value " << -axes[axes_val] << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
-			send(getConfig().find(desc)->second, -axes[axes_val], 1, -1, 0);
+			send(b, -axes[axes_val], 1, -1, 0);
 		}
 	}
 }
+
 
 void BoxerUI_Inputs::send(const float com, const float data, const float max, const float min, const float zero)
 {
