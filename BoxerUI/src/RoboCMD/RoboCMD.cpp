@@ -4,7 +4,6 @@
  * @brief a package to deal with encoding and decoding command messages for a robot. Protocol defined externally.
  * @version 0.1 alpha
  * @date 2021-07-28
- *
  */
 
 #include <vector>
@@ -15,6 +14,7 @@
 #include <math.h>
 
 using namespace std;
+
 
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
@@ -294,7 +294,7 @@ class RoboCMD{
 
     /**
      * generate scaller representation of value stored in val_. 
-     * generates scaller as float with precision defined in "roundPlace". default accuracy of %0.1 (4 decimal places). 
+     * generates scaller as float with precision defined in "roundPlace". default accuracy of %0.01 (4 decimal places). 
      * @return returns scaller as float. 
      */ 
     float getScaller(){

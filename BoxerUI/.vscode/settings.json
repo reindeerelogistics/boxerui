@@ -3,6 +3,9 @@
         "vector": "cpp",
         "limits": "cpp",
         "ratio": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "iostream": "cpp",
+        "ostream": "cpp",
+        "*.tcc": "cpp"
     }
 }
