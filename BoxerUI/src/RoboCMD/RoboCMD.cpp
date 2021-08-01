@@ -351,4 +351,8 @@ class RoboCMD{
         return com_;
     }
 
+    void sendMsg(){
+        sendToClients(&(*msg_.begin()), msg_.size(),'1' );
+    }
+
 };

@@ -4,29 +4,25 @@
 using namespace std;
 
 int main(){
+    uint8_t array[20] = "Ramsey";
+    copyName(UI.name, array, 0);
+
+    setServerAddress("184.146.119.106", 8000);
+    joinServer();
+
+    uint8_t name[] = "Ramsey";
+    uint8_t sign = '+';
+    uint8_t op = '1';
+    uint8_t dests[] = "Aaron";
+    mutateDestinations(name, '+', '1', dests);
 
     RoboCMD <float,float,float,float> cmd;
 
     cmd.set(0x01,75,100,-100,0);
 
-    vector<uint8_t> msg = cmd.getMsg();
+    cmd.sendMsg();
 
-    for(int i = 0; i<msg.size(); i++){
-
-        printf("%#x ", msg.at(i));
-    }
-
-     printf("\nuint16 of byte 2&3: %d", ((uint16_t)msg.at(2) << 8) | msg.at(3));
-
-    cmd.clrMsg();
-
-    printf("\n\n RECIVER \n\n");
-
-    cmd.setMsg(msg);
-
-    printf("Command: %d\n", cmd.getCom());
-    printf("Direction: %d\n", cmd.getDir());
-    printf("Scaller: %f\n", cmd.getScaller());
+ 
 
 return 0;
 }
