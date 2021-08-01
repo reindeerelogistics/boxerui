@@ -17,9 +17,7 @@ int main(){
     mutateDestinations(name, '+', '1', dests);
 
     RoboCMD <float,float,float,float> cmd;
-
     cmd.set(0x01,75,100,-100,0);
-
     cmd.sendMsg();
 
 return 0;
