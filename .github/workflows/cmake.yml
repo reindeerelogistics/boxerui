@@ -23,6 +23,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
+    - name: Checkout Submodules
+      run: git submodule update --init --recursive
 #       with:
 #         submodules: true
     
@@ -33,7 +36,6 @@ jobs:
       uses: lukka/run-cmake@v3.4
       with:
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
-          cmakeListsTxtPath: '${{ github.workspace }}/cmakesettings.json/CMakeLists.txt'
 
     - name: Build
       # Build your program with the given configuration
