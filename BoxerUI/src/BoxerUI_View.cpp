@@ -242,8 +242,8 @@ bool BoxerUI_View::settings() {//settings that will replace the sideNav upon tog
 	ImGui::Text("Settings");
 	ImGui::PopFont();
 	//BoxerUI_View::boxerUI_fonts[2].b
-	ImGui::Text("%s among %d items", ICON_FA_GOOGLE_WALLET, 2);
-	ImGui::Button(ICON_FA_BUFFER " Search");
+	ImGui::Text("%s among %d items", ICON_FA_ALLERGIES, 2);
+	ImGui::Button(ICON_FA_AMBULANCE " Search");
 
 
 

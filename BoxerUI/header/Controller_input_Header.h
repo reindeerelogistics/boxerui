@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cstdlib>
@@ -32,7 +32,7 @@ RoboCMD <float,float,float,float> cmd;
 	void joystick(const float* axes, const char* desc, int axes_val, const char* cmd);
 	void trigger(const float* axes, const char* desc, int axes_val, const char* cmd);
 	void input();
-	void send(const float* com,const float* data,const float* max,const float* min,const float* zero);
+	void send(const float com,const float data,const float max,const float min,const float zero);
 	
 
 }
