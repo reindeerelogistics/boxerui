@@ -53,7 +53,9 @@ class RoboCMD{
     t_zero zero_ = 0;
 
     //*************************//
-
+/**
+ * Resets all class variables to defaults. -1 for com and direction, 0 for all else. 
+ */
     void clrTmp(){
         com_= -1;
         val_ = 0;
@@ -64,6 +66,16 @@ class RoboCMD{
         zero_ = 0;
     }
 
+
+/**
+ * A function to set the class variables.
+ * 
+ * @param com command code to set in class variables. Defined in external protocol.
+ * @param data generic data that will later be rescalled. Type defined in class template.
+ * @param max maximum that will later be used for rescalling. Type defined in class template.
+ * @param min minimum that will later be used for rescalling. Type defined in class template.
+ * @param zero zero that will later be used for rescalling. Type defined in class template.
+ */
     void format(uint8_t com, t_data data, t_max max, t_min min, t_zero zero){
         switch(com){
             case 0x00: case 0x01: case 0x02: case 0x03: case 0x04: case 0x05: // cases of form: [direction bit] [scaler]
@@ -88,6 +100,8 @@ class RoboCMD{
 
         }//switch (com)
     }//format(uint8_t com, t_data data, t_max max, t_min min, t_zero zero)
+
+    
 
     void genMsg(){
 
