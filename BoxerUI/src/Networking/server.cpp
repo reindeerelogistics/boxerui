@@ -47,7 +47,7 @@ struct epoll_event epollInit(int fd) {
 }
 
 struct Node {
-    uint8_t name[20] = "";
+    uint8_t name[20];
     uint8_t uid;
     int temperature;
 
@@ -431,11 +431,12 @@ void serverThread() {
 
 }
 
+/*
 void spawnThread() {
     std::thread thread(serverThread);
     thread.detach();
 }
-
+*/
 
 void addSize(uint8_t* array, uint64_t size) {
     int i = 7;

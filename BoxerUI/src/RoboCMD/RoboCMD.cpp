@@ -262,7 +262,7 @@ class RoboCMD{
     }//set(uint8_t com, t_data data)
 
 
-/***** DEBUG *****
+//***** DEBUG *****
     void disMsg(){
         
         printf("Total message size: %d\n", msg_.size());

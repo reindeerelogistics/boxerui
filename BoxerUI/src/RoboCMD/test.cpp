@@ -22,7 +22,5 @@ int main(){
 
     cmd.sendMsg();
 
- 
-
 return 0;
 }
