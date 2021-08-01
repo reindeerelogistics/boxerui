@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "vector": "cpp",
-        "limits": "cpp",
-        "ratio": "cpp",
-        "cmath": "cpp"
-    }
-}

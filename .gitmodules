@@ -1,3 +1,6 @@
 [submodule "imgui"]
-	path = BoxerUI/libs
+	path = BoxerUI/libs/imgui
+	url = https://github.com/reindeererobotics/imgui.git
+[submodule "imgui"]
+	path = BoxerUI/libs/imgui
 	url = https://github.com/reindeererobotics/imgui.git
