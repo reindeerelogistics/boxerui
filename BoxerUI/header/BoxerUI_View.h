@@ -6,8 +6,8 @@
 #include "TextTheme.h"
 #include "Components_View.h"
 
-#include "resource/icons/IconFontCppHeaders/IconsFontAwesome5Brands.h"
-#include "resource/icons/IconFontCppHeaders/IconsMaterialDesign.h"
+#include "../resource/icons/IconFontCppHeaders/IconsFontAwesome5.h"
+#include "../resource/icons/IconFontCppHeaders/IconsMaterialDesign.h"
 
 //#define _BOXERUI_TEST
 

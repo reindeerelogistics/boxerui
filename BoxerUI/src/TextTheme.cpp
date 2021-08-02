@@ -28,7 +28,7 @@ void TextTheme::setFont()
 	config_font.OversampleH = 3;
 	io.Fonts->AddFontDefault();
 
-	const ImWchar icon_ranges[] = { ICON_MIN_FAB, ICON_MAX_FAB, ICON_MIN_MD, ICON_MAX_MD, 0 };// Will not be copied by AddFont*, keep in scope as indicated in ImGui docs (https://github.com/reindeererobotics/imgui/blob/master/docs/FONTS.md#font-loading-instructions)
+	const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, ICON_MIN_MD, ICON_MAX_MD, 0 };// Will not be copied by AddFont*, keep in scope as indicated in ImGui docs (https://github.com/reindeererobotics/imgui/blob/master/docs/FONTS.md#font-loading-instructions)
 
 	icons(&iconstyle_map, icon_ranges); //Icons are loaded first and merged with the default font as this font is guarateed to always to be available
 	headline(&textstyle_map);
