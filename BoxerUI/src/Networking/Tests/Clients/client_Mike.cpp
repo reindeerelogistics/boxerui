@@ -1,16 +1,4 @@
-
-#include <vector>
-#include <string.h>
-#include <iostream>
-#include <cstdlib>
-
-#include "../../uiBackend.cpp"
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-
+#include "../../../RoboCMD/RoboCMD.cpp"
 
 int main() {
     struct sockaddr_in Address;
@@ -25,7 +13,16 @@ int main() {
 
     setServerAddress("0.0.0.0", 8000);
     joinServer();
-    recvFromClient();
+
+    int i = 0;
+    while(true) {
+        printf("\nMessage: %d\n", i);
+    RoboCMD <float, float, float, float> cmd;
+    cmd.setMsg(recvFromClient());
+    cmd.disMsg();
+    printf("\n\n");
+    i += 1;
+    }
 }
 
 
