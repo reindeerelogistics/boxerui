@@ -20,8 +20,8 @@ enum class Buttons {
 };
 */
 namespace BoxerUI_Inputs {
+
 	//map<Buttons,const char*> button_map;
-RoboCMD <float,float,float,float> cmd;
 
 	std::string split(std::string target, bool dir, char delim);
 	std::map<std::string, std::string> getConfig();

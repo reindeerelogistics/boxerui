@@ -63,7 +63,8 @@ target_include_directories(BoxerUI_app PUBLIC
     "${IMGUI_BACKENDS_DIR}"
     "${LIBS_DIR}/imgui/examples/libs/gl3w/" 
     "${LIBS_DIR}/implot/" 
-    "${SOURCES_DIR}")
+    "${SOURCES_DIR}"
+    "${WORKSPACE_DIR}")
 
 #Links the libraries to build target set in add_executable command
 target_link_libraries(BoxerUI_app  OpenGL::GL glfw "${OpenCV_LIBS}")# Threads::Threads )

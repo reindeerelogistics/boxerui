@@ -128,6 +128,7 @@ ImGuiIO& io = ImGui::GetIO();
 			//input_type = InputType::Gamepad;
 			//Dispatch inputs to Boxer_Inputs
 			std::cout << "Window in focus" << std::endl;
+			BoxerUI_Inputs::input();//Dispatch inputs to Dereks impl
 		}
 		else {
 

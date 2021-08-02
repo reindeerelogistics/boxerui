@@ -185,8 +185,8 @@ int main(int, char**)
 	//x->ContainerAtlas =io.Fonts;
 	//ImFontAtlas* fonts =  io.Fonts;
 
-	TextTheme texttheme;
-	texttheme.setFont();
+	//TextTheme texttheme;
+	//texttheme.setFont();
 
 	//io.Fonts = x->ContainerAtlas;
 	//x->ContainerAtlas->Build();
@@ -278,11 +278,11 @@ int main(int, char**)
 		// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
 
 		{
-			if (show_index_window)
-			{
-				boxerController.displayIndexWindow(&show_index_window);
-			}
-			else
+			// if (show_index_window)
+			// {
+			// 	boxerController.displayIndexWindow(&show_index_window);
+			// }
+			// else
 			{
 				//SetNextWindowViewport();
 				ImGui::ShowStyleEditor();
@@ -294,7 +294,7 @@ int main(int, char**)
 				//ImGui::PopFont();
 
 				boxerController.inputHandlerModel();
-				//boxerController.cameraView();
+				boxerController.cameraView();
 				boxerController.indexView();
 			}
 		}

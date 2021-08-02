@@ -22,6 +22,7 @@
 
 // 	return 0;
 // }
+RoboCMD <float,float,float,float> cmd;
 std::string BoxerUI_Inputs::split(std::string target, bool dir, char delim)
 {
 
