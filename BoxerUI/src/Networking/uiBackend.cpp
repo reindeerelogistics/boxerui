@@ -29,7 +29,7 @@ void printMsg(const uint8_t* data, uint64_t size) {
     int i = 0;
     while(i < size) {
         if(data[i] == '\0') {
-            printf("[NULL]");
+            //printf("[NULL]");
         }
         else {
         printf("%c", data[i]);
@@ -141,5 +141,5 @@ std::vector<uint8_t> recvFromClient() {
     recvfrom(sock, data, size, 0, (sockaddr*)&ServerAddress, &addr_size);
     //printMsg(data, size);
 
-    return std::vector<uint8_t>(data, data + sizeof data / sizeof data[0]);
+    return std::vector<uint8_t>(data + 8, (data + 8) + (sizeof(data) - 8) / sizeof data[0]);
 }

@@ -231,7 +231,7 @@ void sendToDestinations(uint8_t* msg, struct Node** Destinations) {
     printf("Message server is sending\n");
     while(j < 20) {
         if(msg[j] == '\0') {
-            printf("[NULL]");
+            //printf("[NULL]");
         } else{
         printf("%c", msg[j]);
         }
