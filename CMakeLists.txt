@@ -42,7 +42,9 @@ set(SOURCE
     "${IMGUI_BACKENDS_SOURCES}"
     "${IMGUI_EXAMPLES_LIBS_SOURCES}"
     "${BOXERUI_SOURCES}"
-    "${IMPLOT_SOURCES}")
+    "${IMPLOT_SOURCES}"
+    "BoxerUI/src/RoboCMD/RoboCMD.cpp"
+    )
 
 #Should print the include dir and link libs.
 MESSAGE(STATUS "Include dirs ${OpenCV_INCLUDE_DIRS}")
