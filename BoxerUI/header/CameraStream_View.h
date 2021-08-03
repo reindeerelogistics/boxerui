@@ -12,6 +12,7 @@
 #include <map>
 #include <queue>
 
+
 #ifdef _WIN32
 
 #else
@@ -30,13 +31,15 @@ using CameraMap = std::map <int, std::queue<cv::Mat >>;
 //Preprocessor. Checks if the symbol has been not bee ndefined. Use #pragma, it includes the symbol once
 
 #define BUFFER_SIZE 5
-#define NUM_CAMERAS 2
+#define NUM_CAMERAS 1
 #define FREEZE_FRAME_IMG (NUM_CAMERAS+1)
 
 class CameraStream : public Components_View
 {
 
 	static bool freeze_frame, enhance;
+
+	cv::Mat freeze_frame_mat;
 
 	void dispFrame(cv::Mat* frame);
 
@@ -55,6 +58,8 @@ class CameraStream : public Components_View
 
 	void swapCamViews();
 
+	void takeScreenshot();
+
 public:
 	std::vector<cv::VideoCapture> vid_captures = std::vector<cv::VideoCapture>(NUM_CAMERAS);
 	
@@ -62,9 +67,11 @@ public:
 
 	static bool show_camera;
 
-	static std::shared_ptr<CameraMap> payload_frames;
+	//static std::shared_ptr<CameraMap> payload_frames;
+	static CameraMap payload_frames;
 	
 	std::future<CameraMap> cam_futures;
+
 
 	std::vector<std::thread> cam_threads;
 
@@ -75,4 +82,5 @@ public:
 	**/
 	void initCamera();
 
+	
 };

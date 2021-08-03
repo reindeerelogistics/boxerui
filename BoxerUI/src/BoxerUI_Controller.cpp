@@ -100,7 +100,7 @@ cv::Mat procCam(cv::VideoCapture vid, cv::Mat& temp)
 	//cam_mutex.unlock();
 	return temp;
 }
-
+//std::mutex m;
 void BoxerUI_Controller::cameraView()
 {
 	static bool x = true;
@@ -131,26 +131,29 @@ void BoxerUI_Controller::cameraView()
 				//var = cv::VideoCapture(1, cv::CAP_DSHOW);
 				//var.set(cv::CAP_PROP_FPS, 30.0);
 
-				(*camera_stream.payload_frames).insert({ i,temp });// = temp;
+				(camera_stream.payload_frames).insert({ i,temp });// = temp;
 				i++;
 			}
 
-			for (size_t i = 0; i < (*camera_stream.payload_frames).size(); i++)
+			for (size_t i = 0; i < (camera_stream.payload_frames).size(); i++)
 			{//vector of threads based on camera size
-				//camera_stream.cam_threads.push_back(std::thread(boxerModel.cameraStreamProc, std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera)));
-				boxerModel.cameraStreamProc(std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera));
+				std::cout << camera_stream.payload_frames.size()<<std::endl;
+				camera_stream.cam_threads.push_back(std::thread(boxerModel.cameraStreamProc, std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera)));
+				//boxerModel.cameraStreamProc(std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera));
 			}
 		}
 	}
 	else {
 		for (size_t i = 0; i < camera_stream.cam_threads.size(); i++)
 		{
+			//m.lock();
 			std::thread& t = camera_stream.cam_threads[i];
 			if (t.joinable()) {
 				std::cout << "Thread ID: " << t.get_id() << " joined successfully" << std::endl;
 				t.join();
 				camera_stream.cam_threads.erase(camera_stream.cam_threads.begin() + i);
 			}
+			//m.unlock();
 		}
 		cam_thread_init = true;
 	}

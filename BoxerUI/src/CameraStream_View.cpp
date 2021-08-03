@@ -2,7 +2,8 @@
 
 bool CameraStream::freeze_frame = false;
 bool CameraStream::enhance = false;
-std::shared_ptr<CameraMap> CameraStream::payload_frames = std::make_shared<CameraMap>() ;
+//std::shared_ptr<CameraMap> CameraStream::payload_frames = std::make_shared<CameraMap>() ;
+CameraMap CameraStream::payload_frames = {};
 
 void CameraStream::dispFrame(cv::Mat *frame)
 {
@@ -113,7 +114,7 @@ ImGuiIO& io = ImGui::GetIO();
 	if (ImGui::Button("Freeze Frame"))
 	{ //if freeze frame is clicked. capture the current frame...
 		freeze_frame = !freeze_frame;
-
+		freeze_frame_mat = payload_frames[0].front();
 		//TODO: clone the main context frame to freeze frame then display
 		//cameras[*camera].retrieve(frames[FREEZE_FRAME_IMG]);
 	}
@@ -143,7 +144,7 @@ ImGuiIO& io = ImGui::GetIO();
 
 	{ //Queue of streams on side child window
 		ImGui::BeginChild("childCams", ImVec2(0.0f, 0.0f), true);
-		for (int i = 0; i < (*payload_frames).size(); i++)
+		for (int i = 0; i < (payload_frames).size(); i++)
 		{
 			if ((*camera) == i)
 			{ //i.e. if the current index camera is in context, skip it in iteration and set its context to secondary in the side queue
@@ -161,6 +162,7 @@ ImGuiIO& io = ImGui::GetIO();
 
 void CameraStream::freezeFrame()
 {
+	
 	std::cout << "Freeze frame: " << freeze_frame << std::endl;
 	//cv::Mat freeze_frame_img;
 	//freeze_frame_img=frame.clone();
@@ -182,6 +184,12 @@ void CameraStream::freezeFrame()
 		//cv::Rect2d roi = //(zoom_vert, zoom_vert, freeze_frame_img.cols/2, freeze_frame_img.rows/2);
 
 		//freeze_frame_img = freeze_frame_img(cv::selectROI(freeze_frame_img, false, false));
+	}
+
+	if (ImGui::Button("Screenshot"))
+	{
+		//TODO: take & save SS to file
+		takeScreenshot();
 	}
 }
 
@@ -260,6 +268,9 @@ void CameraStream::initCamera()
 	}
 }
 
+void CameraStream::takeScreenshot() {
+	//TODO @Aaron: help make takeSS function
+}
 
 #ifdef _BOXERUI_TEST
 void CameraStream::setCamContext(int context = 0)
@@ -399,11 +410,11 @@ void CameraStream::destroyCamera(int* index)
 #else
 void CameraStream::setCamContext(int context)
 {
-	if ((*payload_frames)[context].size()>10)
+	if (payload_frames[context].size()>10)
 	{
 
-	BindCVMat2GLTexture(&(*(payload_frames))[context].front());
-	(*payload_frames)[context].pop();
+	BindCVMat2GLTexture(&payload_frames[context].front());
+	payload_frames[context].pop();
 	}
 }
 

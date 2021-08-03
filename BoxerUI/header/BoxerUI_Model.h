@@ -9,9 +9,15 @@
 #include <future>
 #include <chrono>
 #include <algorithm>
-#include <opencv2/core/cuda.hpp>
+#include "opencv2/core/cuda.hpp"
 #include <opencv2/core/core.hpp>
+#include <mutex>
+#include <thread>
 
+#include <opencv2/core.hpp>
+#include <opencv2/core/opengl.hpp>
+
+#include <opencv2/highgui.hpp>
 
 #ifdef _WIN32
 
@@ -23,12 +29,13 @@
 
 #endif // headers for threads
 
-
+//using namespace std::this_thread
 #ifndef _INPUTS_H
 //#define _INPUTS_H
 #include "Inputs_Model.h"
 #endif
 
+using namespace std::chrono_literals;
 using CameraMap = std::map <int, std::queue<cv::Mat >>;
 
 class BoxerUI_Model
@@ -38,6 +45,8 @@ private:
 	Inputs input;
 	static void* cameraPayloadRecv(void* arg);
 
+	
+
 public:
 	double getTemperature();
 	double getBattery();
@@ -46,7 +55,7 @@ public:
 	void inputHandler();
 	
 	 //static CameraMap cameraStreamProc(std::shared_future<CameraMap> f, std::vector<cv::VideoCapture>& vid, bool& is_camera_on);
-	 static void cameraStreamProc(std::shared_ptr<CameraMap>& f, cv::VideoCapture& vid, int cam_index,bool& cam_stream);
+	 static void cameraStreamProc(CameraMap& f, cv::VideoCapture& vid, int cam_index,bool& cam_stream);
 
 protected:
 	void print(const char* text);
