@@ -157,6 +157,8 @@ void BoxerUI_Inputs::trigger(const float *axes, const char *desc, int axes_val, 
 void BoxerUI_Inputs::send(const float com, const float data, const float max, const float min, const float zero)
 {
 	cmd.set(com, data, max, min, zero);
+	cmd.sendMsg();
+	cmd.clrMsg();
 	//cmd.send();
 }
 

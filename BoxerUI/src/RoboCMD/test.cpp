@@ -13,13 +13,12 @@ int main(){
     setServerAddress("184.146.119.106", 8000);
     joinServer();
 
-
     uint8_t name[] = "Ramsey";
     uint8_t sign = '+';
     uint8_t op = '1';
     uint8_t dests[] = "Jeff Mike";
     mutateDestinations(name, '+', '1', dests);
-
+    
     //Network setup stuff end
 
     RoboCMD <float,float,float,float> cmd;
@@ -31,7 +30,6 @@ int main(){
 
     cmd.clrMsg();
     //making and sending 1 message (end)
-
 
 
     //making and sending another message (start)
