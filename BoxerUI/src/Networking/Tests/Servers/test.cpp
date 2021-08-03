@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 //#include "node.cpp"
-#include "server.cpp"
+#include "../../server.cpp"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -65,28 +65,42 @@ int main() {
 }
 */
 
+socklen_t len;
 void addClients() {
-    unsigned char name[10] = "Bob";
+    uint8_t name[] = "0 Bob";
     sockaddr_in Address;
     Address.sin_family = AF_INET;
     Address.sin_port = htons(8000);
     Address.sin_addr.s_addr = INADDR_ANY;
 
-    unsigned char name2[10] = "Ricky";
+    uint8_t name2[] = "0 Ricky";
     sockaddr_in Address2;
     Address2.sin_family = AF_INET;
     Address2.sin_port = htons(8001);
     Address2.sin_addr.s_addr = INADDR_ANY;
 
-    addNode(name, Address);
-    addNode(name2, Address2);
+    uint8_t name3[] = "0 Albert";
+    sockaddr_in Address3;
+    Address3.sin_family = AF_INET;
+    Address3.sin_port = htons(8002);
+    Address3.sin_addr.s_addr = INADDR_ANY;
 
-    addToDict(searchNodes(name), 1);
-    addToDests(searchNodes(name), searchNodes(name2), 1);
+    chooseDirection(name, Address, len);
+    chooseDirection(name2, Address2, len);
+    chooseDirection(name3, Address3, len);
 
-    printNamesInDests(searchNodes(name), 1);
+    printAllNodes();
+    u_int8_t protocol[29] = "+ Bob:1 Ricky Albert \0\0\0";
+    //mutateDestination(protocol, Address);
+
+
+    //printNamesInDests(searchNodes(name), '1');
+    printf("Program finished\n");
 }
 
 int main() {
     addClients();
+    printf("Bob: %s\n", Nodes[0].name);
+    printf("Ricky: %s\n", Nodes[1].name);
+    printf("Albert: %s\n", Nodes[2].name);
 }

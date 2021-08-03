@@ -5,28 +5,40 @@ using namespace std;
 
 int main(){
 
+    //Network setup stuff start
+
+    uint8_t array[20] = "Ramsey";
+    copyName(UI.name, array, 0);
+
+    setServerAddress("184.146.119.106", 8000);
+    joinServer();
+
+    uint8_t name[] = "Ramsey";
+    uint8_t sign = '+';
+    uint8_t op = '1';
+    uint8_t dests[] = "Jeff Mike";
+    mutateDestinations(name, '+', '1', dests);
+    
+    //Network setup stuff end
+
     RoboCMD <float,float,float,float> cmd;
 
+    //making and sending 1 message (start)
     cmd.set(0x01,75,100,-100,0);
 
-    vector<uint8_t> msg = cmd.getMsg();
-
-    for(int i = 0; i<msg.size(); i++){
-
-        printf("%#x ", msg.at(i));
-    }
-
-     printf("\nuint16 of byte 2&3: %d", ((uint16_t)msg.at(2) << 8) | msg.at(3));
+    cmd.sendMsg();
 
     cmd.clrMsg();
+    //making and sending 1 message (end)
 
-    printf("\n\n RECIVER \n\n");
 
-    cmd.setMsg(msg);
+    //making and sending another message (start)
+    cmd.set(0x01,50,100,-100,0);
 
-    printf("Command: %d\n", cmd.getCom());
-    printf("Direction: %d\n", cmd.getDir());
-    printf("Scaller: %f\n", cmd.getScaller());
+    cmd.sendMsg();  
+
+    cmd.clrMsg();   //Clears data in buffer (must be done before another set function, Multi-command yet to be implemented)
+    //making and sending another message (end)
 
 return 0;
 }
