@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../libs/imgui/examples/libs/gl3w/GL/gl3w.h"
+#include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cstdlib>
@@ -8,7 +8,7 @@
 #include <string>
 #include <map>
 #include <cstdlib>
-#include "../src/RoboCMD/RoboCMD.cpp"
+#include "RoboCMD/RoboCMD.cpp"
 #include <sstream>
 #include <string>
 
