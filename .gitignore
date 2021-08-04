@@ -3,12 +3,10 @@
 Debug/
 Release/
 
+opencv-build/*
+opencv/*
+opencv_contrib-master/
 
-
-<<<<<<< HEAD
-
-=======
->>>>>>> a582f15fd00022ab71585e9c6005d95a15a960d9
 BoxerUI/libs/cereal/
 
 #Imgui

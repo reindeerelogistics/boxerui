@@ -20,17 +20,17 @@ enum class Buttons {
 };
 */
 namespace BoxerUI_Inputs {
+
 	//map<Buttons,const char*> button_map;
-RoboCMD <float,float,float,float> cmd;
 
 	std::string split(std::string target, bool dir, char delim);
 	std::map<std::string, std::string> getConfig();
 
 	
 	
-	void button(const unsigned char* buttons, const char* desc, int button_val,  const char* cmd );
-	void joystick(const float* axes, const char* desc, int axes_val, const char* cmd);
-	void trigger(const float* axes, const char* desc, int axes_val, const char* cmd);
+	void button(const unsigned char* buttons, const char* desc, int button_val);
+	void joystick(const float* axes, const char* desc, int axes_val);
+	void trigger(const float* axes, const char* desc, int axes_val);
 	void input();
 	void send(const float com,const float data,const float max,const float min,const float zero);
 	

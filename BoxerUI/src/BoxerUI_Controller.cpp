@@ -1,4 +1,4 @@
-#include "BoxerUI_Controller.h"
+#include "../header/BoxerUI_Controller.h"
 //#include "Networking/socketLibrary.cpp"
 bool CameraStream::show_camera = false;
 

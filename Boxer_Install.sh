@@ -5,13 +5,20 @@ sudo apt update && sudo apt install -y cmake g++ wget unzip
 # Download and unpack sources
 wget -O opencv.zip https://github.com/opencv/opencv/archive/master.zip
 unzip opencv.zip
+
+# Download opencv_contrib extra modules
+git clone https://github.com/opencv/opencv_contrib.git
+
 # Create build directory
 mkdir -p opencv-build && cd opencv-build
+
+# Add opencv_contrib extra modules
+cmake ../opencv-master/ -DOPENCV_EXTRA_MODULES_PATH=/home/username/opencv_contrib/modules ../opencv-master/
 
 # Configure
 # cmake ../opencv-master/ -DBUILD_TESTS=OFF -DBUILD_opencv_python2=OFF -DBUILD_opencv_python3=OFF -DWITH_OPENEXR=OFF -DWITH_1394=OFF -DWITH_EIGEN=OFF -DWITH_OPENGL=ON -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=OFF .
 # cmake ../opencv-master/ -DBUILD_LIST=calib3d,core,features2d,flann,highgui,imgcodecs,imgproc,ts,videoio .
-cmake ../opencv-master/ -DBUILD_LIST=calib3d,core,features2d,flann,highgui,imgcodecs,imgproc,ts,videoio -DBUILD_TESTS=OFF -DBUILD_opencv_python2=OFF -DBUILD_opencv_python3=OFF -DWITH_OPENEXR=OFF -DWITH_1394=OFF -DWITH_EIGEN=OFF -DWITH_OPENGL=ON -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=OFF .
+cmake ../opencv-master/ -DBUILD_LIST=calib3d,core,features2d,flann,highgui,imgcodecs,imgproc,ts,videoio -DBUILD_TESTS=OFF -DBUILD_opencv_python2=OFF -DBUILD_opencv_python3=OFF -DWITH_OPENEXR=OFF -DWITH_1394=OFF -DWITH_EIGEN=OFF -DWITH_OPENGL=ON -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=OFF -DWITH_CUDA=ON .
 
 # print all options
 cmake -L
@@ -27,7 +34,6 @@ make -j4
 mkdir build
 git clone https://github.com/glfw/glfw.git
 
-cd boxer_build
 
 # mkdir ../../build
 # Configure the project. Create the CMakeCache files required for building the project

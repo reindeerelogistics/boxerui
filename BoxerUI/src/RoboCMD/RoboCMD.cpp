@@ -76,7 +76,7 @@ class RoboCMD{
  */
     void format(uint8_t com, t_data data, t_max max, t_min min, t_zero zero){
         switch(com){
-            case 0x00: case 0x01: case 0x02: case 0x03: case 0x04: case 0x05: // cases of form: [direction bit] [scaler]
+            case 0x00 ... 0x05: // cases of form: [direction bit] [scaler]
 
             zero_ = zero;
             dir_ = (data>zero_)? 0:1;
@@ -86,7 +86,7 @@ class RoboCMD{
             com_ = com;
 
             break;
-            case 0x06: case 0x07: case 0x08:
+            case 0x06 ... 0x08:
 
             zero_ = zero;
             data_ = abs(data);

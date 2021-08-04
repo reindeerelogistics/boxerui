@@ -7,8 +7,9 @@
 #include "imgui_impl_opengl3.h"
 #include "imconfig.h"
 
-#include "BoxerUI_Controller.h"
-#include "TextTheme.h"
+//#include "BoxerUI_Controller.h"
+#include "Controller_input_Header.h"
+//#include "TextTheme.h"
 
 
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -185,8 +186,8 @@ int main(int, char**)
 	//x->ContainerAtlas =io.Fonts;
 	//ImFontAtlas* fonts =  io.Fonts;
 
-	TextTheme texttheme;
-	texttheme.setFont();
+	//TextTheme texttheme;
+	//texttheme.setFont();
 
 	//io.Fonts = x->ContainerAtlas;
 	//x->ContainerAtlas->Build();
@@ -254,7 +255,7 @@ int main(int, char**)
 	//Initialize Boxer controller object.
 	//BoxerUI_Model boxerModel = BoxerUI_Model();
 	//BoxerUI_View boxerView;
-	BoxerUI_Controller boxerController = BoxerUI_Controller(); // = BoxerUI_Controller(boxerView, boxerModel);
+	//BoxerUI_Controller boxerController = BoxerUI_Controller(); // = BoxerUI_Controller(boxerView, boxerModel);
 															   //boxerController.payloadRecv();
 
 
@@ -278,24 +279,25 @@ int main(int, char**)
 		// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
 
 		{
-			if (show_index_window)
-			{
-				boxerController.displayIndexWindow(&show_index_window);
-			}
-			else
+			// if (show_index_window)
+			// {
+			// 	boxerController.displayIndexWindow(&show_index_window);
+			// }
+			// else
 			{
 				//SetNextWindowViewport();
 				ImGui::ShowStyleEditor();
 				ImGui::ShowUserGuide();
 				ImGui::ShowFontSelector("Font_selector");
+				BoxerUI_Inputs::input();
 				//ImFont* x = ImGui::GetFont();
 				//ImGui::PushFont(x);
 				//ImGui::Text("Settings");
 				//ImGui::PopFont();
 
-				boxerController.inputHandlerModel();
-				//boxerController.cameraView();
-				boxerController.indexView();
+				// boxerController.inputHandlerModel();
+				// boxerController.cameraView();
+				// boxerController.indexView();
 			}
 		}
 

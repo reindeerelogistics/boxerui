@@ -34,14 +34,15 @@ aux_source_directory("${HEADERS_DIR}/" BOXERUI_HEADERS) # collects all src files
 aux_source_directory("${LIBS_DIR}/imgui/" IMGUI_SOURCES)# collects all src files in the libs/imgui dir. Cannot be impl for backends dir, would attempt at compiling non required
     aux_source_directory("${LIBS_DIR}/imgui/examples/libs/gl3w/GL" IMGUI_EXAMPLES_LIBS_SOURCES)
 aux_source_directory("${LIBS_DIR}/implot/" IMPLOT_SOURCES)
-aux_source_directory("${SOURCES_DIR}" BOXERUI_SOURCES)
+#aux_source_directory("${SOURCES_DIR}" BOXERUI_SOURCES)
 
 set(SOURCE 
     "${BOXERUI_HEADERS}" 
     "${IMGUI_SOURCES}" 
     "${IMGUI_BACKENDS_SOURCES}"
     "${IMGUI_EXAMPLES_LIBS_SOURCES}"
-    "${BOXERUI_SOURCES}"
+    #"${BOXERUI_SOURCES}"
+    ${SOURCES_DIR}/main.cpp
     "${IMPLOT_SOURCES}"
     "BoxerUI/src/RoboCMD/RoboCMD.cpp"
     )
@@ -63,7 +64,8 @@ target_include_directories(BoxerUI_app PUBLIC
     "${IMGUI_BACKENDS_DIR}"
     "${LIBS_DIR}/imgui/examples/libs/gl3w/" 
     "${LIBS_DIR}/implot/" 
-    "${SOURCES_DIR}")
+    "${SOURCES_DIR}"
+    "${WORKSPACE_DIR}")
 
 #Links the libraries to build target set in add_executable command
 target_link_libraries(BoxerUI_app  OpenGL::GL glfw "${OpenCV_LIBS}")# Threads::Threads )

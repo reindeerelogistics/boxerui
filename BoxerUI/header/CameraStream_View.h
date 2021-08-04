@@ -2,6 +2,7 @@
 #include "Boxer.h"
 #include "BoxerUI_View.h"
 #include "Components_View.h"
+#include "Controller_input_Header.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp> //Note: no need to include these headers in the working file. These will be handled automatically by linker
 
