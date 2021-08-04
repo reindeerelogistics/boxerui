@@ -1,5 +1,6 @@
 #include "../header/Controller_input_Header.h"
-using namespace std;
+
+RoboCMD <float,float,float,float> cmd;
 
  int main(void)
  {
@@ -19,16 +20,10 @@ using namespace std;
 
  	glfwTerminate();
 
-<<<<<<< Updated upstream
-// 	glfwTerminate();
-
-// 	return 0;
-// }
-RoboCMD <float,float,float,float> cmd;
-=======
  	return 0;
  }
->>>>>>> Stashed changes
+
+
 std::string BoxerUI_Inputs::split(std::string target, bool dir, char delim)
 {
 
@@ -110,7 +105,7 @@ void BoxerUI_Inputs::button(const unsigned char *buttons, const char *desc, int 
 	}
 }
 
-void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val, const char *cmd)
+void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val)
 {
 	std::string NA = "NA";
 	unsigned int x;
@@ -124,7 +119,7 @@ void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val,
 		if (axes[axes_val] > 0.1 || axes[axes_val] < -0.1)
 		{
 
-			//std::cout << cmd << getConfig().find(desc)->second << " Value " << -axes[axes_val] << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
+			std::cout << desc << getConfig().find(desc)->second << " Value " << -axes[axes_val] << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
 			send(b, -axes[axes_val], 1.0f, -1.0f, 0.0f);
 		}
 		else
@@ -132,14 +127,14 @@ void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val,
 			if (axes[axes_val] > 0.1 || axes[axes_val] < -0.1)
 			{
 
-				//std::cout << cmd << getConfig().find(desc)->second << " Value " << axes[axes_val] << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
+				std::cout << desc << getConfig().find(desc)->second << " Value " << axes[axes_val] << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
 				send(b, axes[axes_val], 1.0f, -1.0f, 0.0f);
 			}
 		}
 	}
 }
 
-void BoxerUI_Inputs::trigger(const float *axes, const char *desc, int axes_val, const char *cmd)
+void BoxerUI_Inputs::trigger(const float *axes, const char *desc, int axes_val)
 {
 	std::string NA = "NA";
 	unsigned int x;
@@ -153,7 +148,7 @@ void BoxerUI_Inputs::trigger(const float *axes, const char *desc, int axes_val, 
 		if (axes[axes_val] > -0.95)
 		{
 
-			//std::cout << cmd << getConfig().find(desc)->second << " Value " << -axes[axes_val] << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
+			std::cout << desc << getConfig().find(desc)->second << " Value " << -axes[axes_val] << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
 			send(b, -axes[axes_val], 1, -1, 0);
 		}
 	}
@@ -165,11 +160,9 @@ void BoxerUI_Inputs::send(const float com, const float data, const float max, co
 	cmd.set(com, data, max, min, zero);
 	cmd.sendMsg();
 	cmd.clrMsg();
-	//cmd.send();
 }
 
-void BoxerUI_Inputs::input()
-{
+void BoxerUI_Inputs::input(){
 	glfwWaitEventsTimeout(0.2);
 	int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
 
@@ -209,10 +202,10 @@ void BoxerUI_Inputs::input()
 		button(buttons, "BL", 13);
 
 		//trigger and joystick
-		joystick(axes, "LJ", 1, "Linear V"); //LJ
-		joystick(axes, "LJ", 2, "Turn");	 //RJ
-		trigger(axes, "LT", 4, "Accerlate"); //LT
-		trigger(axes, "RT", 5, "Break");	 //RT
+		joystick(axes, "LJ", 1); //LJ
+		joystick(axes, "LJ", 2);	 //RJ
+		trigger(axes, "LT", 4); //LT
+		trigger(axes, "RT", 5);	 //RT
 
 		const char *name = glfwGetJoystickName(GLFW_JOYSTICK_1);
 		//cout << name << endl;

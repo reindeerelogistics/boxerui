@@ -1,6 +1,6 @@
 #pragma once
 
-//#include <GL/gl3w.h>
+#include "../libs/imgui/examples/libs/gl3w/GL/gl3w.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cstdlib>
@@ -8,7 +8,7 @@
 #include <string>
 #include <map>
 #include <cstdlib>
-#include "RoboCMD/RoboCMD.cpp"
+#include "../src/RoboCMD/RoboCMD.cpp"
 #include <sstream>
 #include <string>
 
@@ -28,9 +28,9 @@ namespace BoxerUI_Inputs {
 
 	
 	
-	void button(const unsigned char* buttons, const char* desc, int button_val,  const char* cmd );
-	void joystick(const float* axes, const char* desc, int axes_val, const char* cmd);
-	void trigger(const float* axes, const char* desc, int axes_val, const char* cmd);
+	void button(const unsigned char* buttons, const char* desc, int button_val);
+	void joystick(const float* axes, const char* desc, int axes_val);
+	void trigger(const float* axes, const char* desc, int axes_val);
 	void input();
 	void send(const float com,const float data,const float max,const float min,const float zero);
 	
