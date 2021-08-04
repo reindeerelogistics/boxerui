@@ -107,6 +107,7 @@ void BoxerUI_Model::cameraStreamProc(CameraMap& cam_map, cv::VideoCapture& vid, 
 	//cv::cuda::Stream strm;
 	//strm.
 	temp.~Mat();
+	vid.~VideoCapture();
 }
 
 void BoxerUI_Model::print(const char* text)
