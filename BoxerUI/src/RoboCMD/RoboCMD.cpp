@@ -9,7 +9,7 @@
 #include <limits>
 #include <stdlib.h>
 #include <cmath>
-#include "../Networking/uiBackend.cpp"
+#include "../Networking/uiBackend.h"
 
 using namespace std;
 

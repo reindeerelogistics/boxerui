@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.10)
 project(BoxerUI)
 
 #Note: Shared/dynamic libraries are linked at runtime (must be included with obj/binary file), static are linked at compile time (larger file size).
@@ -42,9 +42,9 @@ set(SOURCE
     "${IMGUI_BACKENDS_SOURCES}"
     "${IMGUI_EXAMPLES_LIBS_SOURCES}"
     #"${BOXERUI_SOURCES}"
-    ${SOURCES_DIR}/main.cpp
+    ${SOURCES_DIR}/Controller_input.cpp
     "${IMPLOT_SOURCES}"
-    "BoxerUI/src/RoboCMD/RoboCMD.cpp"
+    "BoxerUI/src/RoboCMD/RoboCMD.h"
     )
 
 #Should print the include dir and link libs.

@@ -1,9 +1,26 @@
-#include "../header/Controller_input_Header.h"
+#include "Controller_input_Header.h"
 
 RoboCMD <float,float,float,float> cmd;
 
  int main(void)
  {
+
+	//Network setup stuff start
+
+    uint8_t array[20] = "Ramsey";
+    copyName(UI.name, array, 0);
+
+    setServerAddress("184.146.119.106", 8000);
+    joinServer();
+
+    uint8_t name[] = "Ramsey";
+    uint8_t sign = '+';
+    uint8_t op = '1';
+    uint8_t dests[] = "Jeff Mike";
+    mutateDestinations(name, '+', '1', dests);
+    
+    //Network setup stuff end
+
  	//library
  	if (!glfwInit())
  	{
@@ -66,18 +83,17 @@ std::string BoxerUI_Inputs::split(std::string target, bool dir, char delim)
 }
 std::map<std::string, std::string> BoxerUI_Inputs::getConfig()
 {
-	std::string filename = "Confige.txt";
-	std::ifstream input;
 
-	input.open(filename);
+	std::map<std::string, std::string> config;
+	std::string line;
+	std::ifstream input ("/home/ramsey/Documents/GitHub/BoxerUI/BoxerUI/src/Confige.txt");
 
 	if (!input.is_open())
 	{
 		std::cout << "file is occupied" << std::endl;
+		//exit(-1);
 	}
 
-	std::map<std::string, std::string> config;
-	std::string line;
 	while (getline(input, line))
 	{
 
@@ -85,6 +101,7 @@ std::map<std::string, std::string> BoxerUI_Inputs::getConfig()
 	}
 
 	input.close();
+
 	return config;
 }
 void BoxerUI_Inputs::button(const unsigned char *buttons, const char *desc, int button_val){
