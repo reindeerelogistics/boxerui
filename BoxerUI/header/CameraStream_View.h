@@ -31,7 +31,7 @@ using CameraMap = std::map <int, std::queue<cv::Mat >>;
 //Preprocessor. Checks if the symbol has been not bee ndefined. Use #pragma, it includes the symbol once
 
 #define BUFFER_SIZE 5
-#define NUM_CAMERAS 1
+#define NUM_CAMERAS 2
 #define FREEZE_FRAME_IMG (NUM_CAMERAS+1)
 
 class CameraStream : public Components_View
@@ -41,9 +41,7 @@ class CameraStream : public Components_View
 
 	cv::Mat freeze_frame_mat;
 
-	void dispFrame(cv::Mat* frame);
-
-	void BindCVMat2GLTexture(cv::Mat* disp_frame);
+	void BindCVMat2GLTexture(int* context);
 
 	//destroy the frame & cap objects then release from memory
 	void destroyCamera(int *index);

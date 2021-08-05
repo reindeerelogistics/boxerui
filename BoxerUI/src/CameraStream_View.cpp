@@ -5,38 +5,21 @@ bool CameraStream::enhance = false;
 //std::shared_ptr<CameraMap> CameraStream::payload_frames = std::make_shared<CameraMap>() ;
 CameraMap CameraStream::payload_frames = {};
 
-void CameraStream::dispFrame(cv::Mat *frame)
-{
-	//creates a buffer of 5 frames before binding cv::Mat type to GLTexture
-	cv::Mat frames_buf[BUFFER_SIZE];
-	//GLuint my_frame_texture;
-	for (int i = 0; i < BUFFER_SIZE; i++)
-	{
-		frames_buf[i] = *frame;
-		(*frame).~Mat();
-	}
-	for (int i = 0; i < 5; i++)
-	{
-		cv::Mat disp_frame = cv::Mat(100, 100, CV_64FC1);
-
-		disp_frame = frames_buf[i];
-		BindCVMat2GLTexture(&disp_frame); // , & my_frame_texture);
-
-		disp_frame.release();
-	}
-}
-
-void CameraStream::BindCVMat2GLTexture(cv::Mat* disp_frame)
+void CameraStream::BindCVMat2GLTexture(int* context)
 {
 	ImGuiIO &io = ImGui::GetIO();
 	GLuint image_texture;
-	if ((*disp_frame).empty())
+	
+	cv::Mat disp_frame = payload_frames[*context].front();
+	
+
+	if ((disp_frame).empty())
 	{
 		std::cout << "image empty" << std::endl;
 	}
 	else
 	{
-		cv::cvtColor(*disp_frame, *disp_frame, cv::COLOR_BGR2RGBA);
+		cv::cvtColor(disp_frame,disp_frame, cv::COLOR_BGR2RGBA);
 
 		glGenTextures(1, &image_texture);
 		glBindTexture(GL_TEXTURE_2D, image_texture);
@@ -53,26 +36,26 @@ void CameraStream::BindCVMat2GLTexture(cv::Mat* disp_frame)
 		glTexImage2D(GL_TEXTURE_2D,		 // Type of texture
 			0,					 // Pyramid level (for mip-mapping) - 0 is the top level
 			GL_RGBA,			 // colour format to convert to
-			(*disp_frame).cols,	 // Image width
-			(*disp_frame).rows,	 // Image height
+			(disp_frame).cols,	 // Image width
+			(disp_frame).rows,	 // Image height
 			0,					 // Border width in pixels (can either be 1 or 0)
 			GL_RGBA,			 // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
 			GL_UNSIGNED_BYTE,	 // Image data type
-			(*disp_frame).data); // The actual image data itself
+			(disp_frame).data); // The actual image data itself
 		ImGui::Text("pointer = %p", image_texture);
-		ImGui::Text("size = %d x %d", (*disp_frame).cols, (*disp_frame).rows);
+		ImGui::Text("size = %d x %d", (disp_frame).cols, (disp_frame).rows);
 
 		ImTextureID my_tex_id = reinterpret_cast<void*>(static_cast<intptr_t>(image_texture));
 		float my_tex_w = (float)io.Fonts->TexWidth;
 		float my_tex_h = (float)io.Fonts->TexHeight;
 		{
-			ImGui::Text("%.0fx%.0f", (*disp_frame).cols, (float)(*disp_frame).rows);
+			ImGui::Text("%.0fx%.0f", (disp_frame).cols, (float)(disp_frame).rows);
 			ImVec2 pos = ImGui::GetCursorScreenPos();
 			ImVec2 uv_min = ImVec2(0.0f, 0.0f);																						   // Top-left
 			ImVec2 uv_max = ImVec2(1.0f, 1.0f);																						   // Lower-right
 			ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);																		   // No tint
 			ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f);																		   // 50% opaque white
-			ImGui::Image(my_tex_id, ImVec2((float)(*disp_frame).cols, (float)(*disp_frame).rows), uv_min, uv_max, tint_col, border_col); //reinterpret_cast<ImTextureID*>(my_frame_texture)
+			ImGui::Image(my_tex_id, ImVec2((float)(disp_frame).cols, (float)(disp_frame).rows), uv_min, uv_max, tint_col, border_col); //reinterpret_cast<ImTextureID*>(my_frame_texture)
 
 			if (ImGui::IsItemHovered())
 			{//Tooltip feature that will allow zooming in on mouse hover
@@ -85,22 +68,22 @@ void CameraStream::BindCVMat2GLTexture(cv::Mat* disp_frame)
 				{
 					region_x = 0.0f;
 				}
-				else if (region_x > (*disp_frame).cols - region_sz)
+				else if (region_x > (disp_frame).cols - region_sz)
 				{
-					region_x = (*disp_frame).cols - region_sz;
+					region_x = (disp_frame).cols - region_sz;
 				}
 				if (region_y < 0.0f)
 				{
 					region_y = 0.0f;
 				}
-				else if (region_y > (float)(*disp_frame).rows - region_sz)
+				else if (region_y > (float)(disp_frame).rows - region_sz)
 				{
-					region_y = (float)(*disp_frame).rows - region_sz;
+					region_y = (float)(disp_frame).rows - region_sz;
 				}
 				ImGui::Text("Min: (%.2f, %.2f)", region_x, region_y);
 				ImGui::Text("Max: (%.2f, %.2f)", region_x + region_sz, region_y + region_sz);
-				ImVec2 uv0 = ImVec2((region_x) / (*disp_frame).cols, (region_y) / (float)(*disp_frame).rows);
-				ImVec2 uv1 = ImVec2((region_x + region_sz) / (*disp_frame).cols, (region_y + region_sz) / (float)(*disp_frame).rows);
+				ImVec2 uv0 = ImVec2((region_x) / (disp_frame).cols, (region_y) / (float)(disp_frame).rows);
+				ImVec2 uv1 = ImVec2((region_x + region_sz) / (disp_frame).cols, (region_y + region_sz) / (float)(disp_frame).rows);
 				ImGui::Image(my_tex_id, ImVec2(region_sz * zoom, region_sz * zoom), uv0, uv1, tint_col, border_col);
 				ImGui::EndTooltip();
 			}
@@ -410,12 +393,20 @@ void CameraStream::destroyCamera(int* index)
 #else
 void CameraStream::setCamContext(int context)
 {
-	if (payload_frames[context].size()>10)
+	if (payload_frames[context].size()>1 && payload_frames[context].size()<100)
 	{
-
-	BindCVMat2GLTexture(&payload_frames[context].front());
-	payload_frames[context].pop();
+	BindCVMat2GLTexture(&context);
+	//payload_frames[context].pop();
 	}
+	else
+	{
+		ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 0.5f), "Buffering...");
+	}
+
+	/*if (payload_frames[context].size()==0)
+	{
+		std::cout << "Empty queue" << std::endl;
+	}*/
 }
 
 #endif

@@ -64,9 +64,11 @@ std::mutex m;
 void BoxerUI_Model::cameraStreamProc(CameraMap& cam_map, cv::VideoCapture& vid, int cam_index, bool& cam_stream)
 { // Collect frames from network here and add send to controller to add onto frame buffers in CameraStream::streamCamera()
 
-	cv::Mat temp;
-	//cv::cuda::printCudaDeviceInfo(0);
-	//cv::cuda::GpuMat temp_gpu(temp);
+	//, output;
+	cv::Mat input;
+	std::cout << "Cuda Device info: " << std::endl;
+	cv::cuda::printCudaDeviceInfo(0);
+	cv::cuda::GpuMat temp_gpu;
 	//cv::cuda::
 
 	{//If camera is open populate the payload_frames queue
@@ -75,30 +77,31 @@ void BoxerUI_Model::cameraStreamProc(CameraMap& cam_map, cv::VideoCapture& vid, 
 			std::cout << "Camera Opened: " << cam_index << std::endl;
 			while (cam_stream)
 			{
-				//temp_gpu.upload(temp);
-				//if (m.try_lock())
 				{
 					
-					(vid).read(temp); 
-					//if (!temp.empty())
+
+					
+					//cv::cvtColor(input, output, cv::COLOR_BGR2GRAY);
+					//temp_gpu.upload(input);
+					//cv::cuda::bilateralFilter(output, input, 30, 100, 100);
+					//temp_gpu.download(output);
+					if (!cam_map[cam_index].empty())
 					{
 
-					(cam_map)[cam_index].push(temp);
+					cam_map[cam_index].pop();
 					}
-					//m.unlock();
-					
+
+					while (cam_map[cam_index].size()<10)
+					{
+						(vid).read(input);
+					(cam_map)[cam_index].emplace(input);
+
+input.~Mat();
+					}
+
+				//temp_gpu.download(input);
+
 				}
-				//else { std::this_thread::sleep_for(10ms);  
-				
-				//std::cout << "Random string" << std::endl;
-
-				//}
-
-
-
-
-				//temp_gpu.download(temp);
-
 
 			}
 
@@ -106,7 +109,7 @@ void BoxerUI_Model::cameraStreamProc(CameraMap& cam_map, cv::VideoCapture& vid, 
 	}
 	//cv::cuda::Stream strm;
 	//strm.
-	temp.~Mat();
+	
 	vid.~VideoCapture();
 }
 
