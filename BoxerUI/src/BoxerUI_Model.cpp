@@ -65,7 +65,7 @@ void BoxerUI_Model::cameraStreamProc(CameraMap& cam_map, cv::VideoCapture& vid, 
 { // Collect frames from network here and add send to controller to add onto frame buffers in CameraStream::streamCamera()
 
 	//, output;
-	cv::Mat input;
+	cv::Mat input, output;
 	std::cout << "Cuda Device info: " << std::endl;
 	cv::cuda::printCudaDeviceInfo(0);
 	cv::cuda::GpuMat temp_gpu;
@@ -78,9 +78,10 @@ void BoxerUI_Model::cameraStreamProc(CameraMap& cam_map, cv::VideoCapture& vid, 
 			while (cam_stream)
 			{
 				{
-					
 
-					
+
+
+
 					//cv::cvtColor(input, output, cv::COLOR_BGR2GRAY);
 					//temp_gpu.upload(input);
 					//cv::cuda::bilateralFilter(output, input, 30, 100, 100);
@@ -88,18 +89,21 @@ void BoxerUI_Model::cameraStreamProc(CameraMap& cam_map, cv::VideoCapture& vid, 
 					if (!cam_map[cam_index].empty())
 					{
 
-					cam_map[cam_index].pop();
+						cam_map[cam_index].pop();
 					}
 
-					while (cam_map[cam_index].size()<10)
+					while (cam_map[cam_index].size() < 10)
 					{
 						(vid).read(input);
-					(cam_map)[cam_index].emplace(input);
+						temp_gpu.upload(input);
+						//cv::cuda::bilateralFilter(output, input, 30, 100, 100);
+						temp_gpu.download(output);
+						(cam_map)[cam_index].emplace(output);
 
-input.~Mat();
+
 					}
 
-				//temp_gpu.download(input);
+					//temp_gpu.download(input);
 
 				}
 
@@ -109,7 +113,8 @@ input.~Mat();
 	}
 	//cv::cuda::Stream strm;
 	//strm.
-	
+	input.~Mat();
+	output.~Mat();
 	vid.~VideoCapture();
 }
 
