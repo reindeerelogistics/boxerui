@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "../../uiBackend.cpp"
+#include "uiBackend.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>

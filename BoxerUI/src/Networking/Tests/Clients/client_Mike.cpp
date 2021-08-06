@@ -1,4 +1,4 @@
-#include "../../../RoboCMD/RoboCMD.cpp"
+#include "../../../RoboCMD/RoboCMD.h"
 
 int main() {
     struct sockaddr_in Address;

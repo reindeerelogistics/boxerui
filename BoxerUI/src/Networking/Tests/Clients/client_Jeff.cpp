@@ -1,4 +1,4 @@
-#include "../../../RoboCMD/RoboCMD.cpp"
+#include "../../../RoboCMD/RoboCMD.h"
 
 int main() {
     uint8_t array[20] = "Jeff";
