@@ -11,6 +11,7 @@ void CameraStream::BindCVMat2GLTexture(int* context)
 	GLuint image_texture;
 	
 	cv::Mat disp_frame = payload_frames[*context].front();
+    
 	
 
 	if ((disp_frame).empty())
@@ -258,12 +259,12 @@ const char filePath[] = "/home/fof/catkin_ws/";
 
 //This was way to simple for the time I put in. FML
 void getFile(char* file, const char* name) {
-        std::strcat(file, filePath);
-        std::strcat(file, name);
+        //std::strcat_s(file, filePath);
+        //std::strcat_s(file, name);
 }
 
-void CameraStream::takeScreenShots(const char* name) {
-        char file1[100] = {};
+void CameraStream::takeScreenshot() {
+    const char* name; char file1[100] = {};
         getFile(file1, name);
         
         cv::imwrite(file1, freeze_frame_mat); //have not tested with "freeze _frame_mat"   

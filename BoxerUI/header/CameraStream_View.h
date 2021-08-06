@@ -25,11 +25,6 @@
 
 using CameraMap = std::map <int, std::queue<cv::Mat >>;
 
-//#ifndef CAMERASTREAM_VIEW_H_
-//...
-//#endif // !CAMERASTREAM_VIEW_H_
-//Preprocessor. Checks if the symbol has been not bee ndefined. Use #pragma, it includes the symbol once
-
 #define BUFFER_SIZE 5
 #define NUM_CAMERAS 2
 #define FREEZE_FRAME_IMG (NUM_CAMERAS+1)
@@ -69,7 +64,6 @@ public:
 	static CameraMap payload_frames;
 	
 	std::future<CameraMap> cam_futures;
-
 
 	std::vector<std::thread> cam_threads;
 

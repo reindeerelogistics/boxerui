@@ -36,13 +36,9 @@ class BoxerUI_Controller
 	
 private:
 	
-	BoxerUI_View boxerView;// = BoxerUI_View(boxerfonts);
+	BoxerUI_View boxerView;
 	BoxerUI_Model boxerModel;
 	CameraStream camera_stream;
-#ifndef _WIN32
-struct sockaddr_in serveraddr;
-	int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-#endif // !_WIN32
 
 public:	
 
