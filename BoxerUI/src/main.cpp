@@ -7,8 +7,9 @@
 #include "imgui_impl_opengl3.h"
 #include "imconfig.h"
 
-#include "BoxerUI_Controller.h"
-#include "TextTheme.h"
+//#include "BoxerUI_Controller.h"
+#include "Controller_input_Header.h"
+//#include "TextTheme.h"
 
 
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -190,7 +191,7 @@ int main(int, char**)
 	//Initialize Boxer controller object.
 	//BoxerUI_Model boxerModel = BoxerUI_Model();
 	//BoxerUI_View boxerView;
-	BoxerUI_Controller boxerController = BoxerUI_Controller(); // = BoxerUI_Controller(boxerView, boxerModel);
+	//BoxerUI_Controller boxerController = BoxerUI_Controller(); // = BoxerUI_Controller(boxerView, boxerModel);
 															   //boxerController.payloadRecv();
 
 
