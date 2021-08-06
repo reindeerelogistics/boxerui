@@ -1,4 +1,5 @@
 #include "Controller_input_Header.h"
+#include <ctime>
 
 RoboCMD <float,float,float,float> cmd;
 
@@ -16,7 +17,7 @@ RoboCMD <float,float,float,float> cmd;
     uint8_t name[] = "Ramsey";
     uint8_t sign = '+';
     uint8_t op = '1';
-    uint8_t dests[] = "Jeff Mike";
+    uint8_t dests[] = "Ricky Robot1";
     mutateDestinations(name, '+', '1', dests);
     
     //Network setup stuff end
@@ -122,34 +123,46 @@ void BoxerUI_Inputs::button(const unsigned char *buttons, const char *desc, int 
 	}
 }
 
-void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val)
-{
+void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val){
+
+	static std::clock_t start = std::clock();
+	static bool nonZerSent = false;
+
 	std::string NA = "NA";
 	unsigned int x;
 	std::stringstream ss;
 	ss << std::hex << getConfig().find(desc)->second;
 	ss >> x;
 	float b = (float)x;
-	if (getConfig().find(desc)->second != NA)
-	{
 
-		if (axes[axes_val] > 0.1 || axes[axes_val] < -0.1)
-		{
+	if (getConfig().find(desc)->second != NA){
+
+		if (axes[axes_val] > 0.1 || axes[axes_val] < -0.1){
 
 			std::cout << desc << getConfig().find(desc)->second << " Value " << -axes[axes_val] << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
 			send(b, -axes[axes_val], 1.0f, -1.0f, 0.0f);
-		}
-		else
-		{
-			/*if (axes[axes_val] > 0.1 || axes[axes_val] < -0.1)
-			{
+			nonZerSent = true;
+		
+		}else{
+			if(nonZerSent){
+				send(b, 0, 1.0f, -1.0f, 0.0f);
+				std::cout << desc << getConfig().find(desc)->second << " Value " << 0 << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
+				start = std::clock();
+			}else{
 
-				std::cout << desc << getConfig().find(desc)->second << " Value " << axes[axes_val] << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl; // range -1-1
-				send(b, axes[axes_val], 1.0f, -1.0f, 0.0f);
-			}*/
-		}
-	}
-}
+				if( (std::clock() - start)/CLOCKS_PER_SEC >= 5 ){
+					std::cout << desc << getConfig().find(desc)->second << " Value " << 0 << " Max " << 1 << " Min " << -1 << " Zero " << 0 << std::endl;
+					send(b, 0, 1.0f, -1.0f, 0.0f);
+					start = std::clock();
+				}
+
+			}//ELSE: nonZerSent
+
+		}//ELSE: axes[axes_val] > 0.1 || axes[axes_val] < -0.1
+
+	}//getConfig().find(desc)->second != NA
+
+}//BoxerUI_Inputs::joystick
 
 void BoxerUI_Inputs::trigger(const float *axes, const char *desc, int axes_val)
 {
