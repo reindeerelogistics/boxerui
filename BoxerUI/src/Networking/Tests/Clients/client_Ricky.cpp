@@ -24,7 +24,13 @@ int main() {
 
     setServerAddress("0.0.0.0", 8000);
     joinServer();
-    recvFromClient();
+    std::vector<uint8_t> vec = recvFromClient();
+
+    int i = 0;
+    while(i < vec.size()) {
+        printf("Val %d is %d\n", i, vec[i]);
+        i += 1;
+    }
 }
 
 
