@@ -2,12 +2,13 @@
 .vscode/*
 Debug/
 Release/
+out/*
 
 opencv/*
 opencv-build/*
 opencv_contrib-master/*
 
-BoxerUI/libs/cereal/*
+BoxerUI/libs/cereal/
 
 #Imgui
 BoxerUI/libs/imgui/*
