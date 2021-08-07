@@ -4,6 +4,9 @@ Debug/
 Release/
 out/*
 
+opencv/*
+opencv-build/*
+opencv_contrib-master/*
 
 BoxerUI/libs/cereal/
 

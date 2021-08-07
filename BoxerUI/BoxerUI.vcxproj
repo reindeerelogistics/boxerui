@@ -121,15 +121,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\imgui\examples\libs\gl3w;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;C:\Program Files\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\imgui\examples\libs\gl3w;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(SolutionDir)opencv\build\include;$(SolutionDir)opencv\build\x64\vc15\bin;$(SolutionDir)opencv\build\x64\vc15\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\glfw;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;C:\Program Files\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;opencv_world451d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\glfw;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(SolutionDir)opencv\build\x64\vc15\lib;$(SolutionDir)opencv\build\x64\vc15\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;opencv_world453d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
@@ -147,15 +147,15 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\imgui\examples\libs\gl3w;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;C:\Program Files\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\imgui\examples\libs\gl3w;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(SolutionDir)opencv\sources\out\install\x64-release\include;$(SolutionDir)opencv\sources\out\install\x64-release\x64\vc16\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\glfw;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;C:\Program Files\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;opencv_world451.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\glfw;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(SolutionDir)opencv\sources\out\install\x64-release\x64\vc16\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;opencv_world453.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -176,6 +176,7 @@
     <ClCompile Include="src\BoxerUI_View.cpp" />
     <ClCompile Include="src\CameraStream_View.cpp" />
     <ClCompile Include="src\Components_View.cpp" />
+    <ClCompile Include="src\Controller_input.cpp" />
     <ClCompile Include="src\Inputs_Model.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\TextTheme.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="header\BoxerUI_View.h" />
     <ClInclude Include="header\CameraStream_View.h" />
     <ClInclude Include="header\Components_View.h" />
+    <ClInclude Include="header\Controller_input_Header.h" />
     <ClInclude Include="header\Inputs_Model.h" />
     <ClInclude Include="header\TextTheme.h" />
     <ClInclude Include="libs\imgui\backends\imgui_impl_glfw.h" />

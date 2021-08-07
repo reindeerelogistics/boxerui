@@ -4,17 +4,15 @@
  * @brief a package to deal with encoding and decoding command messages for a robot. Protocol defined externally.
  * @version 0.1 alpha
  * @date 2021-07-28
- *
  */
 
-#include <vector>
 #include <limits>
 #include <stdlib.h>
-#include <iostream>
 #include <cmath>
-#include <math.h>
+#include "uiBackend.cpp"
 
 using namespace std;
+
 
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
@@ -53,7 +51,9 @@ class RoboCMD{
     t_zero zero_ = 0;
 
     //*************************//
-
+/**
+ * Resets all class variables to defaults. -1 for com and direction, 0 for all else. 
+ */
     void clrTmp(){
         com_= -1;
         val_ = 0;
@@ -64,9 +64,19 @@ class RoboCMD{
         zero_ = 0;
     }
 
+
+/**
+ * A function to set the class variables.
+ * 
+ * @param com command code to set in class variables. Defined in external protocol.
+ * @param data generic data that will later be rescalled. Type defined in class template.
+ * @param max maximum that will later be used for rescalling. Type defined in class template.
+ * @param min minimum that will later be used for rescalling. Type defined in class template.
+ * @param zero zero that will later be used for rescalling. Type defined in class template.
+ */
     void format(uint8_t com, t_data data, t_max max, t_min min, t_zero zero){
         switch(com){
-            case 0x00: case 0x01: case 0x02: case 0x03: case 0x04: case 0x05: // cases of form: [direction bit] [scaler]
+            case 0x00 ... 0x05: // cases of form: [direction bit] [scaler]
 
             zero_ = zero;
             dir_ = (data>zero_)? 0:1;
@@ -76,7 +86,7 @@ class RoboCMD{
             com_ = com;
 
             break;
-            case 0x06: case 0x07: case 0x08:
+            case 0x06 ... 0x08:
 
             zero_ = zero;
             data_ = abs(data);
@@ -88,6 +98,8 @@ class RoboCMD{
 
         }//switch (com)
     }//format(uint8_t com, t_data data, t_max max, t_min min, t_zero zero)
+
+
 
     void genMsg(){
 
@@ -247,10 +259,10 @@ class RoboCMD{
     }//set(uint8_t com, t_data data)
 
 
-/***** DEBUG *****
+//***** DEBUG *****
     void disMsg(){
         
-        printf("Total message size: %d\n", msg_.size());
+        printf("Total message size: %d\n", (int) msg_.size());
 
     for(int i = 0; i<msg_.size(); i++){
 
@@ -294,7 +306,7 @@ class RoboCMD{
 
     /**
      * generate scaller representation of value stored in val_. 
-     * generates scaller as float with precision defined in "roundPlace". default accuracy of %0.1 (4 decimal places). 
+     * generates scaller as float with precision defined in "roundPlace". default accuracy of %0.01 (4 decimal places). 
      * @return returns scaller as float. 
      */ 
     float getScaller(){
@@ -334,6 +346,10 @@ class RoboCMD{
      */ 
     char getCom(){
         return com_;
+    }
+
+    void sendMsg(){
+        sendToClients(&(*msg_.begin()), msg_.size(),'1' );
     }
 
 };

@@ -2,16 +2,16 @@
 #include "Boxer.h"
 #include "BoxerUI_View.h"
 #include "Components_View.h"
+#include "Controller_input_Header.h"
 #include <opencv2/opencv.hpp>
-#include <opencv2/highgui/highgui.hpp> //Note: no need to include these headers in the working file. These will be handled automatically by linker
 
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 
 #include <future>
-
 #include <map>
-#include <vector>
+#include <queue>
+
 
 #ifdef _WIN32
 
@@ -23,26 +23,20 @@
 #include <signal.h>
 #endif
 
-using CameraMap = std::map <int, std::vector<cv::Mat >>;
-
-//#ifndef CAMERASTREAM_VIEW_H_
-//...
-//#endif // !CAMERASTREAM_VIEW_H_
-//Preprocessor. Checks if the symbol has been not bee ndefined. Use #pragma, it includes the symbol once
+using CameraMap = std::map <int, std::queue<cv::Mat >>;
 
 #define BUFFER_SIZE 5
-#define NUM_CAMERAS 4
+#define NUM_CAMERAS 2
 #define FREEZE_FRAME_IMG (NUM_CAMERAS+1)
 
 class CameraStream : public Components_View
 {
 
-private:
 	static bool freeze_frame, enhance;
 
-	void dispFrame(cv::Mat* frame);
+	cv::Mat freeze_frame_mat;
 
-	void BindCVMat2GLTexture(cv::Mat* disp_frame);
+	void BindCVMat2GLTexture(int* context);
 
 	//destroy the frame & cap objects then release from memory
 	void destroyCamera(int *index);
@@ -57,16 +51,21 @@ private:
 
 	void swapCamViews();
 
+	void takeScreenshot();
+
 public:
-	std::vector<cv::VideoCapture> vid_captures = std::vector<cv::VideoCapture>(5);
+	std::vector<cv::VideoCapture> vid_captures = std::vector<cv::VideoCapture>(NUM_CAMERAS);
 	
 	cv::Mat frame= cv::Mat(100, 100, CV_8UC4);
 
 	static bool show_camera;
 
+	//static std::shared_ptr<CameraMap> payload_frames;
 	static CameraMap payload_frames;
 	
 	std::future<CameraMap> cam_futures;
+
+	std::vector<std::thread> cam_threads;
 
 	/** @brief This method establishes the properties of each individual camera based on its initialization from initCamera() method
 	@param camera we are receiving stream from (indicated as an integer value),
@@ -75,4 +74,5 @@ public:
 	**/
 	void initCamera();
 
+	
 };
