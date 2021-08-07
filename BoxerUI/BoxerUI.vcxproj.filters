@@ -93,6 +93,9 @@
     <ClCompile Include="src\Components_View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Controller_input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\imgui\imconfig.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="header\Components_View.h">
       <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Controller_input_Header.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

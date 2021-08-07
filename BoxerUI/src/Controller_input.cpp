@@ -1,27 +1,27 @@
-#include "../header/Controller_input_Header.h"
+#include "Controller_input_Header.h"
 
 RoboCMD <float,float,float,float> cmd;
 
- int main(void)
- {
- 	//library
- 	if (!glfwInit())
- 	{
-		return -1;
- 	}
+ //int main(void)
+ //{
+ //	//library
+ //	if (!glfwInit())
+ //	{
+	//	return -1;
+ //	}
 
- 	while (true)
- 	{
+ //	while (true)
+ //	{
 
- 		BoxerUI_Inputs::input();
- 		glfwPollEvents();
+ //		BoxerUI_Inputs::input();
+ //		glfwPollEvents();
 
- 	}
+ //	}
 
- 	glfwTerminate();
+ //	glfwTerminate();
 
- 	return 0;
- }
+ //	return 0;
+ //}
 
 
 std::string BoxerUI_Inputs::split(std::string target, bool dir, char delim)

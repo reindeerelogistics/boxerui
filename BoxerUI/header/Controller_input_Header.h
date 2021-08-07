@@ -8,7 +8,7 @@
 #include <string>
 #include <map>
 #include <cstdlib>
-#include "RoboCMD/RoboCMD.cpp"
+//#include "RoboCMD/RoboCMD.cpp"
 #include <sstream>
 #include <string>
 

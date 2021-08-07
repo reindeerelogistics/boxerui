@@ -98,7 +98,7 @@ ImGuiIO& io = ImGui::GetIO();
     if (ImGui::Button("Freeze Frame"))
     { //if freeze frame is clicked. capture the current frame...
         freeze_frame = !freeze_frame;
-        freeze_frame_mat = payload_frames[0].front();
+        freeze_frame_mat = payload_frames[*camera].front();
         //TODO: clone the main context frame to freeze frame then display
         //cameras[*camera].retrieve(frames[FREEZE_FRAME_IMG]);
     }
@@ -108,20 +108,21 @@ ImGuiIO& io = ImGui::GetIO();
         //You can use the "##" or "###" markers to use the same label with different id, or same id with different label.See documentation at the top of this file.
         ImGui::BeginChild("Camera_Viewport##cam_viewport", ImVec2((ImGui::GetCurrentWindow()->ContentSize.x) * 0.75f, 0.0f), true);
 
-        //if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootWindow)) {
-        //  io.WantCaptureKeyboard = false;
-        //  //input_type = InputType::Gamepad;
-        //  //Dispatch inputs to Boxer_Inputs
-        //  std::cout << "Window in focus" << std::endl;
-        //}
-        //else {
+        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootWindow)) {
+          io.WantCaptureKeyboard = false;
+          //input_type = InputType::Gamepad;
+          //Dispatch inputs to BoxerUI_Inputs
+         // std::cout << "Window in focus" << std::endl;
+          BoxerUI_Inputs::input();
+        }
+        else {
 
-        //  io.WantCaptureKeyboard = true;
-        //  //Dispatch Inputs to BoxerUI_Inputs
-        //  std::cout << "Window not in focus" << std::endl;
-        //}
+          io.WantCaptureKeyboard = true;
+          //Dispatch Inputs to Inputs_Model
+         // std::cout << "Window not in focus" << std::endl;
+        }
 
-        freeze_frame ? freezeFrame() : setCamContext();
+        freeze_frame ? freezeFrame() : setCamContext(*camera);
         ImGui::EndChild();
         ImGui::SameLine();
     }
