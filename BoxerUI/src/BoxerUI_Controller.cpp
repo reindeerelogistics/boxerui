@@ -30,12 +30,12 @@ void BoxerUI_Controller::cameraPayloadRecv()
 	//camera_stream.setCamContext();
 	//boxerModel.cameraStreamProc();
 }
-void BoxerUI_Controller::decomposePayload(Json::Value jsonPayload)
-{
-	// converts json to model data attributes
-	boxerModel.setBattery(3);	  //jsonPayload["Battery"].asDouble());
-	boxerModel.setTemperature(5); //jsonPayload["Temperature"].asDouble());
-}
+//void BoxerUI_Controller::decomposePayload(Json::Value jsonPayload)
+//{
+//	// converts json to model data attributes
+//	boxerModel.setBattery(3);	  //jsonPayload["Battery"].asDouble());
+//	boxerModel.setTemperature(5); //jsonPayload["Temperature"].asDouble());
+//}
 void BoxerUI_Controller::displayIndexWindow(bool* boxer_analytics)
 {											
 	boxerView.indexwindow(boxer_analytics); 

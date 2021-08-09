@@ -3,10 +3,14 @@ project(BoxerUI)
 
 #Note: Shared/dynamic libraries are linked at runtime (must be included with obj/binary file), static are linked at compile time (larger file size).
 
+IF (WIN32)
+  # set stuff for windows
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/opencv/sources/out/install/x64-Release/include")
+ELSE()
+  # set stuff for other systems
 find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
-    set(BUILD_SHARED_LIBS OFF)
-    set(OpenCV_STATIC ON)#just to make sure 
-
+ #   set(BUILD_SHARED_LIBS OFF)
+  #  set(OpenCV_STATIC ON)#just to make sure 
 find_package(OpenGL REQUIRED)
     # find_package(glfw3 3.3.2 REQUIRED) #for shared library linking. Use "sudo apt-get install libglfw3-dev" to download the shared lib
 
@@ -17,58 +21,17 @@ find_package(OpenGL REQUIRED)
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw/" "${CMAKE_CURRENT_SOURCE_DIR}/glfw-build/")# Runs the CMakeLists.txt in source_dir and places the output in binary_dir
+ENDIF()
+
 
 #Source dir and files variables
 set(WORKSPACE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/BoxerUI/")#This is the dir to the root of the project. !Important
-set(HEADERS_DIR "${WORKSPACE_DIR}/header")
-set(LIBS_DIR "${WORKSPACE_DIR}/libs")
-set(SOURCES_DIR "${WORKSPACE_DIR}/src")
 
-# Set path variable to sources that will be used rather than collecting all the backend sources including ones not in use
-set(IMGUI_BACKENDS_DIR "${LIBS_DIR}/imgui/backends/")
-    set(IMGUI_BACKENDS_SOURCES "${IMGUI_BACKENDS_DIR}imgui_impl_glfw.cpp" "${IMGUI_BACKENDS_DIR}imgui_impl_opengl3.cpp")
-
-# Use aux_source_directory() to get all source files in the specified directory and apply to a variable. 
-    # Does not easily reflect new files. Requires further investigation
-aux_source_directory("${HEADERS_DIR}/" BOXERUI_HEADERS) # collects all src files in the header dir
-aux_source_directory("${LIBS_DIR}/imgui/" IMGUI_SOURCES)# collects all src files in the libs/imgui dir. Cannot be impl for backends dir, would attempt at compiling non required
-    aux_source_directory("${LIBS_DIR}/imgui/examples/libs/gl3w/GL" IMGUI_EXAMPLES_LIBS_SOURCES)
-aux_source_directory("${LIBS_DIR}/implot/" IMPLOT_SOURCES)
-#aux_source_directory("${SOURCES_DIR}" BOXERUI_SOURCES)
-
-set(SOURCE 
-    "${BOXERUI_HEADERS}" 
-    "${IMGUI_SOURCES}" 
-    "${IMGUI_BACKENDS_SOURCES}"
-    "${IMGUI_EXAMPLES_LIBS_SOURCES}"
-    #"${BOXERUI_SOURCES}"
-    ${SOURCES_DIR}/main.cpp
-    "${IMPLOT_SOURCES}"
-    "BoxerUI/src/RoboCMD/RoboCMD.cpp"
-    )
-
-#Should print the include dir and link libs.
-MESSAGE(STATUS "Include dirs ${OpenCV_INCLUDE_DIRS}")
-MESSAGE(STATUS "LINK LIBRARIES ${OpenCV_LIBS}")
-
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw/" "${CMAKE_CURRENT_SOURCE_DIR}/glfw-build/")# Runs the CMakeLists.txt in source_dir and places the output in binary_dir
-
-
-#Executable target name and src files
-add_executable(BoxerUI_app "${SOURCE}")
-
-#adds the dir for src files when compiling. Allows cmake to find where header files are located
-target_include_directories(BoxerUI_app PUBLIC 
-    "${HEADERS_DIR}/" 
-    "${LIBS_DIR}/imgui/"
-    "${IMGUI_BACKENDS_DIR}"
-    "${LIBS_DIR}/imgui/examples/libs/gl3w/" 
-    "${LIBS_DIR}/implot/" 
-    "${SOURCES_DIR}"
-    "${WORKSPACE_DIR}")
-
-#Links the libraries to build target set in add_executable command
-target_link_libraries(BoxerUI_app  OpenGL::GL glfw "${OpenCV_LIBS}")# Threads::Threads )
+add_subdirectory("${WORKSPACE_DIR}/src")
+#enable_testing()
+#add_subdirectory("${WORKSPACE_DIR}/tests")
+#add_subdirectory(lib/googletest)
 
 #To link glfw statically:
     #1. clone the repo into a directory <glfw_dir>: "git clone https://github.com/glfw/glfw.git"
@@ -91,5 +54,3 @@ target_link_libraries(BoxerUI_app  OpenGL::GL glfw "${OpenCV_LIBS}")# Threads::T
         # /usr/local/cmake/opencv4 - cmake package
         # /usr/local/include/opencv4 - headers
         # /usr/local/share/opencv4 - other files (e.g. trained cascades in XML format)
-
-# message(STATUS "${OpenCV_INCLUDE_DIRS}")

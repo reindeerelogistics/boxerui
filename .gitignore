@@ -51,4 +51,6 @@ BoxerUI/imgui.ini
 boxer_install.zip
 install_boxerUI.txt
 Boxer_Install.sh
-Makefile
+
+# BoxerUI_Tests
+BoxerUI/tests/BoxerUI_Tests/packages/

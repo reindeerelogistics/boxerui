@@ -1,6 +1,6 @@
 #include "Controller_input_Header.h"
 
-RoboCMD <float,float,float,float> cmd;
+//RoboCMD <float,float,float,float> cmd;
 
  //int main(void)
  //{
@@ -157,9 +157,9 @@ void BoxerUI_Inputs::trigger(const float *axes, const char *desc, int axes_val)
 
 void BoxerUI_Inputs::send(const float com, const float data, const float max, const float min, const float zero)
 {
-	cmd.set(com, data, max, min, zero);
+	/*cmd.set(com, data, max, min, zero);
 	cmd.sendMsg();
-	cmd.clrMsg();
+	cmd.clrMsg();*/
 }
 
 void BoxerUI_Inputs::input(){
