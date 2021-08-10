@@ -5,6 +5,7 @@ Release/
 out/*
 
 opencv/*
+opencv-master/*
 opencv-build/*
 opencv_contrib-master/*
 

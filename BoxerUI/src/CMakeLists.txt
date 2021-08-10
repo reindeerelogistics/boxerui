@@ -1,13 +1,23 @@
 cmake_minimum_required(VERSION 3.16)
 
+#add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Networking")
+#add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/RoboCMD")
 
 #Source dir and files variables
 set(HEADERS_DIR "${PROJECT_SOURCE_DIR}/BoxerUI/header")
 set(LIBS_DIR "${PROJECT_SOURCE_DIR}/BoxerUI/libs")
-set(OPENCV_DIR "${PROJECT_SOURCE_DIR}/opencv/sources/out/install/x64-Release/x64/vc16/lib/")
 
-#add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Networking")
-#add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/RoboCMD")
+IF (WIN32)
+set(OPENCV_DIR "${PROJECT_SOURCE_DIR}/opencv/sources/out/install/x64-Release/x64/vc16/lib/")
+ELSE()
+set(OPENCV_DIR "${PROJECT_SOURCE_DIR}/opencv-build/install/include/opencv4/")
+ENDIF()
+
+# find_package(OpenGL REQUIRED)
+# #The 3 following lines ask not to build glfw docs, tests, & examples
+# set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
+# set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+# set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 # Set path variable to sources that will be used rather than collecting all the backend sources including ones not in use
 set(IMGUI_BACKENDS_DIR "${LIBS_DIR}/imgui/backends/")
@@ -18,7 +28,7 @@ set(IMGUI_BACKENDS_DIR "${LIBS_DIR}/imgui/backends/")
     # Does not easily reflect new files. Requires further investigation
 aux_source_directory("${HEADERS_DIR}/" BOXERUI_HEADERS) # collects all src files in the header dir
 aux_source_directory("${LIBS_DIR}/imgui/" IMGUI_SOURCES)# collects all src files in the libs/imgui dir. Cannot be impl for backends dir, would attempt at compiling non required
-aux_source_directory("${LIBS_DIR}/imgui/examples/libs/gl3w/" GL)
+aux_source_directory("${LIBS_DIR}/imgui/examples/libs/gl3w/GL" GL)
 aux_source_directory("${LIBS_DIR}/imgui/examples/libs/glfw/include" GLFW)
 aux_source_directory("${LIBS_DIR}/implot/" IMPLOT_SOURCES)
 aux_source_directory("${CMAKE_CURRENT_SOURCE_DIR}" BOXERUI_SOURCES)
@@ -60,10 +70,12 @@ target_include_directories(BoxerUI_app PUBLIC
 IF (WIN32)
   # set stuff for windows
     find_package(OpenGL REQUIRED)
-    add_library(opengl32 STATIC "${GL_DIR}GL/gl3w.h" "${GL_DIR}GL/gl3w.c" "${GL_DIR}GL/glcorearb.h")
     MESSAGE(STATUS "${GL_DIR}GL/gl3w.h")
     target_link_libraries(BoxerUI_app OpenGL::GL "${OPENCV_DIR}opencv_world453.lib"  "${PROJECT_SOURCE_DIR}/BoxerUI/libs/imgui/examples/libs/glfw/lib-vc2010-64/glfw3.lib" )
 ELSE()
+    add_library(opengl32 STATIC "${GL_DIR}GL/gl3w.h" "${GL_DIR}GL/gl3w.c" "${GL_DIR}GL/glcorearb.h")
   # set stuff for other systems
-    target_link_libraries(BoxerUI_app OpenGL::GL glfw "${OpenCV_LIBS}" )# Threads::Threads )
+    find_package(OpenGL REQUIRED)
+    link_directories("${OPENCV_DIR}/install/lib")
+    target_link_libraries(BoxerUI_app OpenGL::GL glfw  opencv_calib3d;opencv_core;opencv_features2d;opencv_flann;opencv_highgui;opencv_imgcodecs;opencv_imgproc;opencv_video;opencv_videoio )#Threads::Threads)#"${OpenCV_LIBS}" )# Threads::Threads )
 ENDIF()

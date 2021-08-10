@@ -1,27 +1,26 @@
 cmake_minimum_required(VERSION 3.16)
 project(BoxerUI)
 
-#Note: Shared/dynamic libraries are linked at runtime (must be included with obj/binary file), static are linked at compile time (larger file size).
 
 IF (WIN32)
   # set stuff for windows
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/opencv/sources/out/install/x64-Release/include")
 ELSE()
-  # set stuff for other systems
-find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
- #   set(BUILD_SHARED_LIBS OFF)
-  #  set(OpenCV_STATIC ON)#just to make sure 
+# set stuff for other systems
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/install/include/opencv4/")
+#find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+ 
 find_package(OpenGL REQUIRED)
     # find_package(glfw3 3.3.2 REQUIRED) #for shared library linking. Use "sudo apt-get install libglfw3-dev" to download the shared lib
 
-    # set(THREADS_PREFER_PTHREAD_FLAG ON)
-    # find_package(Threads REQUIRED)
+    #  set(THREADS_PREFER_PTHREAD_FLAG ON)
+    #  find_package(Threads REQUIRED)
 
 #The 3 following lines ask not to build glfw docs, tests, & examples
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-#add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw/" "${CMAKE_CURRENT_SOURCE_DIR}/glfw-build/")# Runs the CMakeLists.txt in source_dir and places the output in binary_dir
+ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw/" "${CMAKE_CURRENT_SOURCE_DIR}/glfw-build/")# Runs the CMakeLists.txt in source_dir and places the output in binary_dir
 ENDIF()
 
 #Source dir and files variables
@@ -31,6 +30,8 @@ add_subdirectory("${WORKSPACE_DIR}/src")
 #enable_testing()
 #add_subdirectory("${WORKSPACE_DIR}/tests")
 #add_subdirectory(lib/googletest)
+
+#Note: Shared/dynamic libraries are linked at runtime (must be included with obj/binary file), static are linked at compile time (larger file size).
 
 #To link glfw statically:
     #1. clone the repo into a directory <glfw_dir>: "git clone https://github.com/glfw/glfw.git"
