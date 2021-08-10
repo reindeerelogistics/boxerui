@@ -8,9 +8,9 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/opencv/sources/out/install/x64-
 ELSE()
 # set stuff for other systems
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/install/include/opencv4/")
-#find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
  
-find_package(OpenGL REQUIRED)
+#find_package(OpenGL REQUIRED)
     # find_package(glfw3 3.3.2 REQUIRED) #for shared library linking. Use "sudo apt-get install libglfw3-dev" to download the shared lib
 
     #  set(THREADS_PREFER_PTHREAD_FLAG ON)

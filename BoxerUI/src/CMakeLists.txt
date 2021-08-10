@@ -67,9 +67,15 @@ target_include_directories(BoxerUI_app PUBLIC
     "${LIBS_DIR}/implot/")
 
 #Links the libraries to build target set in add_executable command
+    find_package(OpenGL REQUIRED)
 IF (WIN32)
   # set stuff for windows
-    find_package(OpenGL REQUIRED)
+    IF(OpenGL_FOUND)
+    MESSAGE(STATUS "OPENGL FOUND!!")
+    ELSE()
+    MESSAGE(STATUS "OPENGL NOT FOUND")
+    ENDIF()
+
     MESSAGE(STATUS "${GL_DIR}GL/gl3w.h")
     target_link_libraries(BoxerUI_app OpenGL::GL "${OPENCV_DIR}opencv_world453.lib"  "${PROJECT_SOURCE_DIR}/BoxerUI/libs/imgui/examples/libs/glfw/lib-vc2010-64/glfw3.lib" )
 ELSE()
@@ -77,5 +83,11 @@ ELSE()
   # set stuff for other systems
     find_package(OpenGL REQUIRED)
     link_directories("${OPENCV_DIR}/install/lib")
+
+    IF(OPENCV_FOUND)
     target_link_libraries(BoxerUI_app OpenGL::GL glfw  opencv_calib3d;opencv_core;opencv_features2d;opencv_flann;opencv_highgui;opencv_imgcodecs;opencv_imgproc;opencv_video;opencv_videoio )#Threads::Threads)#"${OpenCV_LIBS}" )# Threads::Threads )
+    ELSE()
+    target_link_libraries(BoxerUI_app OpenGL::GL glfw  "${OpenCV_LIBS}")
+    ENDIF()
+
 ENDIF()
