@@ -32,8 +32,8 @@ jobs:
     - name: Setup OpenCV
       uses: Dovyski/setup-opencv-action@v1
       with: 
-        opencv-version: 4.5.1
-        opencv-extra-modules: ON
+        opencv-version: master
+        opencv-extra-modules: OFF
         CMAKE_BUILD_TYPE: DEBUG
         BUILD_NEW_PYTHON_SUPPORT: OFF
         WITH_V4L: ON
