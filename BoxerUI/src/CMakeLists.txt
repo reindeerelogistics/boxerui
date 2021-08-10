@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 3.16)
 
 
 #Source dir and files variables
-set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../header")
-set(LIBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../libs")
+set(HEADERS_DIR "${PROJECT_SOURCE_DIR}/BoxerUI/header")
+set(LIBS_DIR "${PROJECT_SOURCE_DIR}/BoxerUI/libs")
+set(OPENCV_DIR "${PROJECT_SOURCE_DIR}/opencv/sources/out/install/x64-Release/x64/vc16/lib/")
 
 #add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Networking")
 #add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/RoboCMD")
@@ -22,6 +23,7 @@ aux_source_directory("${LIBS_DIR}/imgui/examples/libs/glfw/include" GLFW)
 aux_source_directory("${LIBS_DIR}/implot/" IMPLOT_SOURCES)
 aux_source_directory("${CMAKE_CURRENT_SOURCE_DIR}" BOXERUI_SOURCES)
 
+MESSAGE(STATUS "BOXERUI_HEADERS: ${BOXERUI_HEADERS}" )
 set(SOURCES 
     "${BOXERUI_HEADERS}" 
     "${BOXERUI_SOURCES}"
@@ -57,8 +59,11 @@ target_include_directories(BoxerUI_app PUBLIC
 #Links the libraries to build target set in add_executable command
 IF (WIN32)
   # set stuff for windows
-target_link_libraries(BoxerUI_app opencv_world453 opengl3 "${GLFW_DIR}/lib-vc2010-64/glfw3")
+    find_package(OpenGL REQUIRED)
+    add_library(opengl32 STATIC "${GL_DIR}GL/gl3w.h" "${GL_DIR}GL/gl3w.c" "${GL_DIR}GL/glcorearb.h")
+    MESSAGE(STATUS "${GL_DIR}GL/gl3w.h")
+    target_link_libraries(BoxerUI_app OpenGL::GL "${OPENCV_DIR}opencv_world453.lib"  "${PROJECT_SOURCE_DIR}/BoxerUI/libs/imgui/examples/libs/glfw/lib-vc2010-64/glfw3.lib" )
 ELSE()
   # set stuff for other systems
-target_link_libraries(BoxerUI_app OpenGL::GL glfw "${OpenCV_LIBS}")# Threads::Threads )
+    target_link_libraries(BoxerUI_app OpenGL::GL glfw "${OpenCV_LIBS}" )# Threads::Threads )
 ENDIF()
