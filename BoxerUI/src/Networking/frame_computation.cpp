@@ -2,6 +2,11 @@
 #include <vector>
 #include <string>
 
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/xml.hpp>
+#include <cereal/archives/json.hpp>
+#include <cereal/types/vector.hpp>
+
 int encode_scale = 50;
 std::vector<int> jpeg = {cv::IMWRITE_JPEG_QUALITY, encode_scale};
 std::vector<int> png = {cv::IMWRITE_PNG_COMPRESSION, encode_scale};
@@ -28,20 +33,20 @@ cv::Mat decodeFrame(std::vector<uint8_t> buf) {
     return decoded_frame;
 }
 
-//td::vector<uint8_t> deserializeFrame(char cstr[], int size) {
-//   std::stringstream ss;
-//
-//   int count = 0;
-//   while(count < size) {
-//       ss << cstr[count];
-//       count += 1;
-//   }
-//   std::vector<uint8_t> vec;
-//   {
-//       cereal::BinaryInputArchive archive(ss);
-//       archive(CEREAL_NVP(vec));
-//   }
-//   ss.str("");
-//
-//   return vec;
-//
+std::vector<uint8_t> deserializeFrame(char cstr[], int size) {
+    std::stringstream ss;
+
+    int count = 0;
+    while(count < size) {
+        ss << cstr[count];
+        count += 1;
+    }
+    std::vector<uint8_t> vec;
+    {
+        cereal::BinaryInputArchive archive(ss);
+        archive(CEREAL_NVP(vec));
+    }
+    ss.str("");
+
+    return vec;
+}
