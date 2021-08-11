@@ -9,18 +9,18 @@ std::vector<int> encodings[] = {jpeg, png};
 std::string extensions[] = {".jpg", ".png"};
 
 
-std::vector<unsigned char> encodeFrame(cv::Mat new_frame, int encode_style) {
+std::vector<uint8_t> encodeFrame(cv::Mat new_frame, int encode_style) {
 
-    std::vector<unsigned char> buf;
+    std::vector<uint8_t> buf;
 
     cv::imencode(extensions[encode_style], new_frame, buf, encodings[encode_style]);
 
     return buf;
 }
 
-cv::Mat decodeFrame(std::vector<unsigned char> buf) {
+cv::Mat decodeFrame(std::vector<uint8_t> buf) {
 
-    unsigned char* array = &buf[0];
+    uint8_t* array = &buf[0];
 
     cv::Mat rawData(1, buf.size(), CV_8UC1, array);
     cv::Mat decoded_frame = imdecode(rawData, cv::IMREAD_COLOR);
@@ -28,7 +28,7 @@ cv::Mat decodeFrame(std::vector<unsigned char> buf) {
     return decoded_frame;
 }
 
-std::vector<unsigned char> deserializeFrame(char cstr[], int size) {
+std::vector<uint8_t> deserializeFrame(char cstr[], int size) {
     std::stringstream ss;
 
     int count = 0;
@@ -36,7 +36,7 @@ std::vector<unsigned char> deserializeFrame(char cstr[], int size) {
         ss << cstr[count];
         count += 1;
     }
-    std::vector<unsigned char> vec;
+    std::vector<uint8_t> vec;
     {
         cereal::BinaryInputArchive archive(ss);
         archive(CEREAL_NVP(vec));

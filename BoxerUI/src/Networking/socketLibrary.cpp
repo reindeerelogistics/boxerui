@@ -12,6 +12,7 @@
 #include <cereal/types/vector.hpp>
 
 #include "frame_computation.cpp"
+#include "uiBackend.cpp"
 
 #include <opencv2/highgui/highgui.hpp>
 
@@ -91,46 +92,22 @@ void sendFrame(cv::Mat new_frame, struct sockaddr_in serveraddr, struct sockaddr
     socklen_t clientaddrLength, serveraddrLength;
 
     std::vector<unsigned char> encode_vec = encodeFrame(new_frame, 0);
-    std::string str = serealizeFrame(new_frame, encode_vec);
+    //std::string str = serealizeFrame(new_frame, encode_vec);
 
-    int size = str.length();
+    int size = encode_vec.size();
 
-    const char* cstr = str.c_str();
+    //const char* cstr = str.c_str();
 
     std::cout<<"size of frame is "<<size<<'\n';
-    status = sendto(sockfd, &size, sizeof(int), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+    //status = sendto(sockfd, &size, sizeof(int), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+    sendToClients(&encode_vec[0], size, '1');
     if(status < 0) {
         perror("Perameter <size> failed to send..");
         exit(0);
     }
-
-    std::cout<<"Size of frame "<<size<<'\n';
-    status = sendto(sockfd, cstr, size, 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
-    if(status < 0) {
-        perror("Perameter <cstr> failed to send..");
-        exit(0);
-    }
 }
 
-cv::Mat recvFrame(int sockfd, struct sockaddr_in serveraddr) {
-    socklen_t clientaddrLength, serveraddrLength;
-    int size;
-
-    std::cout<<"Starting to recieve\n";
-    status = recvfrom(sockfd, &size, sizeof(int), 0, (struct sockaddr*)&serveraddr, &serveraddrLength);
-    if(status < 0)
-        perror("recv error");
-
-    char cstr[size];
-    std::cout<<"Size of frame "<<size<<'\n';
-    status = recvfrom(sockfd, cstr, size, MSG_WAITALL, (struct sockaddr*)&serveraddr, &serveraddrLength);
-    if(status < 0)
-        perror("recv error");
-    std::cout<<"recieved data\n";
-
-
-    std::vector<unsigned char> vec = deserializeFrame(cstr, size);
-
+cv::Mat recvFrame(std::vector<uint8_t> vec, int size) {
     return decodeFrame(vec);
 }
 

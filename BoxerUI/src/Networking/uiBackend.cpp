@@ -11,6 +11,7 @@
 #include <netinet/in.h>
 #include <sstream>
 
+#include "frame_computation.cpp"
 #include "server.cpp"
 
 struct sockaddr_in ServerAddress;
@@ -138,7 +139,7 @@ std::vector<uint8_t> recvFromClient() {
     printf("Size: %" PRIu64 "\n", size);
 
     uint8_t data[size];
-    recvfrom(sock, data, size, 0, (sockaddr*)&ServerAddress, &addr_size);
+    recvfrom(sock, data, size, MSG_WAITALL, (sockaddr*)&ServerAddress, &addr_size);
     //printMsg(data, size);
 
     return std::vector<uint8_t>(data + 8, (data + 8) + (sizeof(data) - 8) / sizeof data[0]);
