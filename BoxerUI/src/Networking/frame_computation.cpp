@@ -33,7 +33,7 @@ cv::Mat decodeFrame(std::vector<uint8_t> buf) {
     return decoded_frame;
 }
 
-std::vector<uint8_t> deserializeFrame(char cstr[], int size) {
+std::vector<uint8_t> deserializeFrame(uint8_t cstr[], int size) {
     std::stringstream ss;
 
     int count = 0;

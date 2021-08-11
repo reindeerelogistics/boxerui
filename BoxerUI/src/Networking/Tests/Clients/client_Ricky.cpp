@@ -24,7 +24,7 @@ int main() {
 
         cv::imshow("View", frame);
         cv::waitKey(1);
-        printf("Recieved frame");
+        printf("Recieved frame\n");
     }
 }
 

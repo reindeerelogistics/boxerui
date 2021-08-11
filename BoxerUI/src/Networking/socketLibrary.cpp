@@ -14,13 +14,13 @@
 int status;
 
 //Mat -> string
-std::string serealizeFrame(cv::Mat new_frame, std::vector<unsigned char> compressed_frame) {
-    std::vector<unsigned char> vec;
+std::string serealizeFrame(cv::Mat new_frame, std::vector<uint8_t> compressed_frame) {
+    std::vector<uint8_t> vec;
     if(compressed_frame.size() != 0){
         std::cout<<"Seriliased jpg/png encoding\n";
         vec = compressed_frame;
     } else {
-        std::vector<unsigned char> frameVec(new_frame.begin<unsigned char>(), new_frame.end<unsigned char>());
+        std::vector<uint8_t> frameVec(new_frame.begin<uint8_t>(), new_frame.end<uint8_t>());
         vec = frameVec;
     }
 
@@ -86,16 +86,15 @@ struct FrameStructure recvFrameOverhead(int sockfd, struct sockaddr_in serveradd
 void sendFrame(cv::Mat new_frame, struct sockaddr_in serveraddr, struct sockaddr_in clientaddr, int sockfd) {
     socklen_t clientaddrLength, serveraddrLength;
 
-    std::vector<unsigned char> encode_vec = encodeFrame(new_frame, 0);
+    std::vector<uint8_t> encode_vec = encodeFrame(new_frame, 0);
     std::string str = serealizeFrame(new_frame, encode_vec);
-
-    int size = encode_vec.size();
 
     //const char* cstr = str.c_str();
 
-    std::cout<<"size of frame is "<<size<<'\n';
+    std::cout<<"size of frame is "<<(int)str.length()<<'\n';
     //status = sendto(sockfd, &size, sizeof(int), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
-    sendToClients(str.c_str(), str.size(), '1');
+    uint8_t* arry = (uint8_t*)str.c_str();
+    sendToClients(arry, str.length(), '1');
     if(status < 0) {
         perror("Perameter <size> failed to send..");
         exit(0);

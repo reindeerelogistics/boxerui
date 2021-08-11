@@ -17,7 +17,7 @@ cv::Mat retrieveFrame(cv::VideoCapture vidCap) {
         //vid.set(cv::CAP_PROP_FRAME_HEIGHT, 900);
         //vid.set(cv::CAP_PROP_FRAME_WEIGHT, 1440);
         (vidCap).read(frame);
-        cv::imshow("view", frame);
+        //cv::imshow("view", frame);
         cv::waitKey(2);
         printf("read frame\n");
         return frame;
@@ -46,9 +46,10 @@ mutateDestinations(name, '+', '1', dests);
 
     while(vidCap.isOpened()) {
         frame = retrieveFrame(vidCap);
-        std::vector<uint8_t> vec = encodeFrame(frame, 0);
+        std::string str = serealizeFrame(frame, encodeFrame(frame, 0));
+        uint8_t* arry = (uint8_t*)str.c_str();
 
-        sendToClients(&vec[0], vec.size(), '1');
+        sendToClients(arry, str.length(), '1');
     }
 
     //vidCap.~VideoCapture();
