@@ -82,12 +82,14 @@ ELSE()
     add_library(opengl32 STATIC "${GL_DIR}GL/gl3w.h" "${GL_DIR}GL/gl3w.c" "${GL_DIR}GL/glcorearb.h")
   # set stuff for other systems
     find_package(OpenGL REQUIRED)
-    link_directories("${OPENCV_DIR}/install/lib")
+    # link_directories("${OPENCV_DIR}")
 
+    
     IF(OPENCV_FOUND)
-    target_link_libraries(BoxerUI_app OpenGL::GL glfw  opencv_calib3d;opencv_core;opencv_features2d;opencv_flann;opencv_highgui;opencv_imgcodecs;opencv_imgproc;opencv_video;opencv_videoio )#Threads::Threads)#"${OpenCV_LIBS}" )# Threads::Threads )
+    target_link_libraries(BoxerUI_app OpenGL::GL glfw "${OpenCV_LIBS}")
     ELSE()
-    target_link_libraries(BoxerUI_app OpenGL::GL glfw  "${OpenCV_LIBS}")
+    set(OPENCV_LIBS "${PROJECT_SOURCE_DIR}/opencv-build/install/lib/")
+    target_link_libraries(BoxerUI_app OpenGL::GL glfw "${OPENCV_LIBS}"opencv_calib3d "${OPENCV_LIBS}"opencv_core "${OPENCV_LIBS}"opencv_features2d "${OPENCV_LIBS}"opencv_flann "${OPENCV_LIBS}"opencv_highgui "${OPENCV_LIBS}"opencv_imgcodecs "${OPENCV_LIBS}"opencv_imgproc "${OPENCV_LIBS}"opencv_video "${OPENCV_LIBS}"opencv_videoio )#"${OpenCV_LIBS}" )# Threads::Threads )
     ENDIF()
 
 ENDIF()

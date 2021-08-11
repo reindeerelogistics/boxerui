@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(BoxerUI_Network)
 
-#file(GLOB to_remove file_to_remove.cpp)
+#file(GLOB to_remove file_to_remove.cpp)*.cpp
 #list(REMOVE_ITEM list ${to_remove})   
 
 #file(APPEND <filename> <content>...)

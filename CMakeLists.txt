@@ -1,14 +1,21 @@
 cmake_minimum_required(VERSION 3.16)
 project(BoxerUI)
 
-
-IF (WIN32)
+# set( CMAKE_VERBOSE_MAKEFILE on )
+IF(WIN32)
   # set stuff for windows
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/opencv/sources/out/install/x64-Release/include")
 ELSE()
 # set stuff for other systems
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/install/include/opencv4/")
-find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+
+
+# find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+
+IF(NOT OPENCV_FOUND)
+# MESSAGE(FATAL_ERROR "OPENCV NOT FOUND")
+ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/install/include/opencv4/")
+ENDIF()
+ENDIF()
  
 #find_package(OpenGL REQUIRED)
     # find_package(glfw3 3.3.2 REQUIRED) #for shared library linking. Use "sudo apt-get install libglfw3-dev" to download the shared lib
@@ -20,8 +27,8 @@ find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#o
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
- add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw/" "${CMAKE_CURRENT_SOURCE_DIR}/glfw-build/")# Runs the CMakeLists.txt in source_dir and places the output in binary_dir
-ENDIF()
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw/" "${CMAKE_CURRENT_SOURCE_DIR}/glfw-build/")# Runs the CMakeLists.txt in source_dir and places the output in binary_dir
+
 
 #Source dir and files variables
 set(WORKSPACE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/BoxerUI/")#This is the dir to the root of the project. !Important
