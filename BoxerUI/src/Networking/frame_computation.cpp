@@ -28,20 +28,20 @@ cv::Mat decodeFrame(std::vector<uint8_t> buf) {
     return decoded_frame;
 }
 
-std::vector<uint8_t> deserializeFrame(char cstr[], int size) {
-    std::stringstream ss;
-
-    int count = 0;
-    while(count < size) {
-        ss << cstr[count];
-        count += 1;
-    }
-    std::vector<uint8_t> vec;
-    {
-        cereal::BinaryInputArchive archive(ss);
-        archive(CEREAL_NVP(vec));
-    }
-    ss.str("");
-
-    return vec;
-}
+//td::vector<uint8_t> deserializeFrame(char cstr[], int size) {
+//   std::stringstream ss;
+//
+//   int count = 0;
+//   while(count < size) {
+//       ss << cstr[count];
+//       count += 1;
+//   }
+//   std::vector<uint8_t> vec;
+//   {
+//       cereal::BinaryInputArchive archive(ss);
+//       archive(CEREAL_NVP(vec));
+//   }
+//   ss.str("");
+//
+//   return vec;
+//

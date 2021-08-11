@@ -6,10 +6,10 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-#include <cereal/archives/binary.hpp>
-#include <cereal/archives/xml.hpp>
-#include <cereal/archives/json.hpp>
-#include <cereal/types/vector.hpp>
+//#include <cereal/archives/binary.hpp>
+//#include <cereal/archives/xml.hpp>
+//#include <cereal/archives/json.hpp>
+//#include <cereal/types/vector.hpp>
 
 #include "frame_computation.cpp"
 #include "uiBackend.cpp"
@@ -19,25 +19,25 @@
 int status;
 
 //Mat -> string
-std::string serealizeFrame(cv::Mat new_frame, std::vector<unsigned char> compressed_frame) {
-    std::vector<unsigned char> vec;
-    if(compressed_frame.size() != 0){
-        std::cout<<"Seriliased jpg/png encoding\n";
-        vec = compressed_frame;
-    } else {
-        std::vector<unsigned char> frameVec(new_frame.begin<unsigned char>(), new_frame.end<unsigned char>());
-        vec = frameVec;
-    }
-
-    std::stringstream ss;
-    {
-        cereal::BinaryOutputArchive archive(ss);
-        archive(CEREAL_NVP(vec));
-    }
-
-    return ss.str();
-
-}
+//td::string serealizeFrame(cv::Mat new_frame, std::vector<unsigned char> compressed_frame) {
+//   std::vector<unsigned char> vec;
+//   if(compressed_frame.size() != 0){
+//       std::cout<<"Seriliased jpg/png encoding\n";
+//       vec = compressed_frame;
+//   } else {
+//       std::vector<unsigned char> frameVec(new_frame.begin<unsigned char>(), new_frame.end<unsigned char>());
+//       vec = frameVec;
+//   }
+//
+//   std::stringstream ss;
+//   {
+//       cereal::BinaryOutputArchive archive(ss);
+//       archive(CEREAL_NVP(vec));
+//   }
+//
+//   return ss.str();
+//
+//
 
 //i32 i32 -> u1
 struct sockaddr_in sendFrameOverhead(int rows, int cols, struct sockaddr_in serveraddr, struct sockaddr_in clientaddr, int sockfd) {
