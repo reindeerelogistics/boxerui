@@ -412,7 +412,7 @@ void serverThread() {
         printf("Size: %" PRIu64 "\n", size);
 
         uint8_t data[size];
-        recvfrom(events[0].data.fd, data, size, MSG_DONTWAIT, (struct sockaddr*)&Client, &len);
+        recvfrom(events[0].data.fd, data, size, MSG_DONTWAIT | MSG_WAITALL, (struct sockaddr*)&Client, &len);
 
         char ip[30];
         char port[10];
