@@ -104,6 +104,7 @@ void sendToClients(uint8_t* msg, uint64_t size, uint8_t op) {
 
     const uint8_t* data = (uint8_t*)sd.str().c_str();
     //printMsg(data, sd.str().size());
+    printf("Message Size: %d\n", sd.str().size());
     sendto(sock, data, sd.str().size(), 0, (sockaddr*)&ServerAddress, sizeof(ServerAddress));
 }
 
