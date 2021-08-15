@@ -53,13 +53,13 @@ jobs:
           BUILD_opencv_python3: OFF
           WITH_OPENEXR: OFF
     
-#     - name: Step 4 - Setup Glfw
-#       run: |
-#             mkdir build
-#             pwd
-#             git clone https://github.com/glfw/glfw.git
+    - name: Step 4 - Setup Glfw
+      run: |
+            mkdir build
+            pwd
+            git clone https://github.com/glfw/glfw.git
             
-    - name: Step 4 - run-cmake and build BoxerUI
+    - name: Step 5 - run-cmake and build BoxerUI
       uses: lukka/run-cmake@v3.4
       with:
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
