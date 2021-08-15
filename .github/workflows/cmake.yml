@@ -22,39 +22,53 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Step 1 - Checkout branch
+      uses: actions/checkout@v2
       with:
         submodules: true
     
-    - name: get-cmake
+    - name: Step 2 - Get CMake
       uses: lukka/get-cmake@v3.21.1
       
-    - name: Setup OpenCV
-      uses: Dovyski/setup-opencv-action@v1
-      with: 
-        opencv-version: master
-        opencv-extra-modules: OFF
-        CMAKE_BUILD_TYPE: DEBUG
-        BUILD_NEW_PYTHON_SUPPORT: OFF
-        WITH_V4L: ON
-        WITH_OPENGL: ON
-    
-    - name: Setup Glfw
-      run: |
-            mkdir build
-            pwd
-            git clone https://github.com/glfw/glfw.git
+    - name: Step 3 - Cache OpenCV
+      id: cache-open-cv
+      uses: actions/cache@v2.1.6
+      with:
+        path: ./opencv-master
+        key: ${{ runner.os }}-opencv-cache
             
-    - name: run-cmake
+    - name: Step 3.5 - Load Cached OpenCV
+      uses: rayandrews/with-opencv-action@v1
+      with:
+          dir: ../opencv-master
+          opencv-version: master
+          opencv-extra-modules: OFF
+          CMAKE_BUILD_TYPE: ${{env.BUILD_TYPE_RELEASE}}
+          BUILD_NEW_PYTHON_SUPPORT: OFF
+          WITH_V4L: ON
+          WITH_OPENGL: ON
+          BUILD_LISTS: calib3d,core,features2d,flann,highgui,imgcodecs,imgproc,videoio
+          BUILD_TESTS: OFF
+          BUILD_opencv_python2: OFF
+          BUILD_opencv_python3: OFF
+          WITH_OPENEXR: OFF
+    
+#     - name: Step 4 - Setup Glfw
+#       run: |
+#             mkdir build
+#             pwd
+#             git clone https://github.com/glfw/glfw.git
+            
+    - name: Step 4 - run-cmake and build BoxerUI
       uses: lukka/run-cmake@v3.4
       with:
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
 
-    - name: Build
-      # Build your program with the given configuration
-      run: |
-            pwd
-            cmake --build ../build/ --config ${{env.BUILD_TYPE_RELEASE}}
+#     - name: Build
+#       # Build your program with the given configuration
+#       run: |
+#             pwd
+#             cmake --build ../build/ --config ${{env.BUILD_TYPE_RELEASE}}
 
 #     - name: Test
 #       working-directory: ${{github.workspace}}/build
