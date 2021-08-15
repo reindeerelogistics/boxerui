@@ -42,7 +42,7 @@ jobs:
       uses: rayandrews/with-opencv-action@v1
       with:
           dir: ./opencv-master
-          cached:  steps.opencv-cache.outputs.cache-hit 
+          cached:  ${{ steps.opencv-cache.outputs.cache-hit }} 
           opencv-version: master
           opencv-extra-modules: OFF
           CMAKE_BUILD_TYPE: ${{env.BUILD_TYPE_RELEASE}}
@@ -52,14 +52,27 @@ jobs:
     
     - name: Step 4 - Setup Glfw
       run: |
-            mkdir build
             pwd
+            ls -al
             git clone https://github.com/glfw/glfw.git
             
-    - name: Step 5 - run-cmake and build BoxerUI
-      uses: lukka/run-cmake@v3.4
-      with:
-          cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+#     - name: Step 5 - run-cmake and build BoxerUI
+#       uses: lukka/run-cmake@v3.4
+#       with:
+#           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+
+    - name: Step 5 - Configure BoxerUI
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: |
+            ls -al
+            cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Step 6 - Build BoxerUI
+      # Build your program with the given configuration
+      run: |
+            ls -al
+            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2.0.10
@@ -67,7 +80,7 @@ jobs:
         # Artifact name
         name: BoxerUI_app
         # Destination path
-        path: BoxerUI/src
+        path: ./build/BoxerUI/src
 #     - name: Build
 #       # Build your program with the given configuration
 #       run: |
