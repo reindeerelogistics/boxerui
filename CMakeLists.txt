@@ -38,6 +38,8 @@ ELSE()
     MESSAGE(STATUS "OPENCV LINK LIBRARIES ${OpenCV_LIBS}")
 ENDIF()
 
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw/")# Runs the CMakeLists.txt in source_dir
+
 # Add directories to our project and src files
 add_subdirectory("${WORKSPACE_DIR}/src")
 #enable_testing()
