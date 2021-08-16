@@ -1,4 +1,3 @@
-#include "gtest/gtest.h"
 #include "CameraStream_Test.h"
 
 int main(int argc, char** argv) {

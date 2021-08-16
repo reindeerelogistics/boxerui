@@ -1,4 +1,4 @@
-#include "pch.h"
+// #include "pch.h"
 #include "CameraStream_Test.h"
 
 TEST(TestCaseName, TestName) {
@@ -9,6 +9,6 @@ TEST(TestCaseName, TestName) {
 
 //This definition will ideally be with the source files
 int CameraStream_Test::minorTest(int args) {
-	return arg++;
+	return args++;
 }
 
