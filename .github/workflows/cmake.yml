@@ -36,7 +36,7 @@ jobs:
       env:
         cache-name: cache-opencv
       with:
-        path: ./opencv-master
+        path: opencv-master
         key: ${{ runner.os }}-opencv-cache
         restore-keys: |
                       ${{ runner.os }}-opencv
@@ -46,7 +46,7 @@ jobs:
       if:  steps.opencv-cache.outputs.cache-hit != 'true'
       uses: rayandrews/with-opencv-action@v1
       with:
-        dir: ./opencv-master
+        dir: opencv-master
         cached:  ${{ steps.opencv-cache.outputs.cache-hit }} 
         opencv-version: master
         opencv-extra-modules: OFF
@@ -90,7 +90,7 @@ jobs:
         # Artifact name
         name: BoxerUI_app
         # Destination path
-        path: ${{github.workspace}}/build/BoxerUI/src/BoxerUI_app
+        path: build/BoxerUI/src/BoxerUI_app
         
 
 #     - name: Build
