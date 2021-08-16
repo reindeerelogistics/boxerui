@@ -85,7 +85,7 @@ jobs:
             cd build/BoxerUI/src; ls -al
 
     - name: Download a Build Artifact
-      uses: actions/upload-artifact@v2.0.10
+      uses: actions/upload-artifact@v2.2.4
       with:
         # Artifact name
         name: BoxerUI_app
