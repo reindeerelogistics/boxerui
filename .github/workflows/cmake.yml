@@ -66,13 +66,13 @@ jobs:
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
             ls -al
-            cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+            cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE_RELEASE}}
 
     - name: Step 6 - Build BoxerUI
       # Build your program with the given configuration
       run: |
             ls -al
-            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE_RELEASE}} 
 
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2.0.10
