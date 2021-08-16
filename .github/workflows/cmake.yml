@@ -90,7 +90,7 @@ jobs:
         # Artifact name
         name: BoxerUI_app
         # Destination path
-        path: ${{github.workspace}}/build/BoxerUI/src
+        path: ${{github.workspace}}/build/BoxerUI/src/BoxerUI_app
         
 
 #     - name: Build

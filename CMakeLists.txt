@@ -18,12 +18,15 @@ ELSE()
         MESSAGE(WARNING "OPENCV NOT FOUND")
         MESSAGE(STATUS "INSTALLING COPENCV")
         
-    FetchContent_Declare(
-    OPENCV
-    GIT_REPOSITORY https://github.com/opencv/opencv.git
-)
         #TODO: Clone OpenCV repo from master. execute as command
+        include(FetchContent)
 
+        FetchContent_Declare(
+            OPENCV
+            GIT_REPOSITORY https://github.com/opencv/opencv.git
+        )
+
+        # Setting configure variabes for Opencv
         set(BUILD_LIST "calib3d,core,features2d,flann,highgui,imgcodecs,imgproc,videoio" CACHE STRING "Build only listed modules (comma-separated, e.g. 'videoio,dnn,ts')")
         set(BUILD_TESTS OFF CACHE BOOL "" FORCE) 
         set(BUILD_opencv_python2 OFF CACHE BOOL "" FORCE)
@@ -33,8 +36,9 @@ ELSE()
         set(WITH_EIGEN OFF CACHE BOOL "" FORCE)
         set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
         set(WITH_FFMPEG ON CACHE BOOL "" FORCE)
+        FetchContent_MakeAvailable(googletest)
 
-        add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/opencv-master/")# Runs the CMakeLists.txt in opencv-master and places the output in binary_dir
+        # add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/opencv-master/")# Runs the CMakeLists.txt in opencv-master and places the output in binary_dir
     ENDIF()
 
     #Should print the include dir and link libs.
