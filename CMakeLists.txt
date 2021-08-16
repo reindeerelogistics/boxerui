@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(BoxerUI)
 
-set( CMAKE_VERBOSE_MAKEFILE on )
+# set( CMAKE_VERBOSE_MAKEFILE on )
 set(WORKSPACE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/BoxerUI/")#This is the dir to the root of the project.
 
 IF(WIN32)
@@ -14,10 +14,14 @@ ELSE()
     # execute_process(COMMAND "mkdir ${CMAKE_SOURCE_DIR}/mydir")
 
     IF(NOT OPENCV_FOUND)
-        #TODO: build opencv from source
+        #TODO: build opencv from source if not found 
         MESSAGE(WARNING "OPENCV NOT FOUND")
         MESSAGE(STATUS "INSTALLING COPENCV")
         
+    FetchContent_Declare(
+    OPENCV
+    GIT_REPOSITORY https://github.com/opencv/opencv.git
+)
         #TODO: Clone OpenCV repo from master. execute as command
 
         set(BUILD_LIST "calib3d,core,features2d,flann,highgui,imgcodecs,imgproc,videoio" CACHE STRING "Build only listed modules (comma-separated, e.g. 'videoio,dnn,ts')")
@@ -42,9 +46,9 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw/")# Runs the CMakeLists.txt i
 
 # Add directories to our project and src files
 add_subdirectory("${WORKSPACE_DIR}/src")
-#enable_testing()
-#add_subdirectory("${WORKSPACE_DIR}/tests")
-#add_subdirectory(lib/googletest)
+
+# enable_testing()
+# add_subdirectory("${WORKSPACE_DIR}/tests")
 
 
 #find_package(OpenGL REQUIRED)
