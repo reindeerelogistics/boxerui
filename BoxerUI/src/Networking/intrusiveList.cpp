@@ -1,20 +1,7 @@
 #include <stdio.h>
 #include <cstdlib>
+#include "./uiBackend.h"
 
-struct Header {
-    int type;
-    Header* next;
-};
-
-struct MsgImg {
-    struct Header Head;
-    int payload;
-};
-
-struct MsgCon {
-    struct Header Head;
-    char payload;
-};
 
 struct Header* lastHeader;
 struct Header* Start;
@@ -24,15 +11,14 @@ void appendInfo(struct Header* NewHeadInfo) {
         case 0: {
             struct MsgImg* Temp = (struct MsgImg*)lastHeader;
             Temp->Head.type = NewHeadInfo->type;
-            Temp->payload = ((struct MsgImg*)NewHeadInfo)->payload;
+            Temp->frame = ((struct MsgImg*)NewHeadInfo)->frame;
             break;
                 }
         case 1: {
             struct MsgCon* Temp = (struct MsgCon*)lastHeader;
             Temp->Head.type = NewHeadInfo->type;
-            Temp->payload = ((struct MsgCon*)NewHeadInfo)->payload;
+            Temp->com = ((struct MsgCon*)NewHeadInfo)->com; //May give segfault asss assigning arrays
             break;
-
                 }
         default:
                 printf("Not a valid type\n");

@@ -53,3 +53,25 @@ void setServerAddress(const char* ip, int port);
 //Writes each element of a contiguous data structure to a string 
 //stream
 void writeToSS(uint8_t* msg, uint64_t size, std::stringstream& sd);
+
+
+struct Header {
+    int type;
+    Header* next;
+};
+
+struct MsgImg {
+    struct Header Head;
+    cv::Mat frame;
+};
+
+struct MsgCon {
+    struct Header Head;
+    std::vector<uint8_t> coms;
+};
+
+void appendInfo(struct Header* NewHeadInfo);
+
+void append(struct Header* NewHead);
+
+void print(struct Header* CurrentHead);
