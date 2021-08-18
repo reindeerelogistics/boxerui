@@ -1,18 +1,7 @@
     //u_int8_t mutation[] = " 3 + Bob:1 Ricky Jeff John \0\0\0";
     //uint8_t data[7] = {6, '2', ' ', uid, '1', 25, '\0'};
 
-#include <vector>
-#include <string.h>
-#include <iostream>
-#include <cstdlib>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sstream>
-
-#include "frame_computation.cpp"
-#include "server.cpp"
+#include "uiBackend.h"
 
 struct sockaddr_in ServerAddress;
 int sock = socket(AF_INET, SOCK_DGRAM, 0);
