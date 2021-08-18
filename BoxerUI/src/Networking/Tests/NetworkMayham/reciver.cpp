@@ -6,16 +6,39 @@
 #include <netinet/in.h>
 
 
-struct Data {
-    uint8_t size;
-    uint8_t value;
+struct Header {
+    int type;
+    Header* next;
+};
+
+struct MsgImg {
+    struct Header Head;
+    uint8_t data;
+};
+
+struct MsgCon {
+    struct Header Head;
+    uint8_t data;
+};
+
+union Payload {
+    struct MsgCon cons;
+    struct MsgImg Img;
+};
+
+struct ServerMsg {
+    uint64_t size;
+    uint8_t type;
+    union Payload payload;
 };
 
 int sockfd;
 
 int main() {
     socklen_t socklength;
-    struct Data D1;
+    struct MsgImg Img;
+    Img.data = 26;
+    Img.size = sizeof(Img);
 
     struct sockaddr_in Client;
     Client.sin_port = htons(9000);

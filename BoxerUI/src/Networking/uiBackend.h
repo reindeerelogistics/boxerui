@@ -70,6 +70,34 @@ struct MsgCon {
     std::vector<uint8_t> coms;
 };
 
+struct MutateDest {
+}
+
+struct Join {
+
+}
+
+struct Leave {
+
+}
+
+struct SendData {
+
+}
+
+union Payload {
+    struct MsgCon cons;
+    struct MsgImg Img;
+};
+
+struct ServerMsg {
+    uint64_t size;
+    uint8_t instruction;
+    union Payload payload;
+};
+
+
+
 void appendInfo(struct Header* NewHeadInfo);
 
 void append(struct Header* NewHead);
