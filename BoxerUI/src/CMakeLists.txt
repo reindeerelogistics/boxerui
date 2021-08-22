@@ -11,7 +11,7 @@ set(LIBS_DIR "${PROJECT_SOURCE_DIR}/BoxerUI/libs")
 message(STATUS "Cmake build type: ${CMAKE_BUILD_TYPE}")
 
 IF (WIN32)
-set(OPENCV_DIR "${PROJECT_SOURCE_DIR}/opencv/sources/out/install/x64-Release/x64/vc16/lib/")
+    set(OPENCV_DIR "${PROJECT_SOURCE_DIR}/opencv/sources/out/install/x64-Release/x64/vc16/lib/")
 ENDIF()
 
 
@@ -68,7 +68,30 @@ IF (WIN32)
 ELSE()
     #Links the libraries to build target set in add_executable command
     find_package(OpenGL REQUIRED)
+    
+    if(NOT glfw_FOUND)    
+        include(FetchContent)
+            FetchContent_Declare(
+                glfw
+                GIT_REPOSITORY https://github.com/glfw/glfw.git            
+            )
+            # For Windows: Prevent overriding the parent project's compiler/linker settings
+            set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
+            set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
+            set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+            set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+            FetchContent_MakeAvailable(glfw)
+    endif(NOT glfw_FOUND)
+    
     add_library(opengl32 STATIC "${GL_DIR}GL/gl3w.h" "${GL_DIR}GL/gl3w.c" "${GL_DIR}GL/glcorearb.h")
-    target_link_libraries(BoxerUI_app PRIVATE OpenGL::GL glfw ${OpenCV_LIBS} )# Threads::Threads )
+    # add_library(glfw3 STATIC  "${GLFW_DIR}/GLFW/glfw3.h" "${GLFW_DIR}/GLFW/glfw3native.h" )
+    target_link_libraries(BoxerUI_app PUBLIC OpenGL::GL glfw opengl32 ${OpenCV_LIBS} )# Threads::Threads )
+
+
+    set_target_properties(BoxerUI_app PROPERTIES
+                      RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/BoxerUI/bin/debug"
+                      RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_CURRENT_SOURCE_DIR}/BoxerUI/bin/release"
+    )
+    # install(TARGETS BoxerUI_app DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 ENDIF()

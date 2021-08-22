@@ -8,45 +8,82 @@ IF(WIN32)
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/include")
     find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
 ELSE()
-    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/install/include/opencv4/")
 
-    find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
-    # execute_process(COMMAND "mkdir ${CMAKE_SOURCE_DIR}/mydir")
-
+    set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
+    # find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc )#CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/" )#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+    
     IF(NOT OPENCV_FOUND)
-        #TODO: build opencv from source if not found 
+        #WIP: build opencv from source if not found 
         MESSAGE(WARNING "OPENCV NOT FOUND")
-        MESSAGE(STATUS "INSTALLING COPENCV")
-        
-        #TODO: Clone OpenCV repo from master. execute as command
-        include(FetchContent)
+        MESSAGE(STATUS "INSTALLING OPENCV")
 
-        FetchContent_Declare(
-            OPENCV
-            GIT_REPOSITORY https://github.com/opencv/opencv.git
+        include(FetchContent)
+        execute_process(COMMAND nproc 
+                                OUTPUT_VARIABLE NUM_PROC)
+        set(CMAKE_BUILD_PARALLEL_LEVEL ${NUM_PROC})
+        # MATH(EXPR VAR "${VAR}+1") To increment a variable value
+
+        set(OPENCV_CACHE_ARGS 
+                            -DBUILD_LIST=core,imgproc,imgcodecs,videoio
+                            -DBUILD_TESTS=OFF 
+                            -DBUILD_opencv_python2=OFF
+                            -DBUILD_opencv_python3=OFF
+                            -DWITH_OPENEXR=OFF
+                            -DWITH_1394=OFF
+                            -DWITH_EIGEN=OFF
+                            -DWITH_OPENGL=ON
+                            -DBUILD_SHARED_LIBS=OFF
+                            -DWITH_FFMPEG=OFF
+                            -DBUILD_EXAMPLES=OFF
+                            -DBUILD_TESTS=OFF
+                            -DBUILD_opencv_python_tests=OFF
+                            -DBUILD_JAVA=OFF
+        )
+        set(OPENCV_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/opencv-install
+                              -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         )
 
-        # Setting configure variabes for Opencv
-        set(BUILD_LIST "calib3d,core,features2d,flann,highgui,imgcodecs,imgproc,videoio" CACHE STRING "Build only listed modules (comma-separated, e.g. 'videoio,dnn,ts')")
-        set(BUILD_TESTS OFF CACHE BOOL "" FORCE) 
-        set(BUILD_opencv_python2 OFF CACHE BOOL "" FORCE)
-        set(BUILD_opencv_python3 OFF CACHE BOOL "" FORCE)
-        set(WITH_OPENEXR OFF CACHE BOOL "" FORCE)
-        set(WITH_1394 OFF CACHE BOOL "" FORCE) 
-        set(WITH_EIGEN OFF CACHE BOOL "" FORCE)
-        set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-        set(WITH_FFMPEG ON CACHE BOOL "" FORCE)
-        FetchContent_MakeAvailable(googletest)
+        FetchContent_Declare(opencv)               
+        # FetchContent_MakeAvailable(opencv)
+        
+        # Check if population has already been performed
+        FetchContent_GetProperties(opencv)
+        if(NOT opencv_POPULATED)
+        # Fetch the content using previously declared details
+           
+            FetchContent_Populate(opencv
+            GIT_REPOSITORY      https://github.com/opencv/opencv.git
+            GIT_TAG             master
+            GIT_PROGRESS        ON
+            DOWNLOAD_DIR        "${CMAKE_CURRENT_SOURCE_DIR}"
+            SOURCE_DIR          "${CMAKE_CURRENT_SOURCE_DIR}/opencv-master"
+            BINARY_DIR          "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build"
+            INSTALL_DIR         "${CMAKE_CURRENT_SOURCE_DIR}/opencv-install"
+            )
 
-        # add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/opencv-master/")# Runs the CMakeLists.txt in opencv-master and places the output in binary_dir
+                # foreach(opencv_cache_arg opencv_cmake_arg IN ZIP_LISTS OPENCV_CACHE_ARGS OPENCV_CMAKE_ARGS)
+                #     message(STATUS "cache=${opencv_cache_arg}, opencv_cmake_arg=${opencv_cmake_arg}")
+                # endforeach()
+
+            
+            message("OPENCV Cache args: ${OPENCV_CACHE_ARGS}")
+            message("OPENCV cmake args: ${OPENCV_CMAKE_ARGS}")
+            execute_process(COMMAND ${CMAKE_COMMAND} -S "${CMAKE_CURRENT_SOURCE_DIR}/opencv-master" ${OPENCV_CACHE_ARGS} ${OPENCV_CMAKE_ARGS} -B "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
+            execute_process(COMMAND ${CMAKE_COMMAND} --build "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build" --parallel 3 -- -j4)#make -j4)
+            execute_process(COMMAND ${CMAKE_COMMAND} --install "${CMAKE_CURRENT_SOURCE_DIR}/opencv-install" )
+            # add_subdirectory(${opencv_SOURCE_DIR} ${opencv_BINARY_DIR})
+            set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
+            find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/" )#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+        endif()
+
+
     ENDIF()
+
 
     #Should print the include dir and link libs.
     MESSAGE(STATUS "OPENCV INCLUDE DIRS: ${OpenCV_INCLUDE_DIRS}")
     MESSAGE(STATUS "OPENCV LINK LIBRARIES ${OpenCV_LIBS}")
 ENDIF()
-
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw/")# Runs the CMakeLists.txt in source_dir
 
 # Add directories to our project and src files
 add_subdirectory("${WORKSPACE_DIR}/src")
@@ -54,17 +91,4 @@ add_subdirectory("${WORKSPACE_DIR}/src")
 # enable_testing()
 # add_subdirectory("${WORKSPACE_DIR}/tests")
 
-
-#find_package(OpenGL REQUIRED)
-    # find_package(glfw3 3.3.2 REQUIRED) #for shared library linking. Use "sudo apt-get install libglfw3-dev" to download the shared lib
-
-    #  set(THREADS_PREFER_PTHREAD_FLAG ON)
-    #  find_package(Threads REQUIRED)
-
-#The 3 following lines ask not to build glfw docs, tests, & examples
-# set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
-# set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
-# set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-# set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-# add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw/")# Runs the CMakeLists.txt in source_dir
 

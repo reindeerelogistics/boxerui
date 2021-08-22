@@ -25,6 +25,14 @@ add_executable(BoxerUI_Tests ${BOXERUI_SOURCE_TESTS})
 target_link_libraries(BoxerUI_Tests PUBLIC gtest_main )
 # add_test(NAME ${BoxerUI_Tests} COMMAND ${BoxerUI_Tests})
 
+# TODO: define a function to simplify adding tests
+# function(do_test target arg result)
+#   add_test(NAME Comp${arg} COMMAND ${target} ${arg})
+#   set_tests_properties(Comp${arg}
+#     PROPERTIES PASS_REGULAR_EXPRESSION ${result}
+#     )
+# endfunction(do_test)
+
 include(GoogleTest)
 gtest_discover_tests(BoxerUI_Tests)
 
