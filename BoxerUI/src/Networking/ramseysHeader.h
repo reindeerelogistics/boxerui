@@ -22,7 +22,7 @@ struct MsgHeader {
 
 struct MsgImg {
     struct MsgHeader Head;
-   // cv::Mat frame;
+    // cv::Mat frame;
 };
 
 struct MsgCon {
@@ -61,28 +61,46 @@ struct ServerMsg {
 //Protocol
 
 //Turn into Linked lists
-struct Node {
-    struct Node* next;
+class LinkedList {
+    //RESTRICT THE USER WITH CONSTRUCTOR
+    Data* first;
+    Data* last;
+    private:
+            struct Client {
+                Client* next;
 
-    uint8_t name[20];
-    uint8_t uid;
-    int temperature;
-    struct sockaddr_in Address;
-    socklen_t len;
+                uint8_t name[20];
+                uint8_t uid;
+                int temperature;
+                struct sockaddr_in Address;
+                socklen_t len;
 
-    struct KeyValue* DestinationDictionary; //Become linked list
-};
+                LinkedList DestinationDictionary; //Become linked list
+            };
 
-struct NodePtr {
-    struct NodePtr* next;
-    struct Node* node;
-};
+            struct NodePtr {
+                NodePtr* next;
+                struct Client* node;
+            };
 
-struct KeyValue {
-    struct KeyValue* next;
+            struct KeyValue {
+                KeyValue* next;
+                uint8_t op;
+                struct NodePtr* value;
+            };
+        union Data {
+            Client client;
+            NodePtr nodePtr;
+            KeyValue dict;
+        };
+        Data node;
 
-    uint8_t op;
-    struct NodePtr* value;
+    public:
+        addClient(uint8_t uid, ) {
+            node.client = (struct Client*)malloc(sizeof(struct Client));
+            node.client->uid;
+        }
+
 };
 
 struct ListWrap {
@@ -91,4 +109,7 @@ struct ListWrap {
     void* prev;
     void* current;
     void* next;
+
 };
+
+

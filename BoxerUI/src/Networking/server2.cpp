@@ -1,7 +1,13 @@
 #include "server.h"
 
-struct Node* first = NULL;
-struct Node* last = NULL;
+bool test = false;
+void debug(const char words[]) {
+    if(test == true)
+        printf("[#]%s\n", words);
+}
+
+struct Node* first = 0;
+struct Node* last = 0;
 
 int stringCompare(uint8_t* str1, uint8_t* str2) {
     int i = 0;
@@ -9,7 +15,7 @@ int stringCompare(uint8_t* str1, uint8_t* str2) {
         if(str1[i] != str2[i]) {
             return 0;
         }
-        else if(str1[i] == '\0' || str1[i] == NULL) {
+        else if(str1[i] == '\0' || str1[i] == 0) {
             return 1;
         }
         else{
@@ -21,7 +27,7 @@ int stringCompare(uint8_t* str1, uint8_t* str2) {
 struct Node* searchNodes(struct Node* node, uint8_t* name) {
     if(stringCompare(node->name, name) == 1) {
         return node;
-    } else if(node->next == NULL) {
+    } else if(node->next == 0) {
         return 0;
     } else {
         return searchNodes(node->next, name);
@@ -32,7 +38,7 @@ struct Node* printAllNodes(struct Node* node) {
     if(node == last) {
         printf("Name: %s\nEnd Of Nodes\n", node->name);
         return last;
-    } else if(node->next != NULL && node != last) {
+    } else if(node->next != 0 && node != last) {
         printf("Name: %s\n", node->name);
         return printAllNodes(node->next);
     } else {
@@ -63,7 +69,7 @@ struct KeyValue* findKeyPair(struct KeyValue* dests, uint8_t op) {
         printf("found KeyPair with OP: %d\n", dests->op);
         return dests;
     }
-    else if(dests->next == NULL) {
+    else if(dests->next == 0) {
         printf("None of this op\n");
         dests->next = (struct KeyValue*)malloc(sizeof(dests));
         dests->next->op = op;
@@ -94,7 +100,7 @@ std::vector<uint8_t> nextName(uint8_t* names) {
 struct NodePtr* lastNodePtr(struct NodePtr* value) {
     printf("Node to start searching from: %s\n", value->node->name);
     printf("started looking for last node\n");
-    if(value->next == NULL) {
+    if(value->next == 0) {
         printf("Found the last nodePtr which points to: %s\n", value->node->name);
         return value;
     } else {
@@ -104,26 +110,30 @@ struct NodePtr* lastNodePtr(struct NodePtr* value) {
 }
 
 struct ListWrap searchDests(struct NodePtr* nodePtr, uint8_t* name, uint8_t* uid) {
+    printf("Searching dests\n");
     if(name[0] == '\0' && uid[0] != '\0') {
         //search for uid
     } else if(name[0] != '\0' && uid[0] == '\0') {
         struct NodePtr* temp = nodePtr;
         if(stringCompare(temp->node->name, name) == 1) {
                 struct ListWrap wrapNodePtr;
-                wrapNodePtr.prev = NULL;
+                wrapNodePtr.type = 1;
+                wrapNodePtr.prev = 0;
                 wrapNodePtr.current = temp;
                 wrapNodePtr.next = temp->next;
                 return wrapNodePtr;
         }
         while(true) {
-            if(temp->next == NULL) {
+            if(temp->next == 0) {
                 struct ListWrap wrapNodePtr;
-                wrapNodePtr.current = NULL;
-                printf("Failed to find node in dests");
+                wrapNodePtr.type = 1;
+                wrapNodePtr.current = 0;
+                printf("Failed to find node in dests\n");
                 return wrapNodePtr;
             }
             else if(stringCompare(name, temp->next->node->name) == 1) {
                 struct ListWrap wrapNodePtr;
+                wrapNodePtr.type = 1;
                 wrapNodePtr.prev = temp;
                 wrapNodePtr.current = temp->next;
                 wrapNodePtr.next = temp->next->next;
@@ -142,11 +152,11 @@ int addToDests(struct KeyValue* pair, uint8_t* names, uint8_t* uids) {
     struct Node* newNode = searchNodes(first, &name[0]);
     struct NodePtr* ptr = (struct NodePtr*)malloc(sizeof(struct NodePtr));
     ptr->node = newNode;
-    ptr->next = NULL;
+    ptr->next = 0;
     printf("Allocated a new nodePtr that points to: %s\n", ptr->node->name);
 
     if(pair->value == 0) {
-        printf("The list of NodePtr's was NULL, initialised\n");
+        printf("The list of NodePtr's was 0, initialised\n");
         pair->value = ptr;
     } else {
         struct NodePtr* lastDest = lastNodePtr(pair->value);
@@ -170,8 +180,8 @@ bool checkIfNodeToRemove(struct KeyValue* pair, struct NodePtr* nodePtr, struct 
         return true;
     } else if(nodePtr->next->node == nodeToRemove) {
         //deallocate nodePtr->next
-        if(nodePtr->next->next == NULL) {
-            nodePtr->next = NULL;
+        if(nodePtr->next->next == 0) {
+            nodePtr->next = 0;
             return true;
         } else{
             nodePtr->next = nodePtr->next->next;
@@ -197,7 +207,7 @@ int removeFromDests(struct KeyValue* pair, struct NodePtr* nodePtr, uint8_t* nam
         }
         return removeFromDests(pair, pair->value, names + name.size() + 1, uids);
     } 
-    else if(nodePtr->next == NULL) {
+    else if(nodePtr->next == 0) {
         printf("Failed to find node %s in destination list", &name[0]);
         if(*(names + name.size()) == '\0') {
             printf("Finished all names\n");
@@ -232,11 +242,11 @@ int changeDict(struct Node* node, struct MutateDest dests) {
 //Return uid
 uint8_t addNode(struct Join Client, struct sockaddr_in Address, socklen_t len) {
     uint8_t uid = genUID();
-    if(last == NULL) {
+    if(last == 0) {
         last = (struct Node*)malloc(sizeof(struct Node));
         //CHeck for failed allocation
 
-        last->next = NULL;
+        last->next = 0;
         last->uid = uid;
         last->temperature = 100;
         last->Address = Address;
@@ -249,7 +259,7 @@ uint8_t addNode(struct Join Client, struct sockaddr_in Address, socklen_t len) {
         last->next = (struct Node*)malloc(sizeof(struct Node));
         //CHeck for failed allocation
 
-        last->next->next = NULL;
+        last->next->next = 0;
         last->next->uid = uid;
         last->next->temperature = 100;
         last->next->Address = Address;
@@ -262,6 +272,72 @@ uint8_t addNode(struct Join Client, struct sockaddr_in Address, socklen_t len) {
     return uid;
 }
 
+void deallocateNode(struct ListWrap* wrapper) {
+    if(wrapper->prev == 0) {
+        printf("Invalid trying to delete first node\n");
+    }
+    else if(wrapper->current == 0) {
+        printf("Trying to delete invalid node: node does not exist\n");
+    }
+    else if(wrapper->next == 0) {
+        //delete no problem as is at the end of list
+        ((struct Node*)wrapper->prev)->next = 0;
+        free((struct Node*)wrapper->current);
+    }
+    else {
+        //prev next current all not 0 so in middle of list
+        ((struct Node*)wrapper->prev)->next = ((struct Node*)wrapper->next);
+        free((struct Node*)wrapper->current);
+    }
+}
+
+void deallocateNodePtr(struct KeyValue* pair, struct ListWrap* wrapper) {
+    if(wrapper->current == 0) {
+    }
+    else if(wrapper->prev == 0) {
+        pair->value = ((struct NodePtr*)wrapper->next);
+        free(wrapper->current);
+        printf("Reassigned first node\n");
+    }
+    else if(wrapper->next == 0) {
+        printf("Deleted last node\n");
+        ((struct NodePtr*)wrapper->prev)->next = 0;
+        free((struct NodePtr*)wrapper->current);
+    }
+    else {
+        //prev next current all not 0 so in middle of list
+        ((struct NodePtr*)wrapper->prev)->next = ((struct NodePtr*)wrapper->next);
+        free((struct NodePtr*)wrapper->current);
+    }
+}
+
+void deallocateKeyPair(struct ListWrap* wrapper) {
+}
+
+void unlink(void* pointedStructure, struct ListWrap* wrapper) {
+    switch(wrapper->type) {
+        case 0:
+                debug("Dellocating Node\n");
+                deallocateNode(wrapper);
+                printf("Deallocated Node\n");
+                break;
+        case 1:
+                debug("Dellocating NodePtr");
+                deallocateNodePtr((struct KeyValue*)&pointedStructure, wrapper);
+                printf("Deallocated NodePtr\n");
+                break;
+        case 2:
+                debug("Dellocating KeyPair\n");
+                deallocateKeyPair(wrapper);
+                printf("Deallocated KeyPair\n");
+                break;
+        default:
+            printf("Default\n");
+            break;
+    };
+    printf("Finished Switch in unlink\n");
+    return;
+}
 
 void testAddNode() {
     printf("[*]TEST: AddNode\n");
@@ -328,6 +404,7 @@ void testSearchNodes() {
     }
     printf("[*]END TEST: SearchNodes\n\n");
 }
+
 void testNextName() {
     printf("[*]TEST: NextName\n");
 
@@ -361,6 +438,7 @@ void testAddToDests() {
     printf("[*]END TEST: AddToDests\n\n");
 }
 
+
 void testSearchDict() {
     printf("[*]TEST: SearchDict\n");
     uint8_t name[] = "Aaron";
@@ -373,7 +451,27 @@ void testSearchDict() {
     printf("[*]END TEST: SearchDict\n\n");
 }
 
-int main() {
+void testUnlink() {
+    printf("[*]TEST: Unlink\n");
+    uint8_t name[] = "Aaron";
+    uint8_t nameToFind[] = "Mike";
+    uint8_t uids[] = "";
+
+    struct Node* node = searchNodes(first, name);
+    struct ListWrap nodePtrWrap = searchDests(node->DestinationDictionary->value, nameToFind, uids);
+    printf("Type returned: %d\n", nodePtrWrap.type);
+    printf("Current Node: %s\n", ((struct NodePtr*)nodePtrWrap.current)->node->name);
+    printf("Prev: %d\n", nodePtrWrap.prev);
+    printf("Current: %d\n", nodePtrWrap.current);
+    printf("Next: %d\n", nodePtrWrap.next);
+    unlink(node->DestinationDictionary, &nodePtrWrap);
+    printf("Unlinked\n");
+    searchDests(node->DestinationDictionary->value, nameToFind, uids);
+    printf("[*]END TEST: Unlink\n\n");
+}
+int main(int argc, const char* argv[]) {
+    if(argc == 1) {
+    test = true;
     testAddNode();
     testFindKeyValue();
     testSearchNodes();
@@ -381,5 +479,15 @@ int main() {
     printf("First is %s\n", first->name);
     testAddToDests();
     testSearchDict();
+    testUnlink();
+    }
+    else if(argc == 2) {
+    test = true;
+    printf("Run as normal but no normal exists\n");
+    }
+    else if(argc == 3) {
+    test = false;
+    printf("Run as release\n");
+    }
 
 }
