@@ -90,7 +90,7 @@ ELSE()
 
     set_target_properties(BoxerUI_app PROPERTIES
                       RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/BoxerUI/bin/debug"
-                      RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_CURRENT_SOURCE_DIR}/BoxerUI/bin/release"
+                      RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/BoxerUI/bin/release"
     )
     # install(TARGETS BoxerUI_app DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
