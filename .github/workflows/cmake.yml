@@ -89,7 +89,7 @@ jobs:
         cached:  ${{ steps.opencv-cache.outputs.cache-hit }} 
         opencv-version: master
         opencv-extra-modules: OFF
-        CMAKE_BUILD_TYPE: ${{env.BUILD_TYPE_RELEASE}}
+        CMAKE_BUILD_TYPE: ${{env.BUILD_TYPE}}
         BUILD_NEW_PYTHON_SUPPORT: OFF
         WITH_V4L: ON
         WITH_OPENGL: ON
