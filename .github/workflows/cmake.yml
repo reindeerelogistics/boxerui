@@ -116,7 +116,7 @@ jobs:
       # Build your program with the given configuration
       run: |
             ls -al
-            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} 
+            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j 4
        
     - name: Step 7 - Test BoxerUI
       working-directory: ${{github.workspace}}/build/BoxerUI/tests
@@ -229,14 +229,14 @@ jobs:
   Discord-CI:
     runs-on: ubuntu-latest
     env:
-      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      DISCORD_WEBHOOK: https://discord.com/api/webhooks/879220651674730517/oTXy0XPiGOnvuFzOHEqgiA3UIu0KhyexnszLef4Ap25ARgx9gCuPYOIz4-VHjeEiObDH
     if: always()
     needs: [Windows-Test, Linux-Build]
     steps:
     - uses: sarisia/actions-status-discord@v1
       if: success()
       with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        webhook: ${{ env.DISCORD_WEBHOOK }}
 #         nodetail: true
         title: "`BoxerUI_app` build was successful"
         description: |
