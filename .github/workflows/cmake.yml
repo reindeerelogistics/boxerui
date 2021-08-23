@@ -82,7 +82,7 @@ jobs:
                       ${{ runner.os }}-
             
     - name: Step 3.5 - Load Cached OpenCV
-#       if:  steps.opencv-cache.outputs.cache-hit != 'true'
+      if:  steps.opencv-cache.outputs.cache-hit != 'true'
       uses: rayandrews/with-opencv-action@v1
       with:
         dir: opencv-master
