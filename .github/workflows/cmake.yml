@@ -228,6 +228,8 @@ jobs:
         
   Discord-CI:
     runs-on: ubuntu-latest
+    env:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
     if: always()
     needs: [Windows-Test, Linux-Build]
     steps:
