@@ -136,8 +136,10 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       #ctest -C BoxerUI/tests ${{env.BUILD_TYPE}}
       run: |
-            cd build/
             ls -al
+            cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+            cd build/
             cmake --build . --config ${{env.BUILD_TYPE}} --target BoxerUI_Tests -j 4 --
             echo The folowing tests will be executed:
             ctest --show-only human
