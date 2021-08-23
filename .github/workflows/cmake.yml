@@ -183,6 +183,7 @@ jobs:
             ctest --show-only human
             echo Running BoxerUI_Tests...
             ctest -j4 -C ${{env.BUILD_TYPE}} -T test --output-on-failure -T test --output-on-failure
+            cd ..
 #     - id: test-result
 #       run: echo "::set-output name=test::pass"
     
@@ -194,8 +195,8 @@ jobs:
         name: BoxerUI_app
         # Destination path
         path: |
-              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}
-        error: BoxerUI_app not found in "${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}"
+              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}    
+#         error: BoxerUI_app not found in "${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}"
         retention-days: 20  
         
         
