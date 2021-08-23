@@ -75,7 +75,7 @@ jobs:
       env:
         cache-name: cache-opencv
       with:
-        path: opencv-build
+        path: opencv-master
         key: ${{ runner.os }}-opencv-cache
         restore-keys: |
                       ${{ runner.os }}-opencv
