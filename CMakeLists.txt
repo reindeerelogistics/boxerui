@@ -9,8 +9,8 @@ IF(WIN32)
     find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
 ELSE()
 
-    set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
-    # find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc )#CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/" )#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+    # set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
+    find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc )#CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/" )#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
     
     IF(NOT OPENCV_FOUND)
         #WIP: build opencv from source if not found 
@@ -88,7 +88,7 @@ ENDIF()
 # Add directories to our project and src files
 add_subdirectory("${WORKSPACE_DIR}/src")
 
-# enable_testing()
-# add_subdirectory("${WORKSPACE_DIR}/tests")
+enable_testing()
+add_subdirectory("${WORKSPACE_DIR}/tests")
 
 

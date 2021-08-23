@@ -20,7 +20,7 @@ FetchContent_MakeAvailable(googletest)
 
 
 file(GLOB_RECURSE BOXERUI_SOURCE_TESTS LIST_DIRECTORIES true "*.h" "*.cpp")# Recuresively searches to include all files with the following pattern
-message("TsetSrc: ${BOXERUI_SOURCE_TESTS}")
+message("TestSrc: ${BOXERUI_SOURCE_TESTS}")
 add_executable(BoxerUI_Tests ${BOXERUI_SOURCE_TESTS})
 target_link_libraries(BoxerUI_Tests PUBLIC gtest_main )
 # add_test(NAME ${BoxerUI_Tests} COMMAND ${BoxerUI_Tests})
