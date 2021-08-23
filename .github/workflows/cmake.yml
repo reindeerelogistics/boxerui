@@ -130,6 +130,11 @@ jobs:
 #     outputs:
 #       test-output:  ${{ steps.step1.outputs.test }}
     steps: 
+    - name: Step 1 - Checkout branch
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+        
     - name: Test
 #       working-directory: ${{github.workspace}}/build/BoxerUI/tests
       # Execute tests defined by the CMake configuration.  
