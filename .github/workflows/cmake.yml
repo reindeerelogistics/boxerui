@@ -18,15 +18,15 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - name: Step 1 - Checkout branch
-      uses: actions/checkout@v2
-      with:
-        submodules: true
+#     - name: Step 1 - Checkout branch
+#       uses: actions/checkout@v2
+#       with:
+#         submodules: true
         
-    - name: Step 2 - Get CMake
-      uses: lukka/get-cmake@v3.21.1
+#     - name: Step 2 - Get CMake
+#       uses: lukka/get-cmake@v3.21.1
       
-    - name: Step 3 - Get Opencv
+    - name: Step 1 - Get it together!!
       run: |
             get-date
             Write-Output ${{runner.os}} impl is still WIP
