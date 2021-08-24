@@ -112,7 +112,7 @@ jobs:
         name: BoxerUI_app
         # Destination path
         path: |              
-              ${{github.workspace}}/bin/${{env.BUILD_TYPE}}/    
+              ${{github.workspace}}/bin/${{env.BUILD_TYPE}}    
               ${{github.workspace}}/bin/${{env.BUILD_TYPE}}/BoxerUI_app
         if-no-files-found: error
         retention-days: 20 
