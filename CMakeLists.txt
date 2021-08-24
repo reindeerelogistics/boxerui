@@ -3,13 +3,12 @@ project(BoxerUI)
 
 # set( CMAKE_VERBOSE_MAKEFILE on )
 set(WORKSPACE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/BoxerUI/")#This is the dir to the root of the project.
-find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc )
 IF(WIN32)
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/include")
     find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
 ELSE()
 
-    # set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
+    set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
     find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc )#CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/" )#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
     
     IF(NOT OPENCV_FOUND)

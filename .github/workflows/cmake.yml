@@ -134,16 +134,18 @@ jobs:
 #       run: echo "::set-output name=test::pass"
     
     - name: Step 8 - Download a Build Artifact
-      if: ${{needs.Linux-Build.outputs.test-output}} == 'pass'
+      # if: ${{needs.Linux-Build.outputs.test-output}} == 'pass'
       uses: actions/upload-artifact@v2.2.4
       with:
         # Artifact name
         name: BoxerUI_app
         # Destination path
         path: |
+              ls -al
               ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}    
 #         error: BoxerUI_app not found in "${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}"
         retention-days: 20 
+        
 #     - name: Locate artifact
 #       run: |
 #             ls build
