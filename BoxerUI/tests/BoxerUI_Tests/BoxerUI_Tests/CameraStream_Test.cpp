@@ -5,7 +5,7 @@
 TEST(TestCaseName, TestName) {
 	EXPECT_EQ(1, 1);
 	EXPECT_TRUE(true);
-	EXPECT_EQ(CameraStream_Test::minorTest(2), 3);
+	EXPECT_EQ(CameraStream_Test::minorTest(2), 4);
 }
 
 //This definition will ideally be with the source files
