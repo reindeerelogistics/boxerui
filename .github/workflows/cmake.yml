@@ -10,7 +10,7 @@ on:
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
+  BUILD_TYPE: release
 #   BUILD_TYPE_DEBUG: Debug
 
 jobs:
@@ -112,8 +112,8 @@ jobs:
         name: BoxerUI_app
         # Destination path
         path: |              
-              ${{github.workspace}}/bin/${{env.BUILD_TYPE}}    
-              ${{github.workspace}}/bin/${{env.BUILD_TYPE}}/BoxerUI_app
+              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}/BoxerUI_app
+              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}    
         if-no-files-found: error
         retention-days: 20 
         
