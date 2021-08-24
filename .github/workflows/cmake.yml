@@ -18,14 +18,6 @@ jobs:
     runs-on: windows-latest
     
     steps:
-#     - name: Step 1 - Checkout branch
-#       uses: actions/checkout@v2
-#       with:
-#         submodules: true
-        
-#     - name: Step 2 - Get CMake
-#       uses: lukka/get-cmake@v3.21.1
-      
     - name: Step 1 - Get it together!!
       run: |
             get-date
@@ -41,17 +33,6 @@ jobs:
       run: |
             Write-Output ${{runner.os}} artifact will be built upon successful test
   
-#     - name: Download a Build Artifact
-#       uses: actions/upload-artifact@v2.2.4
-#       with:
-#         # Artifact name
-#         name: BoxerUI_app
-#         # Destination path
-#         path: |
-#               ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}
-#         error: BoxerUI_app not found in "${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}"
-#         retention-days: 20
-        
         
   Linux-Build:
     # The CMake configure and build commands are platform agnostic and should work equally
@@ -131,15 +112,11 @@ jobs:
         name: BoxerUI_app
         # Destination path
         path: |              
-              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}/    
-              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}/BoxerUI_app    
+              ${{github.workspace}}/bin/${{env.BUILD_TYPE}}/    
+              ${{github.workspace}}/bin/${{env.BUILD_TYPE}}/BoxerUI_app
         if-no-files-found: error
         retention-days: 20 
         
-#     - name: Locate artifact
-#       run: |
-#             ls build
-#             cd build/BoxerUI/src; ls -al
     
 #   Linux-Test:
 #     needs: Linux-Build
