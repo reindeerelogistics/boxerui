@@ -1,16 +1,45 @@
-name: Greetings
+name: BoxerUI-Greetings
 
-on: [pull_request, issues]
+on: 
+  fork:
+    branches: master
+  pull_request:
+    branches-ignore: [master, tasks/*]
+    types: [assigned, opened, synchronize, reopened]
+  issues: 
+    branches: master
+    types: [opened,closed]
 
 jobs:
-  greeting:
+  BoxerUI-Greetings:
     runs-on: [ubuntu-latest, macos-latest, windows-latest]
-    permissions:
-      issues: write
-      pull-requests: write
+    permissions: write-all
+    if: ${{ github.event }} == 'issues'
     steps:
     - uses: actions/first-interaction@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: 'This is your first issue. Please remain patient, your issue will be seen to shortly'
-        pr-message: 'Thanks for contributing to the Boxer project.'
+        pr-message: |
+                    'Thanks for your interest in the BoxerUI project.'
+                    Please make sure you've explored our [Contributing Guide](#) before continuing with your PR.
+
+  Discord-CI:
+      runs-on: ubuntu-latest
+      env:
+        DISCORD_WEBHOOK: https://discord.com/api/webhooks/879220651674730517/oTXy0XPiGOnvuFzOHEqgiA3UIu0KhyexnszLef4Ap25ARgx9gCuPYOIz4-VHjeEiObDH
+      if: ${{github.event.fork.branches}} == 'master'
+#       needs: [Windows-Test, Linux-Build]
+      steps:
+      - uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ env.DISCORD_WEBHOOK }}
+          nodetail: true
+          title: "${{github.actor}} has forked `${{github.repository}}`"
+          description: |
+                        Please meet with **${{github.repository_owner}}** or any **`Team Leaders`** on roles regarding contributing.
+                        Click [here](#) to view our Contributing Guide!
+          color: 0x065C00
+          username: The Gate Keeper
+          image: https://i.redd.it/ayih4qogh2a51.png
+#           avatar_url: https://i.redd.it/ayih4qogh2a51.png
