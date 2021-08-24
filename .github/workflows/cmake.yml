@@ -140,9 +140,9 @@ jobs:
         # Artifact name
         name: BoxerUI_app
         # Destination path
-        path: |
-              ls -al
-              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}    
+        path: |              
+              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}/    
+              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}/BoxerUI_app    
 #         error: BoxerUI_app not found in "${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}"
         retention-days: 20 
         
