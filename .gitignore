@@ -3,13 +3,13 @@
 Debug/
 Release/
 out/*
-BoxerUI/bin/*
+BoxerUI/bin/
 
-opencv/*
-opencv-master/*
-opencv-build/*
-opencv-install/*
-opencv_contrib-master/*
+opencv/
+opencv-master/
+opencv-build/
+opencv-install/
+opencv_contrib-master/
 
 BoxerUI/libs/cereal/
 

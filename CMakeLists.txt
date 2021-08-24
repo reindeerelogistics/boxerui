@@ -9,7 +9,7 @@ IF(WIN32)
 ELSE()
 
     set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
-    find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc )#CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/" )#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+    find_package(OpenCV OPTIONAL_COMPONENTS highgui imgproc )#CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/" )#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
     
     IF(NOT OPENCV_FOUND)
         #WIP: build opencv from source if not found 
