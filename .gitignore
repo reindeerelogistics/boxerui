@@ -6,7 +6,7 @@ out/*
 BoxerUI/bin/
 
 opencv/
-opencv-master/
+# opencv-master/
 opencv-build/
 opencv-install/
 opencv_contrib-master/
