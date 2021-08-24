@@ -1,4 +1,4 @@
-name: BoxerUI-Build-&-Test
+name: BoxerUI-CD
 
 on:
 #   create:
