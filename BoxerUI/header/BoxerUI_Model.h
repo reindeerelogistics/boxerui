@@ -2,7 +2,6 @@
 
 #include "Boxer.h"
 #include <opencv2/opencv.hpp>
-#include <opencv2/highgui/highgui.hpp>
 
 #include <map>
 #include <queue>
@@ -14,9 +13,7 @@
 //#include <opencv2/core.hpp>
 //#include <opencv2/cudaimgproc.hpp>
 
-
-#include <mutex>
-#include <thread>
+#include <iostream>
 
 //#include <opencv2/core.hpp>
 //#include <opencv2/cudacodec.hpp>
@@ -25,15 +22,11 @@
 //#include <opencv2/cudaimgproc.hpp>
 //#include <opencv2/core/opengl.hpp>
 
-#include <opencv2/highgui.hpp>
 
 #ifdef _WIN32
-
 #include <Windows.h>
-#include <iostream>
 #else
 #include <stdio.h>
-#include <pthread.h>
 
 #endif // headers for threads
 

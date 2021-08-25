@@ -65,7 +65,9 @@ void BoxerUI_Model::cameraStreamProc(CameraMap& cam_map, cv::VideoCapture& vid, 
 
 	cv::Mat input, output;
 	std::cout << "Cuda Device info: " << std::endl;
-	cv::cuda::printCudaDeviceInfo(0);
+// 	cv::ocl::Device(context.device(0)); 
+// UMat img, gray; 
+	// cv::cuda::printCudaDeviceInfo(0);
 
 	//cv::Ptr<cv::cudacodec::VideoReader> d_reader = cv::cudacodec::createVideoReader(fname);
 	//cv::cuda::GpuMat temp_gpu;

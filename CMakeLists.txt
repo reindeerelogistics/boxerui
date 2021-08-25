@@ -1,95 +1,93 @@
 cmake_minimum_required(VERSION 3.16)
 project(BoxerUI)
 
-#Note: Shared/dynamic libraries are linked at runtime (must be included with obj/binary file), static are linked at compile time (larger file size).
+# set( CMAKE_VERBOSE_MAKEFILE on )
+set(WORKSPACE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/BoxerUI/")#This is the dir to the root of the project.
+IF(WIN32)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/include")
+    find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+ELSE()
 
-find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
-    set(BUILD_SHARED_LIBS OFF)
-    set(OpenCV_STATIC ON)#just to make sure 
+    set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
+    find_package(OpenCV OPTIONAL_COMPONENTS highgui imgproc )#CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/" )#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+    
+    IF(NOT OPENCV_FOUND)
+        #WIP: build opencv from source if not found 
+        MESSAGE(WARNING "OPENCV NOT FOUND")
+        MESSAGE(STATUS "INSTALLING OPENCV")
 
-find_package(OpenGL REQUIRED)
-    # find_package(glfw3 3.3.2 REQUIRED) #for shared library linking. Use "sudo apt-get install libglfw3-dev" to download the shared lib
+        include(FetchContent)
+        execute_process(COMMAND nproc 
+                                OUTPUT_VARIABLE NUM_PROC)
+        set(CMAKE_BUILD_PARALLEL_LEVEL ${NUM_PROC})
+        # MATH(EXPR VAR "${VAR}+1") To increment a variable value
 
-    # set(THREADS_PREFER_PTHREAD_FLAG ON)
-    # find_package(Threads REQUIRED)
+        set(OPENCV_CACHE_ARGS 
+                            -DBUILD_LIST=core,imgproc,imgcodecs,videoio
+                            -DBUILD_TESTS=OFF 
+                            -DBUILD_opencv_python2=OFF
+                            -DBUILD_opencv_python3=OFF
+                            -DWITH_OPENEXR=OFF
+                            -DWITH_1394=OFF
+                            -DWITH_EIGEN=OFF
+                            -DWITH_OPENGL=ON
+                            -DBUILD_SHARED_LIBS=OFF
+                            -DWITH_FFMPEG=OFF
+                            -DBUILD_EXAMPLES=OFF
+                            -DBUILD_TESTS=OFF
+                            -DBUILD_opencv_python_tests=OFF
+                            -DBUILD_JAVA=OFF
+        )
+        set(OPENCV_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/opencv-install
+                              -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        )
 
-#The 3 following lines ask not to build glfw docs, tests, & examples
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+        FetchContent_Declare(opencv)               
+        # FetchContent_MakeAvailable(opencv)
+        
+        # Check if population has already been performed
+        FetchContent_GetProperties(opencv)
+        if(NOT opencv_POPULATED)
+        # Fetch the content using previously declared details
+           
+            FetchContent_Populate(opencv
+            GIT_REPOSITORY      https://github.com/opencv/opencv.git
+            GIT_TAG             master
+            GIT_PROGRESS        ON
+            DOWNLOAD_DIR        "${CMAKE_CURRENT_SOURCE_DIR}"
+            SOURCE_DIR          "${CMAKE_CURRENT_SOURCE_DIR}/opencv-master"
+            BINARY_DIR          "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build"
+            INSTALL_DIR         "${CMAKE_CURRENT_SOURCE_DIR}/opencv-install"
+            )
 
-#Source dir and files variables
-set(WORKSPACE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/BoxerUI/")#This is the dir to the root of the project. !Important
-set(HEADERS_DIR "${WORKSPACE_DIR}/header")
-set(LIBS_DIR "${WORKSPACE_DIR}/libs")
-set(SOURCES_DIR "${WORKSPACE_DIR}/src")
+                # foreach(opencv_cache_arg opencv_cmake_arg IN ZIP_LISTS OPENCV_CACHE_ARGS OPENCV_CMAKE_ARGS)
+                #     message(STATUS "cache=${opencv_cache_arg}, opencv_cmake_arg=${opencv_cmake_arg}")
+                # endforeach()
 
-# Set path variable to sources that will be used rather than collecting all the backend sources including ones not in use
-set(IMGUI_BACKENDS_DIR "${LIBS_DIR}/imgui/backends/")
-    set(IMGUI_BACKENDS_SOURCES "${IMGUI_BACKENDS_DIR}imgui_impl_glfw.cpp" "${IMGUI_BACKENDS_DIR}imgui_impl_opengl3.cpp")
-
-# Use aux_source_directory() to get all source files in the specified directory and apply to a variable. 
-    # Does not easily reflect new files. Requires further investigation
-aux_source_directory("${HEADERS_DIR}/" BOXERUI_HEADERS) # collects all src files in the header dir
-aux_source_directory("${LIBS_DIR}/imgui/" IMGUI_SOURCES)# collects all src files in the libs/imgui dir. Cannot be impl for backends dir, would attempt at compiling non required
-    aux_source_directory("${LIBS_DIR}/imgui/examples/libs/gl3w/GL" IMGUI_EXAMPLES_LIBS_SOURCES)
-aux_source_directory("${LIBS_DIR}/implot/" IMPLOT_SOURCES)
-#aux_source_directory("${SOURCES_DIR}" BOXERUI_SOURCES)
-
-set(SOURCE 
-    "${BOXERUI_HEADERS}" 
-    "${IMGUI_SOURCES}" 
-    "${IMGUI_BACKENDS_SOURCES}"
-    "${IMGUI_EXAMPLES_LIBS_SOURCES}"
-    #"${BOXERUI_SOURCES}"
-    ${SOURCES_DIR}/main.cpp
-    "${IMPLOT_SOURCES}"
-    "BoxerUI/src/RoboCMD/RoboCMD.cpp"
-    )
-
-#Should print the include dir and link libs.
-MESSAGE(STATUS "Include dirs ${OpenCV_INCLUDE_DIRS}")
-MESSAGE(STATUS "LINK LIBRARIES ${OpenCV_LIBS}")
-
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw/" "${CMAKE_CURRENT_SOURCE_DIR}/glfw-build/")# Runs the CMakeLists.txt in source_dir and places the output in binary_dir
+            
+            message("OPENCV Cache args: ${OPENCV_CACHE_ARGS}")
+            message("OPENCV cmake args: ${OPENCV_CMAKE_ARGS}")
+            execute_process(COMMAND ${CMAKE_COMMAND} -S "${CMAKE_CURRENT_SOURCE_DIR}/opencv-master" ${OPENCV_CACHE_ARGS} ${OPENCV_CMAKE_ARGS} -B "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
+            execute_process(COMMAND ${CMAKE_COMMAND} --build "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build" --parallel 3 -- -j4)#make -j4)
+            execute_process(COMMAND ${CMAKE_COMMAND} --install "${CMAKE_CURRENT_SOURCE_DIR}/opencv-install" )
+            # add_subdirectory(${opencv_SOURCE_DIR} ${opencv_BINARY_DIR})
+            set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
+            find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/" )#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+        endif()
 
 
-#Executable target name and src files
-add_executable(BoxerUI_app "${SOURCE}")
+    ENDIF()
 
-#adds the dir for src files when compiling. Allows cmake to find where header files are located
-target_include_directories(BoxerUI_app PUBLIC 
-    "${HEADERS_DIR}/" 
-    "${LIBS_DIR}/imgui/"
-    "${IMGUI_BACKENDS_DIR}"
-    "${LIBS_DIR}/imgui/examples/libs/gl3w/" 
-    "${LIBS_DIR}/implot/" 
-    "${SOURCES_DIR}"
-    "${WORKSPACE_DIR}")
 
-#Links the libraries to build target set in add_executable command
-target_link_libraries(BoxerUI_app  OpenGL::GL glfw "${OpenCV_LIBS}")# Threads::Threads )
+    #Should print the include dir and link libs.
+    MESSAGE(STATUS "OPENCV INCLUDE DIRS: ${OpenCV_INCLUDE_DIRS}")
+    MESSAGE(STATUS "OPENCV LINK LIBRARIES ${OpenCV_LIBS}")
+ENDIF()
 
-#To link glfw statically:
-    #1. clone the repo into a directory <glfw_dir>: "git clone https://github.com/glfw/glfw.git"
-    #2. make & select a build dir: "mkdir ./glfw-build/;cd glfw-build; cmake ../<glfw_dir>/"
-    #3. !!WARNING!!. sudo make install will globally. add_subdirectory() command line 38 should avoid this.
+# Add directories to our project and src files
+add_subdirectory("${WORKSPACE_DIR}/src")
 
-#To link opencv statically: (For reference on configuring your build: https://docs.opencv.org/master/db/d05/tutorial_config_reference.html)
-    #1. Get and unzip opencv: "wget -O opencv.zip https://github.com/opencv/opencv/archive/master.zip; unzip opencv.zip"
-    #2. Build opencv: "cmake ../opencv-master/ -DBUILD_TESTS=OFF -DBUILD_opencv_python2=OFF -DBUILD_opencv_python3=OFF
-                        # -DWITH_OPENEXR=OFF -DWITH_1394=OFF -DWITH_EIGEN=OFF -DWITH_OPENGL=ON
-                        # -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=OFF ." FFMPEG could be useful: Investigate
-        #2-a. More modifiable values can be found: "cmake -LH" or "cmake -L"
-        #2-b. "sudo make install" will install globally. i.e. in /usr/... "make -j2" to compile in parallel (Faster install)
-        #2-c. You can indicate specific modules you'll like to build e.g. "-DBUILD_opencv_python2=OFF"
-    #3. Visit "cat OpenCVConfig.cmake" to view settings and variables as well as tips on including opencv to your project.
-    #4. "opencv_version" to find version.
-    #5. By default OpenCV will be installed to the /usr/local directory, all files will be copied to following locations:
-        # /usr/local/bin - executable files
-        # /usr/local/lib - libraries (.so)
-        # /usr/local/cmake/opencv4 - cmake package
-        # /usr/local/include/opencv4 - headers
-        # /usr/local/share/opencv4 - other files (e.g. trained cascades in XML format)
+enable_testing()
+add_subdirectory("${WORKSPACE_DIR}/tests")
 
-# message(STATUS "${OpenCV_INCLUDE_DIRS}")
+
