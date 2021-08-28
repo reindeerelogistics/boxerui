@@ -5,7 +5,7 @@
 #include "BoxerUI_Model.h"
 #include "CameraStream_View.h"
 
-#include "jsoncpp/json/json.h"
+//#include "jsoncpp/json/json.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -49,7 +49,7 @@ public:
 	double getModelTemperature();
 	void setModelBattery(double batteryVal);
 	void setModelTemperature(double temperatureVal);
-	void decomposePayload(Json::Value jsonPayload);
+	//void decomposePayload(Json::Value jsonPayload);
 	void inputHandlerModel();//INPUT_MODEL
 	
 	//VIEW

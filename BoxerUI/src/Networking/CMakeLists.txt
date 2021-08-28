@@ -1,11 +1,16 @@
 cmake_minimum_required(VERSION 3.16)
-project(Networking)
+project(BoxerUI_Network)
 
-find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
-    set(BUILD_SHARED_LIBS OFF)
-    set(OpenCV_STATIC ON)
-    
-    
-add_executable(Networking_Target "${CMAKE_CURRENT_SOURCE_DIR}")
+#file(GLOB to_remove file_to_remove.cpp)*.cpp
+#list(REMOVE_ITEM list ${to_remove})   
 
-target_link_libraries(Networking_Target  OpenGL "${OpenCV_LIBS}"  )
+#file(APPEND <filename> <content>...)
+# reference on file(): https://cmake.org/cmake/help/latest/command/file.html
+
+# aux_source_directory("${CMAKE_CURRENT_LIST_DIR}" NETWORK_SOURCE_FILES)
+# list(REMOVE_ITEM NETWORK_SOURCE_FILES "src/f4.cpp")
+set(NETWORK_SOURCE_FILES "uiBackend.cpp")
+
+include_directories(${NETWORK_SOURCE_FILES})
+
+add_library(NETWORK_TARGET STATIC "${NETWORK_SOURCE_FILES}")

@@ -1,4 +1,4 @@
-name: Setup
+name: BoxerUI-CD
 
 on:
 #   create:
@@ -10,11 +10,31 @@ on:
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE_RELEASE: Release
-  BUILD_TYPE_DEBUG: Debug
+  BUILD_TYPE: release
+#   BUILD_TYPE_DEBUG: Debug
 
 jobs:
-  build:
+  Windows-Build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Step 1 - Get it together!!
+      run: |
+            get-date
+            Write-Output ${{runner.os}} impl is still WIP
+      shell: powershell
+      
+  Windows-Test:
+    runs-on: windows-latest
+    needs: [Windows-Build]
+    
+    steps:
+    - name: Step 1 - Test BoxerUI_app
+      run: |
+            Write-Output ${{runner.os}} artifact will be built upon successful test
+  
+        
+  Linux-Build:
     # The CMake configure and build commands are platform agnostic and should work equally
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
@@ -22,35 +42,176 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Step 1 - Checkout branch
+      uses: actions/checkout@v2
       with:
         submodules: true
     
-    - name: get-cmake
+    - name: Step 2 - Get CMake
       uses: lukka/get-cmake@v3.21.1
       
-    - name: Setup OpenCV
-      uses: Dovyski/setup-opencv-action@v1
-      with: 
-        opencv-version: 4.5.1
-        opencv-extra-modules: ON
-        CMAKE_BUILD_TYPE: DEBUG
+    - name: Step 3 - Cache OpenCV
+      id: opencv-cache
+      uses: actions/cache@v2.1.6
+      env:
+        cache-name: cache-opencv
+      with:
+        path: opencv-master
+        key: ${{ runner.os }}-opencv-cache
+        restore-keys: |
+                      ${{ runner.os }}-opencv
+                      ${{ runner.os }}-
+            
+    - name: Step 3.5 - Load Cached OpenCV
+#       if:  steps.opencv-cache.outputs.cache-hit != 'true'
+      uses: rayandrews/with-opencv-action@v1
+      with:
+        dir: opencv-master
+        cached:  ${{ steps.opencv-cache.outputs.cache-hit }} 
+        opencv-version: master
+        opencv-extra-modules: OFF
+#         CMAKE_BUILD_TYPE: ${{env.BUILD_TYPE}}
         BUILD_NEW_PYTHON_SUPPORT: OFF
         WITH_V4L: ON
         WITH_OPENGL: ON
-    
-    - name: run-cmake
-      uses: lukka/run-cmake@v3.4
-      with:
-          cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
 
-    - name: Build
+    - name: Step 4 - Configure BoxerUI
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: |
+            ls -al
+            cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Step 5 - Build BoxerUI
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE_DEBUG}}
-
-    - name: Test
-      working-directory: ${{github.workspace}}/build
+      run: |
+            ls -al
+            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j 4
+       
+    - name: Step 6 - Test BoxerUI
+      working-directory: ${{github.workspace}}/build/BoxerUI/tests
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C ${{env.BUILD_TYPE}}
+      #ctest -C BoxerUI/tests ${{env.BUILD_TYPE}}
+      run: |
+            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target BoxerUI_Tests -j 4 --
+            echo The folowing tests will be executed:
+            ctest --show-only human
+            echo Running BoxerUI_Tests...
+            ctest -j4 -C ${{env.BUILD_TYPE}} -T test --output-on-failure -T test --output-on-failure
+            sudo apt-get install tree
+            tree ${{github.workspace}}
+#     - id: test-result
+#       run: echo "::set-output name=test::pass"
+    
+    - name: Step 7 - Download a Build Artifact
+      # if: ${{needs.Linux-Build.outputs.test-output}} == 'pass'
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        # Artifact name
+        name: BoxerUI_app
+        # Destination path
+        path: |              
+              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}/BoxerUI_app
+              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}    
+        if-no-files-found: error
+        retention-days: 20 
+        
+    
+#   Linux-Test:
+#     needs: Linux-Build
+#     runs-on: ubuntu-latest
+# #     outputs:
+# #       test-output:  ${{ steps.step1.outputs.test }}
+#     steps: 
+#     - name: Step 1 - Checkout branch
+#       uses: actions/checkout@v2
+#       with:
+#         submodules: true
+
+#     - name: Step 2 - Get CMake
+#       uses: lukka/get-cmake@v3.21.1
       
+#     - name: Step 3 - Cache OpenCV
+#       id: opencv-cache
+#       uses: actions/cache@v2.1.6
+#       env:
+#         cache-name: cache-opencv
+#       with:
+#         path: opencv-master
+#         key: ${{ runner.os }}-opencv-cache
+#         restore-keys: |
+#                       ${{ runner.os }}-opencv
+#                       ${{ runner.os }}-
+            
+#     - name: Step 3.5 - Load Cached OpenCV
+# #       if:  steps.opencv-cache.outputs.cache-hit != 'true'
+#       uses: rayandrews/with-opencv-action@v1
+#       with:
+#         dir: opencv-master
+#         cached:  ${{ steps.opencv-cache.outputs.cache-hit }} 
+#         opencv-version: master
+#         opencv-extra-modules: OFF
+# #         CMAKE_BUILD_TYPE: ${{env.BUILD_TYPE}}
+#         BUILD_NEW_PYTHON_SUPPORT: OFF
+#         WITH_V4L: ON
+#         WITH_OPENGL: ON
+    
+#     - name: Step 4 - Setup Glfw
+#       run: |
+#             pwd
+#             ls -al
+#             git clone https://github.com/glfw/glfw.git
+        
+#     - name: Test
+# #       working-directory: ${{github.workspace}}/build/BoxerUI/tests
+#       # Execute tests defined by the CMake configuration.  
+#       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+#       #ctest -C BoxerUI/tests ${{env.BUILD_TYPE}}
+#       run: |
+#             ls -al
+#             cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+#             cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+#             cd build/
+#             cmake --build . --config ${{env.BUILD_TYPE}} --target BoxerUI_Tests -j 4 --
+#             echo The folowing tests will be executed:
+#             ctest --show-only human
+#             echo Running BoxerUI_Tests...
+#             ctest -j4 -C ${{env.BUILD_TYPE}} -T test --output-on-failure -T test --output-on-failure
+#             cd ..
+# #     - id: test-result
+# #       run: echo "::set-output name=test::pass"
+    
+#     - name: Download a Build Artifact
+#       if: ${{needs.Linux-Build.outputs.test-output}} == 'pass'
+#       uses: actions/upload-artifact@v2.2.4
+#       with:
+#         # Artifact name
+#         name: BoxerUI_app
+#         # Destination path
+#         path: |
+#               ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}    
+# #         error: BoxerUI_app not found in "${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}"
+#         retention-days: 20  
+        
+        
+  Discord-CI:
+    runs-on: ubuntu-latest
+    env:
+      DISCORD_WEBHOOK: https://discord.com/api/webhooks/879220651674730517/oTXy0XPiGOnvuFzOHEqgiA3UIu0KhyexnszLef4Ap25ARgx9gCuPYOIz4-VHjeEiObDH
+    if: always()
+    needs: [Windows-Test, Linux-Build]
+    steps:
+    - uses: sarisia/actions-status-discord@v1
+      if: success()
+      with:
+        webhook: ${{ env.DISCORD_WEBHOOK }}
+#         nodetail: true
+        title: "`BoxerUI_app` build was successful"
+        description: |
+                      Version `1.2.3-alpha`
+                      Click [here](https://github.com/reindeererobotics/BoxerUI/actions) to download!
+        color: 0xff91a4
+#         username: GitHub Actions
+        image: ${{ secrets.EMBED_IMAGE }}
+        avatar_url: ${{ secrets.AVATAR_URL }}

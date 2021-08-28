@@ -17,8 +17,10 @@ cmake ../opencv-master/ -DOPENCV_EXTRA_MODULES_PATH=/home/username/opencv_contri
 
 # Configure
 # cmake ../opencv-master/ -DBUILD_TESTS=OFF -DBUILD_opencv_python2=OFF -DBUILD_opencv_python3=OFF -DWITH_OPENEXR=OFF -DWITH_1394=OFF -DWITH_EIGEN=OFF -DWITH_OPENGL=ON -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=OFF .
-# cmake ../opencv-master/ -DBUILD_LIST=calib3d,core,features2d,flann,highgui,imgcodecs,imgproc,ts,videoio .
-cmake ../opencv-master/ -DBUILD_LIST=calib3d,core,features2d,flann,highgui,imgcodecs,imgproc,ts,videoio -DBUILD_TESTS=OFF -DBUILD_opencv_python2=OFF -DBUILD_opencv_python3=OFF -DWITH_OPENEXR=OFF -DWITH_1394=OFF -DWITH_EIGEN=OFF -DWITH_OPENGL=ON -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=OFF -DWITH_CUDA=ON .
+# cmake ../opencv-master/ -DBUILD_LIST=calib3d,core,features2d,flann,highgui,imgcodecs,imgproc,videoio .
+# Simple build w/out CUDA
+	# cmake ../opencv-master/ -DBUILD_LIST=calib3d,core,highgui,imgcodecs,imgproc,videoio,video -DBUILD_TESTS=OFF -DBUILD_opencv_python2=OFF -DBUILD_opencv_python3=OFF -DWITH_OPENEXR=OFF -DWITH_1394=OFF -DWITH_EIGEN=OFF -DWITH_OPENGL=ON -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=OFF -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_opencv_python_tests=OFF -DBUILD_JAVA=OFF .
+cmake ../opencv-master/ -DBUILD_LIST=calib3d,core,features2d,flann,highgui,imgcodecs,imgproc,videoio -DBUILD_TESTS=OFF -DBUILD_opencv_python2=OFF -DBUILD_opencv_python3=OFF -DWITH_OPENEXR=OFF -DWITH_1394=OFF -DWITH_EIGEN=OFF -DWITH_OPENGL=ON -DBUILD_SHARED_LIBS=OFF -DWITH_FFMPEG=OFF -DWITH_CUDA=ON .
 
 # print all options
 cmake -L
@@ -29,12 +31,13 @@ cmake -LA
 
 # Build
 make -j4
-# sudo apt-get install libglfw3-dev
 
-mkdir build
+cmake --install . --prefix "../opencv-build/install"
+
+# sudo apt-get install libglfw3-dev
 git clone https://github.com/glfw/glfw.git
 
-
+mkdir build
 # mkdir ../../build
 # Configure the project. Create the CMakeCache files required for building the project
 cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_C_COMPILER:FILEPATH=/bin/gcc-9 -DCMAKE_CXX_COMPILER:FILEPATH=/bin/g++-9 -H. -B../../build
