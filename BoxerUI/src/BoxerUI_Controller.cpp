@@ -37,14 +37,14 @@ void BoxerUI_Controller::decomposePayload(Json::Value jsonPayload)
 	boxerModel.setTemperature(5); //jsonPayload["Temperature"].asDouble());
 }
 void BoxerUI_Controller::displayIndexWindow(bool* boxer_analytics)
-{											
-	boxerView.indexwindow(boxer_analytics); 
+{
+	boxerView.indexwindow(boxer_analytics);
 }
 void BoxerUI_Controller::displayFPS()
 {
 	boxerView.appFrameRate();
 }
-void BoxerUI_Controller::demoWindows(){
+void BoxerUI_Controller::demoWindows() {
 	boxerView.showdemos(); // &demo_window);
 }
 void BoxerUI_Controller::updateBSView()
@@ -79,21 +79,26 @@ void BoxerUI_Controller::cameraView()
 			for (cv::VideoCapture& var : camera_stream.vid_captures)
 			{
 
-				var = cv::VideoCapture((i == 0 ? 1 : 0), cv::CAP_ANY);
+				var = cv::VideoCapture((i == 0 ? 1 : 0), cv::CAP_DSHOW);
+				//var.set(cv::CAP_PROP_FRAME_WIDTH, 80);
+				//var.set(cv::CAP_PROP_FRAME_HEIGHT,90);
+				//std::cout<<"Cam is opened? "<<var.isOpened();
+				//var = cv::VideoCapture();
 
 				(camera_stream.payload_frames).insert({ i,temp });
 				i++;
 			}
 
-			for (size_t i = 0; i < (camera_stream.payload_frames).size(); i++)
+			for (size_t i = 0; i < (camera_stream.vid_captures).size(); i++)
 			{
 				//vector of threads based on camera size
-				camera_stream.cam_threads.push_back(std::thread(boxerModel.cameraStreamProc, std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera)));
-				//boxerModel.cameraStreamProc(std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera));
+				camera_stream.cam_threads.push_back(std::thread(boxerModel.cameraPayloadRecv, std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera)));
+
 			}
 		}
 	}
 	else {
+
 		for (size_t i = 0; i < camera_stream.cam_threads.size(); i++)
 		{
 			std::thread& t = camera_stream.cam_threads[i];
@@ -104,8 +109,9 @@ void BoxerUI_Controller::cameraView()
 			}
 		}
 		camera_stream.payload_frames.clear();
+		
 		cam_thread_init = true;
 	}
 
 	camera_stream.initCamera();
-	}
+}

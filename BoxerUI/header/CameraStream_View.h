@@ -4,6 +4,7 @@
 #include "Components_View.h"
 #include "Controller_input_Header.h"
 #include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
 
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>

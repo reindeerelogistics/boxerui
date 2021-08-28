@@ -243,10 +243,6 @@ void CameraStream::initCamera()
                 "Refer to the \"Combo\" section below for an explanation of the full BeginCombo/EndCombo API, "
                 "and demonstration of various flags.\n");
 
-            //TODO Create thread here to process streaming content to window
-            //std::async(std::launch::async, &CameraStream::streamCamera, std::ref(item_current), std::ref(freeze_frame));
-            //auto f=std::async(std::launch::async, [] {return CameraStream::streamCamera(item_current, freeze_frame); });
-            //f.get();
             streamCamera(&item_current);
         }
         ImGui::End();
@@ -265,7 +261,7 @@ void getFile(char* file, const char* name) {
 }
 
 void CameraStream::takeScreenshot() {
-    const char* name; char file1[100] = {};
+    const char* name=""; char file1[100] = {};
         getFile(file1, name);
         
         cv::imwrite(file1, freeze_frame_mat); //have not tested with "freeze _frame_mat"   
@@ -420,17 +416,11 @@ void CameraStream::setCamContext(int context)
 	if (payload_frames[context].size()>1 && payload_frames[context].size()<100)
 	{
 	BindCVMat2GLTexture(&context);
-	//payload_frames[context].pop();
 	}
 	else
 	{
 		ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 0.5f), "Buffering...");
 	}
-
-	/*if (payload_frames[context].size()==0)
-	{
-		std::cout << "Empty queue" << std::endl;
-	}*/
 }
 
 #endif
