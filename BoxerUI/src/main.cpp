@@ -53,6 +53,18 @@ static void glfw_error_callback(int error, const char* description)
 	fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
+void window_close_callback(GLFWwindow* window)
+{
+	BoxerUI_Controller& boxerController = BoxerUI_Controller::Get();
+
+	//if (boxerController.destroyCamThreads())
+	//boxerController.~BoxerUI_Controller();
+	glfwSetWindowShouldClose(window, GL_TRUE);
+	//else {
+		//assert not possible. Threads have not joined
+	//}
+}
+
 int main(int, char**)
 {
 	// Setup window
@@ -85,12 +97,26 @@ int main(int, char**)
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
 
+
+
 	// Create window with graphics context
-	int ui_window_width = 1280, ui_window_height = 720;
+	glfwWindowHint(GLFW_DECORATED, GL_TRUE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+	//glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
+	glfwWindowHint(GLFW_AUTO_ICONIFY, GL_TRUE);
+	//glfwWindowHint(GLFW_FLOATING, GL_TRUE);
+	//glfwWindowHint(GLFW_SRGB_CAPABLE, GL_FALSE);
+
+	//glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+
+	int ui_window_width = 1280, ui_window_height = 720,monitor_W=0,monitor_H=0;
 	GLFWwindow* window = glfwCreateWindow(ui_window_width, ui_window_height, "Reheindeer Robotics - BoxerUI", NULL, NULL);
 	glfwGetWindowSize(window, &ui_window_width, &ui_window_height);
-
 	GLFWmonitor* monitor = glfwGetWindowMonitor(window);
+	
+	//glfwGetMonitorPhysicalSize(monitor, &monitor_W, &monitor_H);
+	//glfwSetWindowPos(window, (monitor_W/3), (monitor_H/3));
+	
 	//const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
 	//glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
@@ -141,8 +167,12 @@ int main(int, char**)
 	//cv::cuda::setGlDevice();
 	ImGuiIO& io = ImGui::GetIO();
 	(void)io;
+
+	
+	BOXERUI_CHECKCUDA();
+
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;	// Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
 	//io.ConfigViewportsNoAutoMerge = false;
@@ -177,7 +207,7 @@ int main(int, char**)
 	// - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
 
 	TextTheme texttheme;
-	texttheme.setFont();	
+	texttheme.setFont();
 	//IM_ASSERT(font != NULL);
 
 	// Our state
@@ -186,17 +216,14 @@ int main(int, char**)
 	static bool show_boxer_windows = false, show_camera = false, show_index_window = true;
 	bool p_open = true;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-	//pid_t pid;
-	//Initialize Boxer controller object.
-	//BoxerUI_Model boxerModel = BoxerUI_Model();
-	//BoxerUI_View boxerView;
-	BoxerUI_Controller boxerController = BoxerUI_Controller(); // = BoxerUI_Controller(boxerView, boxerModel);
-															   //boxerController.payloadRecv();
+
+	BoxerUI_Controller& boxerController = BoxerUI_Controller::Get();	//Our Controller
 
 
 	// Main loop
 	while (!glfwWindowShouldClose(window))
 	{
+		//glfwSetWindowCloseCallback(window, window_close_callback);
 		// Poll and handle events (inputs, window resize, etc.)
 		// You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
 		// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
@@ -204,7 +231,7 @@ int main(int, char**)
 		// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
 		glfwPollEvents();
 		// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		// glClear(GL_COLOR_BUFFER_BIT);
+		 glClear(GL_COLOR_BUFFER_BIT);
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -220,13 +247,25 @@ int main(int, char**)
 			}
 			else*/
 			{
-				ImGui::ShowStyleEditor();
+				/*ImGui::ShowStyleEditor();
 				ImGui::ShowUserGuide();
-				ImGui::ShowFontSelector("Font_selector");
+				ImGui::ShowFontSelector("Font_selector");*/
 
-				boxerController.inputHandlerModel();
-				boxerController.cameraView();
-				boxerController.indexView();
+				//boxerController.inputHandlerModel();
+
+				//if (boxerController.cameraView())
+				{
+					/*ImGui::EndFrame();
+					ImGui::Render();
+					ImGui::UpdatePlatformWindows();
+
+					ImGui::NewFrame();*/
+					boxerController.cameraView();
+				}
+				//else 
+				{
+					boxerController.indexView();
+				}
 			}
 		}
 

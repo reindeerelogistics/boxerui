@@ -1,19 +1,11 @@
 #pragma once
 
-
 #include "BoxerUI_View.h"
 #include "BoxerUI_Model.h"
 #include "CameraStream_View.h"
+#include "CameraStream_Model.h"
 
 //#include "jsoncpp/json/json.h"
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <future>
-#include <thread>
-#include <chrono>
-#include <algorithm>
-#include <queue>
 
 #ifdef _WIN32
 
@@ -22,28 +14,30 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #endif
-
+//namespace BoxerUI{
 class BoxerUI_Controller
 {
-	/*BoxerUI_Controller(BoxerUI_View boxerView, BoxerUI_Model boxerModel) {
-		this->boxerModel = boxerModel;
-		this->boxerView = boxerView;
-	}*/
 
-	/*BoxerUI_Controller(ImFont fonts) {
-		this->boxerfonts = fonts;
-	}*/
-	
 private:
-	
 	BoxerUI_View boxerView;
 	BoxerUI_Model boxerModel;
 	CameraStream camera_stream;
 
-public:	
+	BoxerUI_Controller()
+		: boxerView(), boxerModel(), camera_stream()		//Creates member instances
+	{}
 
-	cv::Mat current_frame = cv::Mat(100, 100, CV_8UC4);
-	
+public:
+
+	static BoxerUI_Controller& Get() {
+		static BoxerUI_Controller boxerController;
+		return boxerController;
+	}
+
+	~BoxerUI_Controller();
+
+public:
+
 	//MODEL
 	double getModelBattery();
 	double getModelTemperature();
@@ -51,7 +45,7 @@ public:
 	void setModelTemperature(double temperatureVal);
 	//void decomposePayload(Json::Value jsonPayload);
 	void inputHandlerModel();//INPUT_MODEL
-	
+
 	//VIEW
 	void displayFPS();
 	void demoWindows();
@@ -59,8 +53,10 @@ public:
 	void plotView();
 	void navView();
 
-	void displayIndexWindow(bool *boxer_analytics);
+	void displayIndexWindow(bool* boxer_analytics);
 	void cameraView();
 	void indexView();
 	void cameraPayloadRecv();
+	void destroyCamThreads();
 };
+//};

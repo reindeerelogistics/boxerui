@@ -23,35 +23,36 @@ void BoxerUI_Model::inputHandler() {//InputType input_type=InputType::None) {
 
 void BoxerUI_Model::cameraPayloadRecv(CameraMap& cam_map, cv::VideoCapture& vid, int cam_index, bool& cam_stream)
 { //WIP Receive frames from socket here and create a buffer for it
-	cv::Mat input, output;
-	std::cout << "Cuda Device info: " << std::endl;
-	
+	cv::Mat input = cv::Mat(100, 100, CV_8UC1), output;
 
-	{//If camera is open populate the payload_frames queue
-		if ((vid).isOpened())
+	//If camera is open populate the payload_frames queue
+	if ((vid).isOpened())
+	{
+		std::cout << "Camera Opened: " << cam_index << std::endl;
+		while (cam_stream)
 		{
-			std::cout << "Camera Opened: " << cam_index << std::endl;
-			while (cam_stream)
+			if (cam_map[cam_index].size() < 10)
 			{
-				if (!cam_map[cam_index].empty())
-					cam_map[cam_index].pop();
+				(vid).read(input);
+				//TODO: All module work are done here
 
-				while (cam_map[cam_index].size() < 10)
-				{
-					(vid).read(input);
-					//TODO: All module work are done here
+				//output=CameraStream_Model::cudaStreamProc(input);
 
-
-					(cam_map)[cam_index].emplace(input);
-					input.~Mat();
-					output.~Mat();
-				}
+				(cam_map)[cam_index].emplace(input);
+			}
+			else
+			{
+				cam_map[cam_index].pop();
 			}
 
 		}
+		input.~Mat();
+		output.~Mat();
+
 	}
-	//cv::cuda::Stream strm;
-	//strm.
 
 	vid.~VideoCapture();
+
+
+
 }

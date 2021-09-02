@@ -152,7 +152,7 @@ void BoxerUI_View::indexwindow(bool* boxer_analytics) {//, int ui_window_width, 
 
 
 	ImGui::Begin("Index", &p_open, flags);//, indexFlags);
-	const ImVec2 pos = ImVec2(viewport->WorkPos.x + (viewport->WorkSize.x * 0.15), viewport->WorkPos.y + (viewport->WorkSize.y * 0.15));
+	const ImVec2 pos = ImVec2(viewport->WorkPos.x + (viewport->WorkSize.x * 0.15f), viewport->WorkPos.y + (viewport->WorkSize.y * 0.15f));
 	ImGui::SetNextWindowPos(pos);// pos);
 	//ImGui::SetNextWindowPos);
 	//ImGui::SetNextWindowPos(x, ImGuiCond_FirstUseEver);
@@ -176,7 +176,7 @@ void BoxerUI_View::indexwindow(bool* boxer_analytics) {//, int ui_window_width, 
 		*boxer_analytics = false;
 		std::cout << *boxer_analytics << std::endl;
 	}
-	
+
 	ImGui::SameLine(185);
 	//Indent(80.0f);
 	if (ImGui::Button("Register", ImVec2(65, 30))) {
@@ -188,7 +188,7 @@ void BoxerUI_View::indexwindow(bool* boxer_analytics) {//, int ui_window_width, 
 }
 
 bool BoxerUI_View::sideNav() {
-	static bool toggle_settings = false,index_window=false;
+	static bool toggle_settings = false, index_window = false;
 	ImGui::Begin("##sideNav");
 
 	{
@@ -216,6 +216,7 @@ bool BoxerUI_View::sideNav() {
 	}
 
 
+
 	ImGui::End();
 
 	return toggle_settings;
@@ -223,7 +224,7 @@ bool BoxerUI_View::sideNav() {
 
 bool BoxerUI_View::settings() {//settings that will replace the sideNav upon toggle
 	ImGuiIO& io = ImGui::GetIO();
-	bool in_settings = true;
+	bool in_settings = true, open_dir = false;
 	static ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings;
 
 	const ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -272,13 +273,13 @@ bool BoxerUI_View::settings() {//settings that will replace the sideNav upon tog
 	/*else{std::cout << "Keyboard Not Selected" << std::endl;
 		}*/
 
-		keyboard ? io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard : ImGuiConfigFlags_NavEnableGamepad;
-		
-		//keyboard?input_type = InputType::Keyboard:input_type = InputType::None;
-		//ImGuiConfigFlags_NavEnableGamepad = !ImGuiConfigFlags_NavEnableGamepad;
-		/*else{std::cout << "Keyboard Not Selected" << std::endl;
-			}*/
-	
+	keyboard ? io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard : ImGuiConfigFlags_NavEnableGamepad;
+
+	//keyboard?input_type = InputType::Keyboard:input_type = InputType::None;
+	//ImGuiConfigFlags_NavEnableGamepad = !ImGuiConfigFlags_NavEnableGamepad;
+	/*else{std::cout << "Keyboard Not Selected" << std::endl;
+		}*/
+
 
 		// Edit a color (stored as ~4 floats)
 		//ImGui::ColorEdit4("Color", my_color);
@@ -290,8 +291,15 @@ bool BoxerUI_View::settings() {//settings that will replace the sideNav upon tog
 	// Display contents in a scrolling region
 	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Important Stuff");
 
-	ImGui::End();
-	
+
+	if (ImGui::Button("Open Directory"))
+		open_dir = !open_dir;
+
+	if (open_dir)
+
+
+		ImGui::End();
+
 	return in_settings;
 }
 
@@ -301,4 +309,3 @@ void BoxerUI_View::indexView() {
 	showdemos();
 	appFrameRate();
 }
-

@@ -1,6 +1,12 @@
 #include "BoxerUI_Controller.h"
 //#include "Networking/socketLibrary.cpp"
-bool CameraStream::show_camera = false;
+
+BoxerUI_Controller::~BoxerUI_Controller()
+{
+	//destructor for the controller. Should be called before exiting the program to free memory and delete variables from heap
+	//camera_stream.~CameraStream();
+	
+}
 
 double BoxerUI_Controller::getModelBattery()
 {
@@ -62,7 +68,10 @@ void BoxerUI_Controller::navView()
 
 void BoxerUI_Controller::indexView()
 {
-	boxerView.indexView();
+	if (!camera_stream.show_camera)
+	{
+		boxerView.indexView();
+	}
 }
 
 void BoxerUI_Controller::cameraView()
@@ -92,25 +101,30 @@ void BoxerUI_Controller::cameraView()
 			for (size_t i = 0; i < (camera_stream.vid_captures).size(); i++)
 			{
 				//vector of threads based on camera size
-				camera_stream.cam_threads.push_back(std::thread(boxerModel.cameraPayloadRecv, std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera)));
-
+				camera_stream.cam_threads.emplace_back(std::thread(boxerModel.cameraPayloadRecv, std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera)));
 			}
 		}
 	}
-	else {
-
+	else if (!camera_stream.cam_threads.empty() && !camera_stream.show_camera)
+	{
+		std::cout << "Num of active threads: " << camera_stream.cam_threads.size() << std::endl;
 		for (size_t i = 0; i < camera_stream.cam_threads.size(); i++)
 		{
 			std::thread& t = camera_stream.cam_threads[i];
 			if (t.joinable()) {
 				std::cout << "Thread ID: " << t.get_id() << " joined successfully" << std::endl;
 				t.join();
-				camera_stream.cam_threads.erase(camera_stream.cam_threads.begin() + i);
+				//camera_stream.cam_threads.erase(camera_stream.cam_threads.begin() + i);
 			}
 		}
-		camera_stream.payload_frames.clear();
-		
-		cam_thread_init = true;
+		camera_stream.cam_threads.clear();
+		std::cout << "Num of active threads after joining: " << camera_stream.cam_threads.size() << std::endl;
+		//if (CameraStream_Model::destroyCamThreads(&camera_stream.cam_threads))
+		{
+			//camera_stream.~CameraStream();
+			camera_stream.payload_frames.clear();
+			cam_thread_init = true;
+		}
 	}
 
 	camera_stream.initCamera();

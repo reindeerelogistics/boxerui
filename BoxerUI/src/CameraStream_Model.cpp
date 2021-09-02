@@ -1,72 +1,42 @@
 #include "CameraStream_Model.h"
 
-
-void CameraStream_Model::cudaStreamProc(cv::Mat& input) {
-	
-	//cv::cuda::printCudaDeviceInfo(0);
-	//cv::cuda::printShortCudaDeviceInfo(0);
-
+cv::Mat CameraStream_Model::cudaStreamProc(cv::Mat& input)
+{
+	//https://stackoverflow.com/questions/17842827/how-to-use-gpustream-in-opencv
 	//cv::cuda::DeviceInfo dev_info(0);
 
-	std::cout << "NUM of CUDA enabled devices: " << cv::cuda::getCudaEnabledDeviceCount() << std::endl;
+	////cv::Ptr<cv::cudacodec::VideoReader> d_reader = cv::cudacodec::createVideoReader(fname);
 
-	//cv::Ptr<cv::cudacodec::VideoReader> d_reader = cv::cudacodec::createVideoReader(fname);
-	//cv::cuda::GpuMat temp_gpu;
-	//cv::cuda::
-
-	// allocate page-locked memory
-	cv::cuda::HostMem host_src_pl(768, 1024, CV_8UC1, cv::cuda::HostMem::AllocType::PAGE_LOCKED);
-	cv::cuda::HostMem host_dst_pl;
+	//// allocate page-locked memory
+	//cv::cuda::HostMem host_src_pl(768, 1024, CV_8UC1, cv::cuda::HostMem::AllocType::PAGE_LOCKED);
+	//cv::cuda::HostMem host_dst_pl;
 
 	// get Mat header for CudaMem (no data copy)
 	//cv::Mat host_src = host_src_pl;
-	cv::Mat  output;
-
-	// fill mat on CPU
-	//cv::cuda::someCPUFunc(host_src);
-
-	cv::cuda::GpuMat gpu_input, gpu_dst;
+	//cv::Ptr<cv::cuda::CannyEdgeDetector> canny_edg = cv::cuda::createCannyEdgeDetector(2.0, 100.0, 3, false);
 
 	// create Stream object
-	//cv::cuda::Stream::StreamCallback stream_callback ();
+	cv::cuda::Stream* cuda_stream{};// stream_callback();
+
+	static cv::cuda::GpuMat gpu_input, gpu_output;
+	cv::Mat output;// (gpu_output);
 
 
-	//cv::cuda::Event event;
+	/*cv::cuda::cvtColor(input, input, cv::COLOR_BGR2GRAY);
+	cv::cuda::bilateralFilter(gpu_input, gpu_output, -1, 50, 7);
+	canny_edg->detect(gpu_input, gpu_output, cuda_stream);*/
 
 
-	// next calls are non-blocking
-
-	// first upload data from host
-	//stream.enqueueHostCallback(host_src_pl, gpu_src);
-	// perform blur
-
-	gpu_input.upload(input);// , stream);
-	//cv::cuda::bilateralFilter(gpu_input, gpu_input, 30, 100, 100);
-	cv::cuda::threshold(gpu_input, gpu_input, 128.0, 255.0, cv::THRESH_BINARY);
+	gpu_input.upload(input);//, *cuda_stream);
+	//cv::cuda::blur(gpu_input, gpu_output, cv::Size(5, 5), cv::Point(-1, -1), cuda_stream);
+	cv::cuda::bilateralFilter(gpu_input, gpu_input, 30, 100, 100);
+	//cv::cuda::threshold(gpu_input, gpu_input, 128.0, 255.0, cv::THRESH_BINARY);
 	gpu_input.download(output); //Use download if mat object requires modification
 
-	input.~Mat();
-	output.~Mat();
 	gpu_input.~GpuMat();
+	gpu_output.~GpuMat();
 
-	//if (stream.queryIfComplete())
-	//{
-	////stream.enqueueHostCallback(stream_callback, &gpu_input);
-	//		stream.waitForCompletion();
-	//}
-
-
-//cv::cuda::blur(gpu_src, gpu_dst, Size(5, 5), Point(-1, -1), stream);
-// download result back to host
-//stream.(gpu_dst, host_dst_pl);
-
-// call another CPU function in parallel with GPU
-
-
-
-// wait GPU for finish
-
-
+	return output;
 }
 
 void CameraStream_Model::ompStreamProc(CameraMap& cam_map, std::vector<cv::VideoCapture>& vid, int cam_index, bool& cam_stream) {
@@ -76,42 +46,21 @@ void CameraStream_Model::ompStreamProc(CameraMap& cam_map, std::vector<cv::Video
 	{
 #pragma omp parallel section
 		{
-			for (size_t i = 0; i < cam_index; i++) {
-				cv::Mat input, output;
-				if ((vid)[i].isOpened())
-				{
-					std::cout << "Camera Opened: " << cam_index << std::endl;
-					while (cam_stream)
-					{
-						if (!cam_map[cam_index].empty()) {
-							cam_map[cam_index].pop();
-						}
-						while (cam_map[cam_index].size() < 10)
-						{
-
-							//else
-							{
-								//cv::cuda::Stream stream;
-								(vid)[i].read(input);
-								//gpu_input.upload(input);// , stream);
-								//cv::cuda::bilateralFilter(gpu_input, gpu_input, 30, 100, 100);
-								//cv::cuda::threshold(gpu_input, gpu_input, 128.0, 255.0, cv::THRESH_BINARY);
-								//gpu_input.download(output);
-								(cam_map)[cam_index].emplace(input);
-								//gpu_input.download(); Use download if mat object requires modification
-								input.~Mat();
-								output.~Mat();
-								//gpu_input.~GpuMat();
-							}
-						}
-					}
-				}
-			}
+			//Do work that requires omp here
 		}
 	}
 
 }
 
-//void CameraStream_Model::boxerStreamProc() {
+//https://stackoverflow.com/a/47483001
+//use cv2.goodFeaturesToTrack to find good corners.
+//use cv2.calcOpticalFlowPyrLK to track the corners.
+//use cv2.findHomography to compute the homography matrix.
+//use cv2.warpPerspective to transform video frame.
+void CameraStream_Model::camStab(cv::Mat& input) {
+	cv::cuda::Stream stab_stream;
+	cv::cuda::cvtColor(input, input, cv::COLOR_BGR2GRAY, 8, stab_stream);
 
-//}
+
+}
+void CameraStream_Model::boxerStreamProc() {}

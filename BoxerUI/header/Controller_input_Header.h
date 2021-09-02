@@ -31,7 +31,7 @@ namespace BoxerUI_Inputs {
 	void button(const unsigned char* buttons, const char* desc, int button_val);
 	void joystick(const float* axes, const char* desc, int axes_val);
 	void trigger(const float* axes, const char* desc, int axes_val);
-	void input();
+	void input(bool& cam_stream);
 	void send(const float com,const float data,const float max,const float min,const float zero);
 	
 
