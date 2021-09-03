@@ -30,6 +30,16 @@
 #include <netinet/in.h>
 
 //#include "node.cpp"
+int Test;
+void testOutput(const char* value) {
+    if(Test == 1)
+    printf("[#]%s", value);
+}
+
+void testOutput(int value) {
+    if(Test == 1)
+        printf("%d\n", value);
+}
 
 int node_index = 0;
 uint8_t uid_index = 2;
