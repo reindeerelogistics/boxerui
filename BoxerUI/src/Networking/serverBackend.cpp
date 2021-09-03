@@ -107,6 +107,8 @@ struct Service {
             server_address = address;
             sockfd = socket(AF_INET, SOCK_DGRAM, 0);
             bind(sockfd, (struct sockaddr*)&server_address, sizeof(server_address));
+
+            set_address = true;
         }
 
         void setName(char* name_to_assign) {
