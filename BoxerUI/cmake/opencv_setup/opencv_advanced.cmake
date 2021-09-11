@@ -1,0 +1,1 @@
+message(VERBOSE "To build with advanced features please refer with the OpenCV documentations as specified in docs/DEVELOPMENT.md")

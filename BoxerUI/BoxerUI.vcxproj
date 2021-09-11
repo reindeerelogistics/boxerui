@@ -121,14 +121,16 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\imgui\examples\libs\gl3w;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(SolutionDir)opencv\build\include;$(SolutionDir)opencv\build\x64\vc15\bin;$(SolutionDir)opencv\build\x64\vc15\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\imgui\examples\libs\gl3w;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(ProjectDir)libs\opencv\sources\out\install\x64-Debug\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>Boxerpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\glfw;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(SolutionDir)opencv\build\x64\vc15\lib;$(SolutionDir)opencv\build\x64\vc15\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\glfw;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(ProjectDir)libs\opencv\sources\out\install\x64-Debug\include;$(ProjectDir)libs\opencv\sources\out\install\x64-Debug\x64\vc16\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;opencv_world453d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>
@@ -147,14 +149,16 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\imgui\examples\libs\gl3w;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(SolutionDir)opencv\sources\out\install\x64-release\include;$(SolutionDir)opencv\sources\out\install\x64-release\x64\vc16\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\imgui\examples\libs\gl3w;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(ProjectDir)libs\opencv\sources\out\install\x64-release\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>Boxerpch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\glfw;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(SolutionDir)opencv\sources\out\install\x64-release\x64\vc16\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)src;$(ProjectDir)header;$(ProjectDir)resource;$(ProjectDir);$(ProjectDir)libs\imgui;$(ProjectDir)libs\imgui\backends;$(ProjectDir)libs\imgui\examples\libs\glfw;$(ProjectDir)libs\imgui\examples\libs\glfw\include;$(ProjectDir)libs\imgui\examples\libs\glfw\lib-vc2010-64;$(ProjectDir)libs\implot;$(ProjectDir)libs\jsoncpp;$(ProjectDir)libs\jsoncpp\json;$(ProjectDir)libs\opencv\sources\out\install\x64-release\x64\vc16\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;opencv_world453.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -171,10 +175,28 @@
     <ClCompile Include="libs\implot\implot_demo.cpp" />
     <ClCompile Include="libs\implot\implot_items.cpp" />
     <ClCompile Include="libs\jsoncpp\jsoncpp.cpp" />
+    <ClCompile Include="src\Boxer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Boxer.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Boxer.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Boxerpch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Boxerpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Boxerpch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\BoxerUI_Controller.cpp" />
     <ClCompile Include="src\BoxerUI_Model.cpp" />
     <ClCompile Include="src\BoxerUI_View.cpp" />
-    <ClCompile Include="src\CameraStream_View.cpp" />
+    <ClCompile Include="src\CameraStream_Model.cpp" />
+    <ClCompile Include="src\CameraStream_View.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CameraStream_View.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CameraStream_View.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\Components_View.cpp" />
     <ClCompile Include="src\Controller_input.cpp" />
     <ClCompile Include="src\Inputs_Model.cpp" />
@@ -183,9 +205,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Boxer.h" />
+    <ClInclude Include="header\Boxerpch.h" />
     <ClInclude Include="header\BoxerUI_Controller.h" />
     <ClInclude Include="header\BoxerUI_Model.h" />
     <ClInclude Include="header\BoxerUI_View.h" />
+    <ClInclude Include="header\CameraStream_Model.h" />
     <ClInclude Include="header\CameraStream_View.h" />
     <ClInclude Include="header\Components_View.h" />
     <ClInclude Include="header\Controller_input_Header.h" />

@@ -1,6 +1,12 @@
 #include "BoxerUI_Controller.h"
 //#include "Networking/socketLibrary.cpp"
-bool CameraStream::show_camera = false;
+
+BoxerUI_Controller::~BoxerUI_Controller()
+{
+	//destructor for the controller. Should be called before exiting the program to free memory and delete variables from heap
+	//camera_stream.~CameraStream();
+	
+}
 
 double BoxerUI_Controller::getModelBattery()
 {
@@ -37,77 +43,27 @@ void BoxerUI_Controller::cameraPayloadRecv()
 //	boxerModel.setTemperature(5); //jsonPayload["Temperature"].asDouble());
 //}
 void BoxerUI_Controller::displayIndexWindow(bool* boxer_analytics)
-{											
-	boxerView.indexwindow(boxer_analytics); 
+{
+	boxerView.indexwindow(boxer_analytics);
 }
 void BoxerUI_Controller::displayFPS()
 {
 	boxerView.appFrameRate();
 }
-void BoxerUI_Controller::demoWindows(){
+void BoxerUI_Controller::demoWindows() {
 	boxerView.showdemos(); // &demo_window);
 }
 void BoxerUI_Controller::updateBSView()
 {
 	//boxerView.displaySensors(boxerModel.getTemperature(), boxerModel.getBattery());
 }
-void BoxerUI_Controller::plotView()
-{
-	boxerView.plotStream();
-}
-void BoxerUI_Controller::navView()
+
+void BoxerUI_Controller::views()
 {
 	boxerView.sideNav();
 }
 
-void BoxerUI_Controller::indexView()
-{
-	boxerView.indexView();
-}
-
 void BoxerUI_Controller::cameraView()
 {
-	static bool cam_thread_init = true;
-	if (camera_stream.show_camera)
-	{
-		if (cam_thread_init)
-		{
-			cam_thread_init = false;
-			int i = 0;
-
-			std::queue<cv::Mat> temp;
-			for (cv::VideoCapture& var : camera_stream.vid_captures)
-			{
-
-				var = cv::VideoCapture((i == 0 ? 0 : 2), cv::CAP_ANY);
-				var.set(cv::CAP_PROP_FRAME_WIDTH,90);
-				var.set(cv::CAP_PROP_FRAME_HEIGHT,90);
-
-				(camera_stream.payload_frames).insert({ i,temp });
-				i++;
-			}
-
-			for (size_t i = 0; i < (camera_stream.payload_frames).size(); i++)
-			{
-				//vector of threads based on camera size
-				camera_stream.cam_threads.push_back(std::thread(boxerModel.cameraStreamProc, std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera)));
-				//boxerModel.cameraStreamProc(std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera));
-			}
-		}
-	}
-	else {
-		for (size_t i = 0; i < camera_stream.cam_threads.size(); i++)
-		{
-			std::thread& t = camera_stream.cam_threads[i];
-			if (t.joinable()) {
-				std::cout << "Thread ID: " << t.get_id() << " joined successfully" << std::endl;
-				t.join();
-				camera_stream.cam_threads.erase(camera_stream.cam_threads.begin() + i);
-			}
-		}
-		camera_stream.payload_frames.clear();
-		cam_thread_init = true;
-	}
-
-	camera_stream.initCamera();
-	}
+	
+}

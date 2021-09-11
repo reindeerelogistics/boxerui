@@ -87,7 +87,7 @@ std::map<std::string, std::string> BoxerUI_Inputs::getConfig()
 	input.close();
 	return config;
 }
-void BoxerUI_Inputs::button(const unsigned char *buttons, const char *desc, int button_val){
+void BoxerUI_Inputs::button(const unsigned char* buttons, const char* desc, int button_val) {
 	std::string NA = "NA";
 	unsigned int x;
 	std::stringstream ss;
@@ -105,7 +105,7 @@ void BoxerUI_Inputs::button(const unsigned char *buttons, const char *desc, int 
 	}
 }
 
-void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val)
+void BoxerUI_Inputs::joystick(const float* axes, const char* desc, int axes_val)
 {
 	std::string NA = "NA";
 	unsigned int x;
@@ -134,7 +134,7 @@ void BoxerUI_Inputs::joystick(const float *axes, const char *desc, int axes_val)
 	}
 }
 
-void BoxerUI_Inputs::trigger(const float *axes, const char *desc, int axes_val)
+void BoxerUI_Inputs::trigger(const float* axes, const char* desc, int axes_val)
 {
 	std::string NA = "NA";
 	unsigned int x;
@@ -162,52 +162,55 @@ void BoxerUI_Inputs::send(const float com, const float data, const float max, co
 	cmd.clrMsg();*/
 }
 
-void BoxerUI_Inputs::input(){
-	glfwWaitEventsTimeout(0.2);
-	int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
+void BoxerUI_Inputs::input(bool& cam_stream) {
 
-	/*
-	static bool button_init = true;
+	while (cam_stream) {
+		glfwWaitEventsTimeout(0.2);
+		int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
 
-	if (button_init) {
-		button_init = false;
+		/*
+		static bool button_init = true;
 
-		button_map{
-			{Button::btnA,"BA"},
-			{Button::btnB,"BB"},
-			//{Button::btnc,"BB"},
+		if (button_init) {
+			button_init = false;
+
+			button_map{
+				{Button::btnA,"BA"},
+				{Button::btnB,"BB"},
+				//{Button::btnc,"BB"},
+			}
 		}
-	}
-	*/
-	if (1 == present)
-	{
-		int axesCount;
-		int buttonCount;
+		*/
+		if (1 == present)
+		{
+			int axesCount;
+			int buttonCount;
 
-		const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
-		const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
+			const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+			const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
 
-		//buttons
+			//buttons
 
-		button(buttons, "BA", 0);//Button A
-		button(buttons, "BB", 1);
-		button(buttons, "BY", 2);
-		button(buttons, "LB", 3);
-		button(buttons, "RB", 4);
-		button(buttons, "B7", 5);
-		button(buttons, "B8", 6);
-		button(buttons, "BU", 10);
-		button(buttons, "BR", 11);
-		button(buttons, "BD", 12);
-		button(buttons, "BL", 13);
+			button(buttons, "BA", 0);//Button A
+			button(buttons, "BB", 1);
+			button(buttons, "BY", 2);
+			button(buttons, "LB", 3);
+			button(buttons, "RB", 4);
+			button(buttons, "B7", 5);
+			button(buttons, "B8", 6);
+			button(buttons, "BU", 10);
+			button(buttons, "BR", 11);
+			button(buttons, "BD", 12);
+			button(buttons, "BL", 13);
 
-		//trigger and joystick
-		joystick(axes, "LJ", 1); //LJ
-		joystick(axes, "LJ", 2);	 //RJ
-		trigger(axes, "LT", 4); //LT
-		trigger(axes, "RT", 5);	 //RT
+			//trigger and joystick
+			joystick(axes, "LJ", 1); //LJ
+			joystick(axes, "LJ", 2);	 //RJ
+			trigger(axes, "LT", 4); //LT
+			trigger(axes, "RT", 5);	 //RT
 
-		const char *name = glfwGetJoystickName(GLFW_JOYSTICK_1);
-		//cout << name << endl;
+			const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
+			//cout << name << endl;
+		}
 	}
 }

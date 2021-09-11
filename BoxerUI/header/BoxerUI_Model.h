@@ -1,52 +1,31 @@
 #pragma once
 
 #include "Boxer.h"
-#include <opencv2/opencv.hpp>
+#include "Boxerpch.h"
+// #include "CameraStream_Model.h"
 
-#include <map>
-#include <queue>
-#include <future>
-#include <chrono>
-#include <algorithm>
+// #include "opencv2/core/cuda.hpp"
+// #include <opencv2/core.hpp>
+// #include <opencv2/cudaimgproc.hpp>
 
-//#include "opencv2/core/cuda.hpp"
-//#include <opencv2/core.hpp>
-//#include <opencv2/cudaimgproc.hpp>
-
-#include <iostream>
-
-//#include <opencv2/core.hpp>
 //#include <opencv2/cudacodec.hpp>
 //#include <opencv2/cudaarithm.hpp>
 //#include <opencv2/cudabgsegm.hpp>
 //#include <opencv2/cudaimgproc.hpp>
 //#include <opencv2/core/opengl.hpp>
 
-
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <stdio.h>
-
-#endif // headers for threads
-
-//using namespace std::this_thread
 #ifndef _INPUTS_H
 //#define _INPUTS_H
 #include "Inputs_Model.h"
 #endif
 
-using namespace std::chrono_literals;
+//using namespace std::chrono_literals;
 using CameraMap = std::map <int, std::queue<cv::Mat >>;
-
 class BoxerUI_Model
 {
 private:
 	double temperature, battery;// , ultrasonic;
 	Inputs input;
-	static void* cameraPayloadRecv(void* arg);
-
-	
 
 public:
 	double getTemperature();
@@ -54,10 +33,8 @@ public:
 	void setTemperature(double temperature);
 	void setBattery(double battery);
 	void inputHandler();
-	
-	 //static CameraMap cameraStreamProc(std::shared_future<CameraMap> f, std::vector<cv::VideoCapture>& vid, bool& is_camera_on);
-	 static void cameraStreamProc(CameraMap& f, cv::VideoCapture& vid, int cam_index,bool& cam_stream);
 
+	static void cameraPayloadRecv(CameraMap& cam_map, cv::VideoCapture& vid, int cam_index, bool& cam_stream);
 protected:
 	void print(const char* text);
 };
