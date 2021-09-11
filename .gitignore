@@ -5,7 +5,7 @@ Release/
 **/out
 BoxerUI/bin/
 
-**/opencv*
+**/opencv-*
 opencv/
 # opencv-master/
 opencv-build/

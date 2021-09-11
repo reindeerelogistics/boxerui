@@ -16,9 +16,11 @@ i.e. Don't be tempted to use this file to bypass the Controller. Messages/data p
 #include "opencv2/core/cuda.hpp"
 //#include <opencv2/core.hpp>
 
-#define BOXERUI_VERSION		"0.0.0"
-#define BOXERUI_CHECKCUDA()  (BoxerUI::cudaInfo())
+
 #define BOXER_UI
+// #define BOXERUI_VERSION		established through CMAKE. Requires loose dependency on CMAKE
+// #define BOXERUI_BIN_PATH		established through CMAKE. Requires loose dependency on CMAKE
+#define BOXERUI_CHECKCUDA()  (BoxerUI::cudaInfo())
 
 //Singleton research: https://stackoverflow.com/questions/1008019/c-singleton-design-pattern
 //Thread safe singleton BoxerUI_Monitor.
@@ -34,11 +36,14 @@ public:
 
 private:
 	static BoxerUI_Monitor* monitor_instance;
-	//BoxerUI_Monitor() {};
+	BoxerUI_Monitor() {};
 
 };
 
 namespace BoxerUI {
 	//BoxerUI_Monitor& Get();
 	bool cudaInfo();
+	const char* getPath();
+	std::string appendPath(const char* append);
+	
 }

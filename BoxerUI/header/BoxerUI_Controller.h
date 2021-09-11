@@ -2,8 +2,7 @@
 
 #include "BoxerUI_View.h"
 #include "BoxerUI_Model.h"
-#include "CameraStream_View.h"
-#include "CameraStream_Model.h"
+// #include "CameraStream_Model.h"
 
 //#include "jsoncpp/json/json.h"
 
@@ -21,10 +20,9 @@ class BoxerUI_Controller
 private:
 	BoxerUI_View boxerView;
 	BoxerUI_Model boxerModel;
-	CameraStream camera_stream;
 
 	BoxerUI_Controller()
-		: boxerView(), boxerModel(), camera_stream()		//Creates member instances
+		: boxerView(), boxerModel()		//Creates member instances
 	{}
 
 public:
@@ -51,7 +49,7 @@ public:
 	void demoWindows();
 	void updateBSView();
 	void plotView();
-	void navView();
+	void views();
 
 	void displayIndexWindow(bool* boxer_analytics);
 	void cameraView();

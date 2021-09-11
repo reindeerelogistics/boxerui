@@ -57,75 +57,13 @@ void BoxerUI_Controller::updateBSView()
 {
 	//boxerView.displaySensors(boxerModel.getTemperature(), boxerModel.getBattery());
 }
-void BoxerUI_Controller::plotView()
-{
-	boxerView.plotStream();
-}
-void BoxerUI_Controller::navView()
+
+void BoxerUI_Controller::views()
 {
 	boxerView.sideNav();
 }
 
-void BoxerUI_Controller::indexView()
-{
-	if (!camera_stream.show_camera)
-	{
-		boxerView.indexView();
-	}
-}
-
 void BoxerUI_Controller::cameraView()
 {
-	static bool cam_thread_init = true;
-	if (camera_stream.show_camera)
-	{
-		if (cam_thread_init)
-		{
-			cam_thread_init = false;
-			int i = 0;
-
-			std::queue<cv::Mat> temp;
-			for (cv::VideoCapture& var : camera_stream.vid_captures)
-			{
-
-				var = cv::VideoCapture((i == 0 ? 1 : 0), cv::CAP_DSHOW);
-				//var.set(cv::CAP_PROP_FRAME_WIDTH, 80);
-				//var.set(cv::CAP_PROP_FRAME_HEIGHT,90);
-				//std::cout<<"Cam is opened? "<<var.isOpened();
-				//var = cv::VideoCapture();
-
-				(camera_stream.payload_frames).insert({ i,temp });
-				i++;
-			}
-
-			for (size_t i = 0; i < (camera_stream.vid_captures).size(); i++)
-			{
-				//vector of threads based on camera size
-				camera_stream.cam_threads.emplace_back(std::thread(boxerModel.cameraPayloadRecv, std::ref(camera_stream.payload_frames), std::ref(camera_stream.vid_captures[i]), (i), std::ref(camera_stream.show_camera)));
-			}
-		}
-	}
-	else if (!camera_stream.cam_threads.empty() && !camera_stream.show_camera)
-	{
-		std::cout << "Num of active threads: " << camera_stream.cam_threads.size() << std::endl;
-		for (size_t i = 0; i < camera_stream.cam_threads.size(); i++)
-		{
-			std::thread& t = camera_stream.cam_threads[i];
-			if (t.joinable()) {
-				std::cout << "Thread ID: " << t.get_id() << " joined successfully" << std::endl;
-				t.join();
-				//camera_stream.cam_threads.erase(camera_stream.cam_threads.begin() + i);
-			}
-		}
-		camera_stream.cam_threads.clear();
-		std::cout << "Num of active threads after joining: " << camera_stream.cam_threads.size() << std::endl;
-		//if (CameraStream_Model::destroyCamThreads(&camera_stream.cam_threads))
-		{
-			//camera_stream.~CameraStream();
-			camera_stream.payload_frames.clear();
-			cam_thread_init = true;
-		}
-	}
-
-	camera_stream.initCamera();
+	
 }

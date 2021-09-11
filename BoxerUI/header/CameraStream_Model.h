@@ -5,33 +5,30 @@
 #include <opencv2/opencv.hpp>
 #include "opencv2/core/cuda.hpp"
 #include <opencv2/core.hpp>
-#include <opencv2/cudaimgproc.hpp>
+// #include <opencv2/cudaimgproc.hpp>
 
-#include <opencv2/cudacodec.hpp>
-#include <opencv2/cudaarithm.hpp>
-#include <opencv2/cudabgsegm.hpp>
+// #include <opencv2/cudacodec.hpp>
+// #include <opencv2/cudaarithm.hpp>
+// #include <opencv2/cudabgsegm.hpp>
 
-using CameraMap = std::map <int, std::queue<cv::Mat >>;
+using CameraMap = std::map<int, std::queue<cv::Mat>>;
 
 namespace CameraStream_Model
 {
 
-//#if defined(HAVE_CUDA)
-	
-	 cv::Mat cudaStreamProc(cv::Mat& cuda_mat);
+#if defined(HAVE_CUDA)
 
-//#endif
+	cv::Mat cudaStreamProc(cv::Mat &cuda_mat);
 
-//#if defined(_OPENMP)
+#elif defined(HAVE_OPENMP)
 
-	void ompStreamProc(CameraMap& cam_map, std::vector<cv::VideoCapture>& vid, int cam_index, bool& cam_stream);
+	void ompStreamProc(CameraMap &cam_map, std::vector<cv::VideoCapture> &vid, int cam_index, bool &cam_stream);
 
-	void camStab(cv::Mat& input);
+	void camStab(cv::Mat &input);
 
-//#endif
+#endif
 
-//#if !defined(_OPENMP) && !defined(HAVE_CUDA)
 	void boxerStreamProc();
-//#endif
-};
 
+void cameraPayloadRecv(CameraMap& cam_map, cv::VideoCapture& vid, int cam_index, bool& cam_stream);
+};

@@ -28,6 +28,5 @@ public:
 void keyboardInputHandler();
 };
  //extern // = InputType::None;
-//static ImGuiIO& io = ImGui::GetIO();
 
 

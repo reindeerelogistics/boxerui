@@ -168,8 +168,10 @@ int main(int, char**)
 	ImGuiIO& io = ImGui::GetIO();
 	(void)io;
 
-	
+	std::cout<<"BOXERUI_VERSION: "<<BOXERUI_VERSION<<std::endl;
+	std::cout<<"BOXERUI_BIN_DIR: "<<BOXERUI_BIN_DIR<<std::endl;
 	BOXERUI_CHECKCUDA();
+	BoxerUI::getPath();
 
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -260,11 +262,11 @@ int main(int, char**)
 					ImGui::UpdatePlatformWindows();
 
 					ImGui::NewFrame();*/
-					boxerController.cameraView();
+					// boxerController.cameraView();
 				}
 				//else 
 				{
-					boxerController.indexView();
+					boxerController.views();
 				}
 			}
 		}

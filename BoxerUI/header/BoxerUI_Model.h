@@ -2,11 +2,11 @@
 
 #include "Boxer.h"
 #include "Boxerpch.h"
-#include "CameraStream_Model.h"
+// #include "CameraStream_Model.h"
 
-#include "opencv2/core/cuda.hpp"
-#include <opencv2/core.hpp>
-#include <opencv2/cudaimgproc.hpp>
+// #include "opencv2/core/cuda.hpp"
+// #include <opencv2/core.hpp>
+// #include <opencv2/cudaimgproc.hpp>
 
 //#include <opencv2/cudacodec.hpp>
 //#include <opencv2/cudaarithm.hpp>
@@ -20,7 +20,7 @@
 #endif
 
 //using namespace std::chrono_literals;
-
+using CameraMap = std::map <int, std::queue<cv::Mat >>;
 class BoxerUI_Model
 {
 private:

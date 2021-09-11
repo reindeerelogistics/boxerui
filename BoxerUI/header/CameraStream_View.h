@@ -1,9 +1,9 @@
 #pragma once
 #include "Boxer.h"
 #include "Boxerpch.h"
-#include "BoxerUI_View.h"
 #include "Components_View.h"
 #include "Controller_input_Header.h"
+#include "CameraStream_Model.h"
 
 #ifdef _WIN32
 
@@ -75,5 +75,7 @@ public:
 	void initCamera();
 	
 	void destroyCamThreads();
+
+	void cameraView();
 };
 

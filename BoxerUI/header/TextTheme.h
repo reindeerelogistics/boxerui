@@ -1,9 +1,9 @@
 #pragma once
 #include "Boxer.h"
+#include "Boxerpch.h"
 #include "../resource/icons/IconFontCppHeaders/IconsFontAwesome5.h"
 #include "../resource/icons/IconFontCppHeaders/IconsMaterialDesign.h"
 #include <map>
-
 
 
 enum class FontStyle {
@@ -21,8 +21,8 @@ enum class IconStyle {
 	Custom_Font
 };
 
-using TextStyleMap = std::map<FontStyle, const char*>;
-using IconStyleMap = std::map<IconStyle, const char*>;
+using TextStyleMap = std::map<FontStyle, std::string>;
+using IconStyleMap = std::map<IconStyle, std::string>;
 
 /** @brief This text theme follows material design type scalling guidelines(https://material.io/design/typography/the-type-system.html#type-scale)
 @note fonts are loaded in the following order

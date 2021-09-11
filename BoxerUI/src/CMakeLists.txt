@@ -55,7 +55,6 @@ target_include_directories(BoxerUI_app PUBLIC
     "${LIBS_DIR}/implot/"
     "${OPENCV_LIBS_DIR}")
 
-    
 IF (WIN32)
     IF(OpenGL_FOUND)
         MESSAGE(STATUS "OPENGL FOUND!!")
@@ -68,7 +67,12 @@ IF (WIN32)
 ELSE()
     #Links the libraries to build target set in add_executable command
     find_package(OpenGL REQUIRED)
+    find_package(OpenMP)
+    if(OpenMP_FOUND)
+        add_compile_definitions(HAVE_OPENMP=\"${OpenMP_FOUND}\")
+    endif(OpenMP_FOUND)
     
+
     if(NOT glfw_FOUND)    
         include(FetchContent)
             FetchContent_Declare(
@@ -87,6 +91,10 @@ ELSE()
     # add_library(glfw3 STATIC  "${GLFW_DIR}/GLFW/glfw3.h" "${GLFW_DIR}/GLFW/glfw3native.h" )
     target_link_libraries(BoxerUI_app PUBLIC OpenGL::GL glfw opengl32 ${OpenCV_LIBS} )# Threads::Threads )
 
+    target_compile_features(BoxerUI_app PRIVATE cxx_std_17)
+    target_compile_definitions(BoxerUI_app PUBLIC   BOXERUI_VERSION=\"${PROJECT_VERSION}\" 
+                                                    BOXERUI_BIN_DIR=\"${PROJECT_SOURCE_DIR}/BoxerUI/bin/${CMAKE_BUILD_TYPE}\"
+                                                    BOXERUI_ROOT_DIR=\"${PROJECT_SOURCE_DIR}\")
 
     set_target_properties(BoxerUI_app PROPERTIES
                       RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/BoxerUI/bin/debug"
