@@ -1,3 +1,6 @@
 [submodule "imgui"]
 	path = BoxerUI/libs/imgui
 	url = https://github.com/reindeererobotics/imgui.git
+[submodule "BoxerUI/libs/spdlog"]
+	path = BoxerUI/libs/spdlog
+	url = https://github.com/gabime/spdlog

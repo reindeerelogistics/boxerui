@@ -31,9 +31,9 @@ void TextTheme::setFont()
 
 	const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, ICON_MIN_MD, ICON_MAX_MD, 0 };// Will not be copied by AddFont*, keep in scope as indicated in ImGui docs (https://github.com/reindeererobotics/imgui/blob/master/docs/FONTS.md#font-loading-instructions)
 
-	icons(&iconstyle_map, icon_ranges); //Icons are loaded first and merged with the default font as this font is guarateed to always to be available
 	headline(&textstyle_map);
 	subtitle(&textstyle_map);
+	icons(&iconstyle_map, icon_ranges); //Icons are loaded first and merged with the default font as this font is guarateed to always to be available
 	body(&textstyle_map);
 	button(&textstyle_map);
 
@@ -42,7 +42,6 @@ void TextTheme::setFont()
 }
 
 void TextTheme::headline(const TextStyleMap* map) {//impl Header styles
-std::cout<<"SOME MAP: "<<map->at(FontStyle::PantonDemo_Light)<<std::endl;
 	io.Fonts->AddFontFromFileTTF(map->at(FontStyle::PantonDemo_Light).c_str(), 96.0f, &config_font);//Headline 1
 	io.Fonts->AddFontFromFileTTF(map->at(FontStyle::PantonDemo_Light).c_str(), 60.0f, &config_font);//Headline 2
 	//io.Fonts->AddFontFromFileTTF(map->at(FontStyle::PantonDemo_Black), 48.0f, &config_font);//Headline 3

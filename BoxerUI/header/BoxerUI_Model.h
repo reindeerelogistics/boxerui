@@ -20,21 +20,24 @@
 #endif
 
 //using namespace std::chrono_literals;
-using CameraMap = std::map <int, std::queue<cv::Mat >>;
-class BoxerUI_Model
+//using CameraMap = std::map <int, std::queue<cv::Mat >>;
+namespace BoxerUI
 {
-private:
-	double temperature, battery;// , ultrasonic;
-	Inputs input;
+	class BoxerUI_Model
+	{
+	private:
+		double temperature, battery;// , ultrasonic;
+		Inputs input;
 
-public:
-	double getTemperature();
-	double getBattery();
-	void setTemperature(double temperature);
-	void setBattery(double battery);
-	void inputHandler();
+	public:
+		double getTemperature();
+		double getBattery();
+		void setTemperature(double temperature);
+		void setBattery(double battery);
+		void inputHandler();
 
-	static void cameraPayloadRecv(CameraMap& cam_map, cv::VideoCapture& vid, int cam_index, bool& cam_stream);
-protected:
-	void print(const char* text);
-};
+		//static void cameraPayloadRecv(CameraMap& cam_map, cv::VideoCapture& vid, int cam_index, bool& cam_stream);
+	protected:
+		void print(const char* text);
+	};
+}

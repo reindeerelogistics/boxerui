@@ -54,24 +54,26 @@ void CameraStream_Model::ompStreamProc(CameraMap &cam_map, std::vector<cv::Video
 {
 
 	// omp:: omp_set_num_threads(cam_index);
-#pragma omp parallel sections for nowait
+#pragma omp parallel// sections for nowait
 	{
-#pragma omp parallel section
-		{
-			//Do work that requires omp here
-		}
+//#pragma omp parallel section
+//		{
+//			//Do work that requires omp here
+//		}
 	}
 }
 #endif
 
 void CameraStream_Model::boxerStreamProc()
 {
+	cv::cuda::resetDevice();
 }
 
 void CameraStream_Model::cameraPayloadRecv(CameraMap& cam_map, cv::VideoCapture& vid, int cam_index, bool& cam_stream)
 { //WIP Receive frames from socket here and create a buffer for it
 	cv::Mat input = cv::Mat(100, 100, CV_8UC1), output;
-
+	int i = 0;
+//cv::cudacodec::createVideoWriter();
 	//If camera is open populate the payload_frames queue
 	if ((vid).isOpened())
 	{
@@ -90,6 +92,8 @@ void CameraStream_Model::cameraPayloadRecv(CameraMap& cam_map, cv::VideoCapture&
 			else
 			{
 				cam_map[cam_index].pop();
+				
+				//std::cout << "Popped at cam index: " << cam_index << "\t\tnum of pops"<<i++ <<"\t\tsize of queue: " << cam_map[cam_index].size() << std::endl;
 			}
 
 		}
@@ -100,6 +104,50 @@ void CameraStream_Model::cameraPayloadRecv(CameraMap& cam_map, cv::VideoCapture&
 
 	vid.~VideoCapture();
 
-
-
 }
+
+//void CameraStream_Model::cameraPayloadRecv(CameraMap& cam_map, cv::VideoCapture& vid, int cam_index, bool& cam_stream)
+//{ //WIP Receive frames from socket here and create a buffer for it
+//	cv::Mat input = cv::Mat(100, 100, CV_8UC1), output;
+//
+//	cv::cuda::GpuMat imgGPU;
+//
+//	//If camera is open populate the payload_frames queue
+//	if ((vid).isOpened())
+//	{
+//		std::cout << "Camera Opened: " << cam_index << std::endl;
+//		while (cam_stream)
+//		{
+//			if (cam_map[cam_index].size() < 10)
+//			{
+//				(vid)>>(input);
+//				imgGPU.upload(input);
+//				//TODO: All module work are done here
+//				auto start = cv::getTickCount();
+//				cv::cuda::bilateralFilter(imgGPU, imgGPU, 30, 100, 100);
+//				auto end = cv::getTickCount();
+//
+//				auto totalTime = (end - start) / cv::getTickFrequency();
+//				auto fps = 1 / totalTime;
+//				std::cout << "FPS: " << fps << std::endl;
+//
+//				//cv::putText(input, "FPS: "+std::to_string(int(fps)),cv::Point(50,50),cv::FONT_HERSHEY_DUPLEX,1, cv::Scalar(0,255,))
+//
+//				//output=CameraStream_Model::cudaStreamProc(input);
+//				imgGPU.download(input);
+//				(cam_map)[cam_index].emplace(input);
+//			}
+//			else
+//			{
+//				cam_map[cam_index].pop();
+//			}
+//
+//		}
+//		input.~Mat();
+//		output.~Mat();
+//
+//	}
+//
+//	vid.~VideoCapture();
+//
+//}

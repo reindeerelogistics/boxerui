@@ -11,9 +11,17 @@ set(LIBS_DIR "${PROJECT_SOURCE_DIR}/BoxerUI/libs")
 message(STATUS "Cmake build type: ${CMAKE_BUILD_TYPE}")
 
 IF (WIN32)
-    set(OPENCV_DIR "${PROJECT_SOURCE_DIR}/opencv/sources/out/install/x64-Release/x64/vc16/lib/")
+     set(OPENCV_DIR "${PROJECT_SOURCE_DIR}/BoxerUI/libs/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/x64/vc16/lib/")
+    #set(OPENCV_DIR "${PROJECT_SOURCE_DIR}/BoxerUI/libs/opencv-build/lib/")
+    message("OPENCV INCLUDE: ${OpenCV_INCLUDE_DIRS}")
+    message("OPENCV_DIR: ${OPENCV_DIR}")
 ENDIF()
 
+#set(GST_DIR )
+#find_package(GST REQUIRED gstreamer-1.0>=1.8)
+#if ( NOT (GST_FOUND))
+ #    message(FATAL_ERROR "Please Install Gstreamer Dev: CMake will Exit")
+#endif()
 
 # Set path variable to sources that will be used rather than collecting all the backend sources including ones not in use
 set(IMGUI_BACKENDS_DIR "${LIBS_DIR}/imgui/backends/")
@@ -53,9 +61,16 @@ target_include_directories(BoxerUI_app PUBLIC
     "${GL_DIR}"
     "${GLFW_DIR}"
     "${LIBS_DIR}/implot/"
-    "${OPENCV_LIBS_DIR}")
+    "${LIBS_DIR}/spdlog/include/"
+    "${OpenCV_INCLUDA_DIRS}")
 
 IF (WIN32)
+    find_package(OpenGL REQUIRED)
+    find_package(OpenMP)
+    if(OpenMP_CXX_FOUND)
+        add_compile_definitions(HAVE_OPENMP=\"${OpenMP_CXX_FOUND}\")
+    endif(OpenMP_CXX_FOUND)
+
     IF(OpenGL_FOUND)
         MESSAGE(STATUS "OPENGL FOUND!!")
     ELSE()
@@ -63,7 +78,30 @@ IF (WIN32)
     ENDIF()
 
     MESSAGE(STATUS "GL DIR: ${GL_DIR}GL/gl3w.h")
-    target_link_libraries(BoxerUI_app OpenGL::GL "${OPENCV_DIR}opencv_world453.lib"  "${PROJECT_SOURCE_DIR}/BoxerUI/libs/imgui/examples/libs/glfw/lib-vc2010-64/glfw3.lib" )
+    # add_library(OpenCV_SHARED SHARED "" )
+    target_link_libraries(BoxerUI_app PUBLIC OpenGL::GL ${OpenCV_LIBS}  "${PROJECT_SOURCE_DIR}/BoxerUI/libs/imgui/examples/libs/glfw/lib-vc2010-64/glfw3.lib" OpenMP::OpenMP_CXX )
+    target_compile_features(BoxerUI_app PRIVATE cxx_std_17)
+    target_compile_definitions(BoxerUI_app PUBLIC   BOXERUI_VERSION=\"${PROJECT_VERSION}\" 
+                                                    BOXERUI_BIN_DIR=\"${PROJECT_SOURCE_DIR}/BoxerUI/bin/${CMAKE_BUILD_TYPE}\"
+                                                    BOXERUI_ROOT_DIR="${PROJECT_SOURCE_DIR}"
+                                                    BOXERUI_APP_NAME=\"${CMAKE_PROJECT_NAME}\"
+                                                    BOXERUI_ASSERT_ENABLED) #TODO set path slashes properly. i.e. // : https://cmake.org/cmake/help/v3.21/command/cmake_path.html
+
+    set_target_properties(BoxerUI_app PROPERTIES
+                      RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/BoxerUI/bin/debug"
+                      #DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+                      RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/BoxerUI/bin/release"
+    )
+
+    install(FILES "${PROJECT_SOURCE_DIR}/BoxerUI/libs/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/x64/vc16/lib/opencv_world453d.lib" DESTINATION "${PROJECT_SOURCE_DIR}/BoxerUI/bin/debug")
+    install(FILES "${PROJECT_SOURCE_DIR}/BoxerUI/libs/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/x64/vc16/lib/opencv_world453d.lib" DESTINATION "${PROJECT_SOURCE_DIR}/BoxerUI/bin/debug")
+
+    install(TARGETS BoxerUI_app DESTINATION "${PROJECT_SOURCE_DIR}/BoxerUI/bin/debug")
+    #include(InstallRequiredSyatemLibraries)
+    Include(CPack)
+    set(CPACK_RESOURCE_FILE_lICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+    set(CPACK_PACKAGE_VERSION_MAJOR "${BoxerUI_VERSION_MAJOR}")
+    set(CPACK_PACKAGE_VERSION_MINOR "${BoxerUI_VERSION_MINOR}")
 ELSE()
     #Links the libraries to build target set in add_executable command
     find_package(OpenGL REQUIRED)
@@ -94,7 +132,7 @@ ELSE()
     target_compile_features(BoxerUI_app PRIVATE cxx_std_17)
     target_compile_definitions(BoxerUI_app PUBLIC   BOXERUI_VERSION=\"${PROJECT_VERSION}\" 
                                                     BOXERUI_BIN_DIR=\"${PROJECT_SOURCE_DIR}/BoxerUI/bin/${CMAKE_BUILD_TYPE}\"
-                                                    BOXERUI_ROOT_DIR=\"${PROJECT_SOURCE_DIR}\")
+                                                    BOXERUI_ROOT_DIR=\"${PROJECT_SOURCE_DIR}\BoxerUI\")
 
     set_target_properties(BoxerUI_app PROPERTIES
                       RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/BoxerUI/bin/debug"
