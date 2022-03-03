@@ -8,7 +8,7 @@
 #include <string>
 #include <map>
 #include <cstdlib>
-//#include "RoboCMD/RoboCMD.cpp"
+#include "RoboCMD/RoboCMD.h"
 #include <sstream>
 #include <string>
 
@@ -26,13 +26,13 @@ namespace BoxerUI_Inputs {
 	std::string split(std::string target, bool dir, char delim);
 	std::map<std::string, std::string> getConfig();
 
-	
-	
+
+
 	void button(const unsigned char* buttons, const char* desc, int button_val);
 	void joystick(const float* axes, const char* desc, int axes_val);
 	void trigger(const float* axes, const char* desc, int axes_val);
 	void input(bool& cam_stream);
 	void send(const float com,const float data,const float max,const float min,const float zero);
-	
+
 
 }

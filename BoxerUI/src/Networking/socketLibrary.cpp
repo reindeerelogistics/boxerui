@@ -6,25 +6,21 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-#include <cereal/archives/binary.hpp>
-#include <cereal/archives/xml.hpp>
-#include <cereal/archives/json.hpp>
-#include <cereal/types/vector.hpp>
 
-#include "frame_computation.cpp"
+#include "uiBackend.cpp"
 
 #include <opencv2/highgui/highgui.hpp>
 
 int status;
 
 //Mat -> string
-std::string serealizeFrame(cv::Mat new_frame, std::vector<unsigned char> compressed_frame) {
-    std::vector<unsigned char> vec;
+std::string serealizeFrame(cv::Mat new_frame, std::vector<uint8_t> compressed_frame) {
+    std::vector<uint8_t> vec;
     if(compressed_frame.size() != 0){
         std::cout<<"Seriliased jpg/png encoding\n";
         vec = compressed_frame;
     } else {
-        std::vector<unsigned char> frameVec(new_frame.begin<unsigned char>(), new_frame.end<unsigned char>());
+        std::vector<uint8_t> frameVec(new_frame.begin<uint8_t>(), new_frame.end<uint8_t>());
         vec = frameVec;
     }
 
@@ -90,47 +86,22 @@ struct FrameStructure recvFrameOverhead(int sockfd, struct sockaddr_in serveradd
 void sendFrame(cv::Mat new_frame, struct sockaddr_in serveraddr, struct sockaddr_in clientaddr, int sockfd) {
     socklen_t clientaddrLength, serveraddrLength;
 
-    std::vector<unsigned char> encode_vec = encodeFrame(new_frame, 0);
+    std::vector<uint8_t> encode_vec = encodeFrame(new_frame, 0);
     std::string str = serealizeFrame(new_frame, encode_vec);
 
-    int size = str.length();
+    //const char* cstr = str.c_str();
 
-    const char* cstr = str.c_str();
-
-    std::cout<<"size of frame is "<<size<<'\n';
-    status = sendto(sockfd, &size, sizeof(int), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+    std::cout<<"size of frame is "<<(int)str.length()<<'\n';
+    //status = sendto(sockfd, &size, sizeof(int), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+    uint8_t* arry = (uint8_t*)str.c_str();
+    sendToClients(arry, str.length(), '1');
     if(status < 0) {
         perror("Perameter <size> failed to send..");
         exit(0);
     }
-
-    std::cout<<"Size of frame "<<size<<'\n';
-    status = sendto(sockfd, cstr, size, 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
-    if(status < 0) {
-        perror("Perameter <cstr> failed to send..");
-        exit(0);
-    }
 }
 
-cv::Mat recvFrame(int sockfd, struct sockaddr_in serveraddr) {
-    socklen_t clientaddrLength, serveraddrLength;
-    int size;
-
-    std::cout<<"Starting to recieve\n";
-    status = recvfrom(sockfd, &size, sizeof(int), 0, (struct sockaddr*)&serveraddr, &serveraddrLength);
-    if(status < 0)
-        perror("recv error");
-
-    char cstr[size];
-    std::cout<<"Size of frame "<<size<<'\n';
-    status = recvfrom(sockfd, cstr, size, MSG_WAITALL, (struct sockaddr*)&serveraddr, &serveraddrLength);
-    if(status < 0)
-        perror("recv error");
-    std::cout<<"recieved data\n";
-
-
-    std::vector<unsigned char> vec = deserializeFrame(cstr, size);
-
-    return decodeFrame(vec);
+cv::Mat recvFrame(std::vector<uint8_t> vec, int size) {
+    return decodeFrame(deserializeFrame(&vec[0], vec.size()));
 }
 

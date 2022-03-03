@@ -9,7 +9,7 @@
 #include <limits>
 #include <stdlib.h>
 #include <cmath>
-//#include "uiBackend.cpp"
+#include "../Networking/uiBackend.h"
 
 using namespace std;
 
@@ -19,8 +19,8 @@ typedef unsigned short uint16_t;
 
 /**
  * @class RoboCMD
- * @brief An object to deal with encoding and decoding messages following externally defined protocol. 
- * 
+ * @brief An object to deal with encoding and decoding messages following externally defined protocol.
+ *
  * @tparam t_data data type of data that will be pased in
  * @tparam t_max data type of max. may be used for scalling.
  * @tparam t_min data type of min. may be used for scalling.
@@ -29,7 +29,7 @@ typedef unsigned short uint16_t;
 
 template <typename t_data, typename t_max, typename t_min, typename t_zero>
 class RoboCMD{
-    
+
     private:
     //************************* Default class varriables *************************//
     const uint8_t d_zero = 0;
@@ -45,14 +45,14 @@ class RoboCMD{
 
     //************************* Temp class varriables *************************//
 
-    t_data data_ = 0; 
+    t_data data_ = 0;
     t_max max_ = 0;
     t_min min_ = 0;
     t_zero zero_ = 0;
 
     //*************************//
 /**
- * Resets all class variables to defaults. -1 for com and direction, 0 for all else. 
+ * Resets all class variables to defaults. -1 for com and direction, 0 for all else.
  */
     void clrTmp(){
         com_= -1;
@@ -67,7 +67,7 @@ class RoboCMD{
 
 /**
  * A function to set the class variables.
- * 
+ *
  * @param com command code to set in class variables. Defined in external protocol.
  * @param data generic data that will later be rescalled. Type defined in class template.
  * @param max maximum that will later be used for rescalling. Type defined in class template.
@@ -103,7 +103,7 @@ class RoboCMD{
 
     void genMsg(){
 
-     vector<uint8_t> msg; 
+     vector<uint8_t> msg;
 
         switch(com_){
             case -1:break;
@@ -118,8 +118,8 @@ class RoboCMD{
 
             }else if(zero_ != max_ && zero_ != min_){
 
-                val = (data_>zero_)? 
-                        round((double)(data_-zero_)/(max_-zero_)* numeric_limits<uint16_t>::max()) : 
+                val = (data_>zero_)?
+                        round((double)(data_-zero_)/(max_-zero_)* numeric_limits<uint16_t>::max()) :
                         round((double)(data_-min_)/(zero_-min_)* numeric_limits<uint16_t>::max());
 
                 //printf("value: %d\n max: %d\n", val,numeric_limits<uint16_t>::max());
@@ -173,7 +173,7 @@ class RoboCMD{
 
                 dir_ = msg_.at(1);
                 val_ = ((uint16_t)msg_.at(2) << 8) | msg_.at(3);
-                
+
             break;
 
             case 0x06 ... 0x07: //commands of form [scaler(16-bit)]
@@ -194,15 +194,15 @@ class RoboCMD{
     }
 
     /**
-     * Formats and adds "data" to command queue accorrding to format specified for "com" in RoboCMD protocol. 
-     * data direction will be determined by value of "data" relative to "zero" , and scaller will be determined acording to 
+     * Formats and adds "data" to command queue accorrding to format specified for "com" in RoboCMD protocol.
+     * data direction will be determined by value of "data" relative to "zero" , and scaller will be determined acording to
      * "data" relative to "zero" and "max" or "min" (according to direction).
      * @param com the command you wish to submit
      * @param data the value you wish to send
      * @param max the max value "data" could be
      * @param min the min value "data" could be
      * @param zero the zero point, used to determine direction and convert data to absolute value and scaller
-     */ 
+     */
     void set(uint8_t com, t_data data, t_max max, t_min min, t_zero zero){
         format(com, data, max, min, zero);
         genMsg();
@@ -212,14 +212,14 @@ class RoboCMD{
     }//set(uint8_t com, t_data data, t_max max, t_min min, t_zero zero)
 
     /**
-     * Formats and adds "data" to command queue accorrding to format specified for "com" in RoboCMD protocol. 
+     * Formats and adds "data" to command queue accorrding to format specified for "com" in RoboCMD protocol.
      * data direction will be determined by value of "data" relative to default "zero" value of 0 ,
      * and scaller will be determined acording to "data" relative to default "zero" value and "max" or "min" (according to direction).
      * @param com the command you wish to submit
      * @param data the value you wish to send
      * @param max the max value "data" could be
      * @param min the min value "data" could be
-     */ 
+     */
     void set(uint8_t com, t_data data, t_max max, t_min min){
         format(com, data, max, min, d_zero);
         genMsg();
@@ -229,39 +229,39 @@ class RoboCMD{
 
 
     /**
-     * Formats and adds "data" to command queue accorrding to format specified for "com" in RoboCMD protocol. 
+     * Formats and adds "data" to command queue accorrding to format specified for "com" in RoboCMD protocol.
      * this function assumes data direction will be irelevent for the command, if a command with direction is used an error may occure.
      * scaller will be determined acording to "data" relative to default "zero" value of 0 and "max".
      * @param com the command you wish to submit
      * @param data the value you wish to send
      * @param max the max value "data" could be
-     */ 
+     */
     void set(uint8_t com, t_data data, t_max max){
         format(com, data, max, d_min, d_zero);
         genMsg();
 
-        
+
     }//set (uint8_t com, t_data data, t_max max)
 
 
     /**
-     * Formats and adds "data" to command queue accorrding to format specified for "com" in RoboCMD protocol. 
+     * Formats and adds "data" to command queue accorrding to format specified for "com" in RoboCMD protocol.
      * data direction will be determined by value of "data" relative to default "zero" value of 0 ,
      * and scaller will be determined acording to "data" relative to default "zero" value and "data" type max or "data" type min (according to direction).
      * @param com the command you wish to submit
      * @param data the value you wish to send
-     */ 
+     */
     void set(uint8_t com, t_data data){
         format(com, data, numeric_limits<t_data>::max(), numeric_limits<t_data>::min(), d_zero);
         genMsg();
 
-        
+
     }//set(uint8_t com, t_data data)
 
 
 //***** DEBUG *****
     void disMsg(){
-        
+
         printf("Total message size: %d\n", (int) msg_.size());
 
     for(int i = 0; i<msg_.size(); i++){
@@ -273,30 +273,30 @@ class RoboCMD{
 
     }
   //***** DEBUG ***** */
- 
+
     /**
      * returns current message stored.
      * @return returns current message stored as vector<uint8_t>
-     */ 
+     */
     vector<uint8_t> getMsg(){
         return msg_;
     }
 
 
     /**
-     *  clears stored data in object. Clears class varriables and emptys vector to size 0. 
-     */ 
-    void clrMsg(){	
+     *  clears stored data in object. Clears class varriables and emptys vector to size 0.
+     */
+    void clrMsg(){
         clrTmp();
         vector<uint8_t>().swap(msg_);
     }
 
 
     /**
-     * clears stored data in object and sets it to data stored in message. 
-     * clears current data, sets class message to passed in message, and decodes class variables from message data. 
-     * @param msg the new message you wish to set. 
-     */ 
+     * clears stored data in object and sets it to data stored in message.
+     * clears current data, sets class message to passed in message, and decodes class variables from message data.
+     * @param msg the new message you wish to set.
+     */
     void setMsg(vector<uint8_t> msg){
         clrMsg();
         msg_.swap(msg);
@@ -305,10 +305,10 @@ class RoboCMD{
 
 
     /**
-     * generate scaller representation of value stored in val_. 
-     * generates scaller as float with precision defined in "roundPlace". default accuracy of %0.01 (4 decimal places). 
-     * @return returns scaller as float. 
-     */ 
+     * generate scaller representation of value stored in val_.
+     * generates scaller as float with precision defined in "roundPlace". default accuracy of %0.01 (4 decimal places).
+     * @return returns scaller as float.
+     */
     float getScaller(){
         switch(com_){
         case 0x00 ... 0x07:
@@ -323,27 +323,27 @@ class RoboCMD{
 
 
     /**
-     * return 16-bit represenation of value stored in message. 
-     * @return returns "val_" of type uint16_t. 
-     */ 
+     * return 16-bit represenation of value stored in message.
+     * @return returns "val_" of type uint16_t.
+     */
     uint16_t getVal(){
         return val_;
     }
 
 
     /**
-     * returns direction stored in message. 
-     * @return returns "dir_" of type char. 
-     */ 
+     * returns direction stored in message.
+     * @return returns "dir_" of type char.
+     */
     char getDir(){
         return dir_;
     }
 
 
     /**
-     * returns command code stored in message. 
-     * @return returns "com_" of type char. 
-     */ 
+     * returns command code stored in message.
+     * @return returns "com_" of type char.
+     */
     char getCom(){
         return com_;
     }

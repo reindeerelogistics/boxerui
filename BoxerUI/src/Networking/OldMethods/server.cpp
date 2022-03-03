@@ -30,6 +30,16 @@
 #include <netinet/in.h>
 
 //#include "node.cpp"
+int Test;
+void testOutput(const char* value) {
+    if(Test == 1)
+    printf("[#]%s", value);
+}
+
+void testOutput(int value) {
+    if(Test == 1)
+        printf("%d\n", value);
+}
 
 int node_index = 0;
 uint8_t uid_index = 2;
@@ -231,7 +241,7 @@ void sendToDestinations(uint8_t* msg, struct Node** Destinations) {
     printf("Message server is sending\n");
     while(j < 20) {
         if(msg[j] == '\0') {
-            printf("[NULL]");
+            //printf("[NULL]");
         } else{
         printf("%c", msg[j]);
         }
@@ -412,7 +422,7 @@ void serverThread() {
         printf("Size: %" PRIu64 "\n", size);
 
         uint8_t data[size];
-        recvfrom(events[0].data.fd, data, size, MSG_DONTWAIT, (struct sockaddr*)&Client, &len);
+        recvfrom(events[0].data.fd, data, size, MSG_DONTWAIT | MSG_WAITALL, (struct sockaddr*)&Client, &len);
 
         char ip[30];
         char port[10];

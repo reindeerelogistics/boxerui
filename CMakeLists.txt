@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
-project(BoxerUI 
-                VERSION 0.0.0 
+project(BoxerUI
+                VERSION 0.0.0
                 DESCRIPTION "A GUI and analytics component to the Boxer Robot"
                 LANGUAGES CXX C
                 HOMEPAGE_URL https://github.com/reindeererobotics)
@@ -31,21 +31,21 @@ ELSE()
 
     message(CHECK_START "Finding BoxerUI Dependencies")
     list(APPEND CMAKE_MESSAGE_INDENT ">>")
-    
+
     message(CHECK_START "Finding OpenCV")
     # OpenCV found. Including OpenCV variables...
     set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build")
     find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc )#CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/" )#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
     message(CHECK_PASS "found")
-    
+
     IF(NOT OPENCV_FOUND)
-        #WIP: build opencv from source if not found 
+        #WIP: build opencv from source if not found
         message(CHECK_FAIL "not found: Proceeding to build from source...")
-        
+
         if(BUILD_OPENCV_BASIC)
         include(BoxerUI/cmake/opencv_basic.cmake)
         endif(BUILD_OPENCV_BASIC)
-        
+
         if(BUILD_OPENCV_CUDA)
         include(BoxerUI/cmake/opencv_cuda.cmake)
         endif(BUILD_OPENCV_CUDA)
@@ -53,9 +53,9 @@ ELSE()
         if(BUILD_OPENCV_ADVANCED)
             include(BoxerUI/cmake/opencv_advanced.cmake)
         endif(BUILD_OPENCV_ADVANCED)
-        
+
     ENDIF()
-    
+
     list(POP_BACK CMAKE_MESSAGE_INDENT)
     #Should print the include dir and link libs.
     MESSAGE(STATUS "OPENCV INCLUDE DIRS: ${OpenCV_INCLUDE_DIRS}")
