@@ -13,7 +13,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #endif
-//namespace BoxerUI{
+namespace BoxerUI{
 class BoxerUI_Controller
 {
 
@@ -21,16 +21,16 @@ private:
 	BoxerUI_View boxerView;
 	BoxerUI_Model boxerModel;
 
+
+		//static BoxerUI_Controller* boxerController;
+public:
 	BoxerUI_Controller()
 		: boxerView(), boxerModel()		//Creates member instances
 	{}
 
-public:
-
-	static BoxerUI_Controller& Get() {
-		static BoxerUI_Controller boxerController;
-		return boxerController;
-	}
+	/*static BoxerUI_Controller& Get() {
+		return *boxerController;
+	}*/
 
 	~BoxerUI_Controller();
 
@@ -55,6 +55,6 @@ public:
 	void cameraView();
 	void indexView();
 	void cameraPayloadRecv();
-	void destroyCamThreads();
+	bool destroyCamThreads();
 };
-//};
+};
