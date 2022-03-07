@@ -3,7 +3,7 @@
 Debug/
 Release/
 **/out
-BoxerUI/bin/
+bin/
 
 **/opencv-*
 opencv/
@@ -12,33 +12,33 @@ opencv-build/
 opencv-install/
 opencv_contrib-master/
 
-BoxerUI/libs/cereal/
-BoxerUI/libs/3rd-party/
-BoxerUI/libs/spdlog/
+libs/cereal/
+libs/3rd-party/
+libs/spdlog/
 
 #Imgui
-BoxerUI/libs/imgui/*
-!/*BoxerUI/libs/imgui/*.cpp
-!/*BoxerUI/libs/imgui/*.h
+libs/imgui/*
+!/*libs/imgui/*.cpp
+!/*libs/imgui/*.h
 
-!/*BoxerUI/libs/imgui/backends/
-BoxerUI/libs/imgui/backends/*
-!BoxerUI/libs/imgui/backends/imgui_impl_glfw*
-!BoxerUI/libs/imgui/backends/imgui_impl_opengl3*
+!/*libs/imgui/backends/
+libs/imgui/backends/*
+!libs/imgui/backends/imgui_impl_glfw*
+!libs/imgui/backends/imgui_impl_opengl3*
 
-!/*BoxerUI/libs/imgui/examples/
-BoxerUI/libs/imgui/examples/*
-!/*BoxerUI/libs/imgui/examples/libs/
-BoxerUI/libs/imgui/examples/libs/*
-!/*BoxerUI/libs/imgui/examples/libs/gl3w/
-!/*BoxerUI/libs/imgui/examples/libs/glfw/
-BoxerUI/libs/imgui/examples/libs/glfw/lib-vc2010-32/
-BoxerUI/libs/imgui/examples/libs/glfw/COPYING.txt
+!/*libs/imgui/examples/
+libs/imgui/examples/*
+!/*libs/imgui/examples/libs/
+libs/imgui/examples/libs/*
+!/*libs/imgui/examples/libs/gl3w/
+!/*libs/imgui/examples/libs/glfw/
+libs/imgui/examples/libs/glfw/lib-vc2010-32/
+libs/imgui/examples/libs/glfw/COPYING.txt
 
 
 #Implot
-BoxerUI/libs/implot/LICENSE
-BoxerUI/libs/implot/README.md
+libs/implot/LICENSE
+libs/implot/README.md
 
 
 # !/*build/BoxerUI_app
@@ -47,14 +47,14 @@ BoxerUI/libs/implot/README.md
 glfw
 glfw-build/
 
-BoxerUI/src/camera_stream.cpp
+src/camera_stream.cpp
 
 build/*
-BoxerUI/imgui.ini
+imgui.ini
 
 boxer_install.zip
 install_boxerUI.txt
 Boxer_Install.sh
 
 # BoxerUI_Tests
-BoxerUI/tests/BoxerUI_Tests/packages/
+tests/BoxerUI_Tests/packages/

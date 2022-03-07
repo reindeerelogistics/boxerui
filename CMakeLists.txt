@@ -1,126 +1,90 @@
-cmake_minimum_required(VERSION 3.16)
-project("Reindeere Technologies - BoxerUI"
-                VERSION 0.0.0
-                DESCRIPTION "GUI and analytics component to the Boxer Robot"
-                LANGUAGES CXX C
-                HOMEPAGE_URL https://github.com/reindeererobotics)
+cmake_minimum_required(VERSION 3.20)
 
-# enable_language(CUDA)
-# set( CMAKE_VERBOSE_MAKEFILE on )
+set(TARGET_NAME Astrolabe)
+set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/header/")#This is the dir to the root of the project.
 
-message(STATUS "BoxerUI version: ${PROJECT_VERSION}")
-
-set(WORKSPACE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/BoxerUI/")#This is the dir to the root of the project.
-
-#set(CMAKE_DEBUG_POSTFIX d)
-#set(CMAKE_DEBUG_POSTFIX d)
+project("${TARGET_NAME}" 
+        VERSION 0.0.0
+        DESCRIPTION "GUI and analytics component to the Boxer Robot"
+        LANGUAGES CXX C
+        HOMEPAGE_URL https://github.com/reindeererobotics)
+                
+                include(CMakePrintHelpers)
+               cmake_print_variables(CMAKE_BINARY_DIR CMAKE_SOURCE_DIR CMAKE_CURRENT_BINARY_DIR CMAKE_CURRENT_SOURCE_DIR)
+                
 
 option (BOXERUI_TESTS "Build BoxerUI tests" OFF)
-option (BOXERUI_SHARED_LIBS "Builds BoxerUI with shared libraries. Turned off by default" OFF)
+option (BUILD_SHARED_LIBS "Builds BoxerUI with shared libraries. Turned off by default" ON)
 option (BOXERUI_LOGGING "Build BoxerUI with logging" ON)
 
 option (BUILD_OPENCV_BASIC "Build the SDL implementation (only if supported)" ON)
 option (BUILD_OPENCV_CUDA "Build OpenCV with CUDA (only if the CUDA-toolkit is available)" OFF)
 option (BUILD_OPENCV_ADVANCED "Build OpenCV with advanced features)" OFF)
 
-IF(WIN32)
-    # set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/include")
-    message(CHECK_START "Finding BoxerUI Dependencies")
-    list(APPEND CMAKE_MESSAGE_INDENT ">>")
 
-    message(CHECK_START "Finding OpenCV")
+set(CMAKE_DEBUG_POSTFIX d)
 
-    set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/BoxerUI/libs/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}")
-    message("OpenCV_DIR: ${OpenCV_DIR}")
-    find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
-    message(CHECK_PASS "found")
+include(FetchContent)
+function(fetch_project_dep depName depRepo depTag)
 
-    IF(NOT OPENCV_FOUND)
-        #WIP: build opencv from source if not found
-        message(CHECK_FAIL "not found: Proceeding to build from source...")
+    if (DEFINED ARGV3)
+        message("ARGV0 defined value=${ARGV3}")
+        set(SRC_DEST ${ARGV3})
+    else()
+        message("ARGV3 not defined")
+        set(SRC_DEST "${CMAKE_CURRENT_BINARY_DIR}/${depName}")
+    endif()
+    
+    # Check if population has been done
+    FetchContent_GetProperties(${depName})
+	
+    if(NOT ${depName})
+         # Fetch content
+        FetchContent_Populate(${depName}
+        GIT_REPOSITORY ${depRepo}
+        GIT_TAG ${depTag}
+        GIT_PROGRESS        ON
+        #DOWNLOAD_DIR        "${CMAKE_CURRENT_BINARY_DIR}"
+        SOURCE_DIR          "${SRC_DEST}")
+        #BINARY_DIR          "${CMAKE_CURRENT_BINARY_DIR}/${depName}-build")
+    endif()
 
-        if(BUILD_OPENCV_BASIC)
-        include(BoxerUI/cmake/opencv_basic.cmake)
-        endif(BUILD_OPENCV_BASIC)
+   # foreach(arg IN LISTS ARGN)
+    #    message("address parts: ${arg}")
+    #endforeach()
+    set("${depName}_SRC_DIR" ${CMAKE_CURRENT_BINARY_DIR}/${depName} PARENT_SCOPE) # Parent scope sets scope of variable in scope of calling function.
+    #include_directories("${spdlog_SOURCE_DIR}/include")
+    #message("Here is spdlog dir: ${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR}")
+    # add_subdirectory("${depName}_SOURCE_DIR" "${depName}_BINARY_DIR")
 
-        if(BUILD_OPENCV_CUDA)
-        include(BoxerUI/cmake/opencv_cuda.cmake)
-        endif(BUILD_OPENCV_CUDA)
+endfunction()
 
-        if(BUILD_OPENCV_ADVANCED)
-            include(BoxerUI/cmake/opencv_advanced.cmake)
-        endif(BUILD_OPENCV_ADVANCED)
-
-    ENDIF()
-
-    list(POP_BACK CMAKE_MESSAGE_INDENT)
-ELSE()
-
-    message(CHECK_START "Finding BoxerUI Dependencies")
-    list(APPEND CMAKE_MESSAGE_INDENT ">>")
-
-    message(CHECK_START "Finding OpenCV")
-    # OpenCV found. Including OpenCV variables...
-    set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/BoxerUI/libs/opencv-build")
-    find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc )#CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_SOURCE_DIR}/opencv-build/" )#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
-    message(CHECK_PASS "found")
-
-    IF(NOT OPENCV_FOUND)
-        #WIP: build opencv from source if not found
-        message(CHECK_FAIL "not found: Proceeding to build from source...")
-
-        if(BUILD_OPENCV_BASIC)
-        include(BoxerUI/cmake/opencv_basic.cmake)
-        endif(BUILD_OPENCV_BASIC)
-
-        if(BUILD_OPENCV_CUDA)
-        include(BoxerUI/cmake/opencv_cuda.cmake)
-        endif(BUILD_OPENCV_CUDA)
-
-        if(BUILD_OPENCV_ADVANCED)
-            include(BoxerUI/cmake/opencv_advanced.cmake)
-        endif(BUILD_OPENCV_ADVANCED)
-
-    ENDIF()
-
-    list(POP_BACK CMAKE_MESSAGE_INDENT)
-    #Should print the include dir and link libs.
-    MESSAGE(STATUS "OPENCV INCLUDE DIRS: ${OpenCV_INCLUDE_DIRS}")
-    MESSAGE(STATUS "OPENCV LINK LIBRARIES ${OpenCV_LIBS}")
-ENDIF()
-
-IF(BOXERUI_LOGGING)
-    add_subdirectory("BoxerUI/libs/spdlog")
-    # TODO: set type of logging based on build type
-ENDIF()
+include(${CMAKE_SOURCE_DIR}/cmake/Deps.cmake)
 
 # Add directories to our project and src files
-add_subdirectory("${WORKSPACE_DIR}/src")
+add_subdirectory("src")
 
 if(BOXERUI_TESTS)
     include(cmake/boxerui_tests.cmake)
 endif(BOXERUI_TESTS)
 
-
-#find_package(PkgConfig) #finding pkg-config is a helper tool
-
-#using pkg-config to getting Gstreamer
-#pkg_check_modules(GSTREAMER REQUIRED gstreamer-1.0)
-
-#including GStreamer header files directory
-#include_directories(
- #       ${GLIB_INCLUDE_DIRS}
- #       ${GSTREAMER_INCLUDE_DIRS}
-#)
-
-#linking GStreamer library directory
-#link_directories(
- #       ${GLIB_LIBRARY_DIRS}
-  #      ${GSTREAMER_LIBRARY_DIRS}
-#)
-
-#building target executable
-#add_executable(${PROJECT_NAME} main.cpp)
-
-#linking Gstreamer library with target executable
-#target_link_libraries(${PROJECT_NAME} ${GSTREAMER_LIBRARIES})
+#include(InstallRequiredSyatemLibraries)
+#    set(CPACK_RESOURCE_FILE_lICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+#    set(CPACK_PACKAGE_VERSION_MAJOR "${${TARGET_NAME}_VERSION_MAJOR}")
+#    set(CPACK_PACKAGE_VERSION_MINOR "${${TARGET_NAME}_VERSION_MINOR}")
+#    Include(CPack)
+#    SET(CPACK_INSTALL_CMAKE_PROJECTS  "SubProject;MySub;ALL;/")
+#    
+#    # set the install/uninstall icon used for the installer itself
+#    set (CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/resource/app.ico")
+#    set (CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/resource/app.ico")
+#     #set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+#
+#     # set the add/remove programs icon using an installed executable
+#     SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\cmake-gui.exe")
+#
+#     set (CPACK_PACKAGE_INSTALL_DIRECTORY "${TARGET_NAME} ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
+#
+#     set (CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/release/app_bmp.bmp")
+#     set (CPACK_CREATE_DESKTOP_LINKS Astrolabe)
+#     set (CPACK_PACKAGE_EXECUTABLES "Astrolabe")
