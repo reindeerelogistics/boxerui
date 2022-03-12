@@ -1,7 +1,7 @@
 #pragma once
 #include "Boxer.h"
 #include "BoxerUI_Log.h"
-//#include "Boxerpch.h"
+#include "Boxerpch.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imconfig.h"

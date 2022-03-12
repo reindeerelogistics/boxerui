@@ -5,36 +5,7 @@ Release/
 **/out
 bin/
 
-**/opencv-*
-opencv/
-# opencv-master/
-opencv-build/
-opencv-install/
-opencv_contrib-master/
-
-libs/cereal/
-libs/3rd-party/
-libs/spdlog/
-
-#Imgui
-libs/imgui/*
-!/*libs/imgui/*.cpp
-!/*libs/imgui/*.h
-
-!/*libs/imgui/backends/
-libs/imgui/backends/*
-!libs/imgui/backends/imgui_impl_glfw*
-!libs/imgui/backends/imgui_impl_opengl3*
-
-!/*libs/imgui/examples/
-libs/imgui/examples/*
-!/*libs/imgui/examples/libs/
-libs/imgui/examples/libs/*
-!/*libs/imgui/examples/libs/gl3w/
-!/*libs/imgui/examples/libs/glfw/
-libs/imgui/examples/libs/glfw/lib-vc2010-32/
-libs/imgui/examples/libs/glfw/COPYING.txt
-
+libs/*
 
 #Implot
 libs/implot/LICENSE
@@ -50,10 +21,6 @@ glfw-build/
 src/camera_stream.cpp
 
 build/*
-imgui.ini
-
-boxer_install.zip
-install_boxerUI.txt
 Boxer_Install.sh
 
 # BoxerUI_Tests

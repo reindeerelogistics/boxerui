@@ -14,9 +14,9 @@ namespace BoxerUI {
 			bool p_open = false;
 			if (&show_demo_window)
 			{
-				ImPlot::CreateContext();
-				ImPlot::ShowDemoWindow(&p_open);
-				ImPlot::DestroyContext();
+				//ImPlot::CreateContext();
+				//ImPlot::ShowDemoWindow(&p_open);
+				//ImPlot::DestroyContext();
 			}
 		}
 		// 3. Show another simple window.
@@ -140,21 +140,21 @@ namespace BoxerUI {
 			ys2[i] = xs2[i] * xs2[i];
 		}
 
-		ImPlot::CreateContext();
-		ImGui::Begin("ImPlot Test###mainview", &show_imgui_style_editor);
+		//ImPlot::CreateContext();
+		//ImGui::Begin("ImPlot Test###mainview", &show_imgui_style_editor);
 
-		if (ImPlot::BeginPlot("My Plot", "my x label", "my y label"))
-		{
+		//if (ImPlot::BeginPlot("My Plot", "my x label", "my y label"))
+		//{
 
-			//ImPlot::PlotBars("My Bar Plot", bar_data, 11);
-			ImPlot::PlotLine("My Line Plot1", xs1, ys1, 1001);
-			ImPlot::SetNextMarkerStyle(ImPlotMarker_Diamond);
-			ImPlot::PlotLine("My Line Plot2", xs2, ys2, 11);
-			ImPlot::EndPlot();
-		}
+		//	//ImPlot::PlotBars("My Bar Plot", bar_data, 11);
+		//	ImPlot::PlotLine("My Line Plot1", xs1, ys1, 1001);
+		//	ImPlot::SetNextMarkerStyle(ImPlotMarker_Diamond);
+		//	ImPlot::PlotLine("My Line Plot2", xs2, ys2, 11);
+		//	ImPlot::EndPlot();
+		//}
 
-		ImGui::End();
-		ImPlot::DestroyContext();
+		//ImGui::End();
+		//ImPlot::DestroyContext();
 	}
 
 	void BoxerUI_View::signinWindow(bool* boxer_analytics)

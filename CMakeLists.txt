@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.20)
 set(TARGET_NAME Astrolabe)
 set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/header/")#This is the dir to the root of the project.
 
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib )
+set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib )
+
 project("${TARGET_NAME}" 
         VERSION 0.0.0
         DESCRIPTION "GUI and analytics component to the Boxer Robot"
@@ -14,7 +18,8 @@ project("${TARGET_NAME}"
                 
 
 option (BOXERUI_TESTS "Build BoxerUI tests" OFF)
-option (BUILD_SHARED_LIBS "Builds BoxerUI with shared libraries. Turned off by default" ON)
+option (${TARGET_NAME}_BUILD_USING_PCH "Build BoxerUI tests" ON)
+option (BUILD_SHARED_LIBS "Builds BoxerUI with shared libraries. Turned ON by default" ON)
 option (BOXERUI_LOGGING "Build BoxerUI with logging" ON)
 
 option (BUILD_OPENCV_BASIC "Build the SDL implementation (only if supported)" ON)
@@ -22,41 +27,41 @@ option (BUILD_OPENCV_CUDA "Build OpenCV with CUDA (only if the CUDA-toolkit is a
 option (BUILD_OPENCV_ADVANCED "Build OpenCV with advanced features)" OFF)
 
 
-set(CMAKE_DEBUG_POSTFIX d)
+#set(CMAKE_DEBUG_POSTFIX d)
 
-include(FetchContent)
+
+
+
 function(fetch_project_dep depName depRepo depTag)
+    include(FetchContent)
 
+    string(TOUPPER ${depName} DEPNAME_UPPERCASE)
     if (DEFINED ARGV3)
         message("ARGV0 defined value=${ARGV3}")
-        set(SRC_DEST ${ARGV3})
+        #set(BIN_DEST ${ARGV3} PARENT_SCOPE)
+        #This is the per-content equivalent of FETCHCONTENT_UPDATES_DISCONNECTED. If the global option or this option is ON, then updates will be disabled for the named content
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_${DEPNAME_UPPERCASE} ${ARGV3})
     else()
-        message("ARGV3 not defined")
-        set(SRC_DEST "${CMAKE_CURRENT_BINARY_DIR}/${depName}")
+        message("ARGV3 not defined. FETCHCONTENT_UPDATES_DISCONNECTED_${DEPNAME_UPPERCASE} is OFF")
     endif()
+
+    set(BIN_DEST "${CMAKE_BINARY_DIR}/${depName}-build" PARENT_SCOPE)
+    set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE) 
+    set(${depName}_SHARED_LIBS ON CACHE BOOL "" FORCE) 
     
     # Check if population has been done
     FetchContent_GetProperties(${depName})
-	
-    if(NOT ${depName})
+    if(NOT ${depName}_POPULATED)
          # Fetch content
         FetchContent_Populate(${depName}
         GIT_REPOSITORY ${depRepo}
         GIT_TAG ${depTag}
         GIT_PROGRESS        ON
         #DOWNLOAD_DIR        "${CMAKE_CURRENT_BINARY_DIR}"
-        SOURCE_DIR          "${SRC_DEST}")
-        #BINARY_DIR          "${CMAKE_CURRENT_BINARY_DIR}/${depName}-build")
-    endif()
-
-   # foreach(arg IN LISTS ARGN)
-    #    message("address parts: ${arg}")
-    #endforeach()
-    set("${depName}_SRC_DIR" ${CMAKE_CURRENT_BINARY_DIR}/${depName} PARENT_SCOPE) # Parent scope sets scope of variable in scope of calling function.
-    #include_directories("${spdlog_SOURCE_DIR}/include")
-    #message("Here is spdlog dir: ${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR}")
-    # add_subdirectory("${depName}_SOURCE_DIR" "${depName}_BINARY_DIR")
-
+        SOURCE_DIR          "${CMAKE_BINARY_DIR}/${depName}"
+        BINARY_DIR          "${BIN_DEST}")
+    endif()    
+    set("${depName}_SRC_DIR" ${CMAKE_BINARY_DIR}/${depName} PARENT_SCOPE) # Parent scope sets scope of variable in scope of calling function.
 endfunction()
 
 include(${CMAKE_SOURCE_DIR}/cmake/Deps.cmake)

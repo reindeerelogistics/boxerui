@@ -5,15 +5,6 @@
 //#include "Controller_input_Header.h"
 #include "CameraStream_Model.h"
 
-#ifdef _WIN32
-
-#else
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <signal.h>
-#endif
 //using CameraMapValue = ;
 using CameraMap = std::map <int, std::queue<cv::Mat>>;
 

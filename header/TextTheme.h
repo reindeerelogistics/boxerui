@@ -1,8 +1,8 @@
 #pragma once
 #include "Boxer.h"
 #include "Boxerpch.h"
-#include "resource/icons/IconFontCppHeaders/IconsFontAwesome5.h"
-#include "resource/icons/IconFontCppHeaders/IconsMaterialDesign.h"
+#include "../resource/icons/IconFontCppHeaders/IconsFontAwesome5.h"
+#include "../resource/icons/IconFontCppHeaders/IconsMaterialDesign.h"
 #include <map>
 
 
