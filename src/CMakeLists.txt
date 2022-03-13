@@ -27,6 +27,17 @@ set(SOURCES
 #Executable target name and src files
 add_executable(${TARGET_NAME} "${SOURCES}" )
 
+ # PCH support
+    option(${TARGET_NAME}_BUILD_USING_PCH "Build using pre-compile header support" ON)
+    if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.19 AND ${TARGET_NAME}_BUILD_USING_PCH) # support for PCHs in CMake was added in 3.16
+        message(STATUS "Compiling using pre-compiled header support")
+        target_precompile_headers(${TARGET_NAME} PUBLIC "${HEADERS_DIR}/Boxerpch.h") # With PUBLIC they will be used by targets using this target
+        set(CMAKE_PCH_INSTANTIATE_TEMPLATES ON)
+    else()
+        message(STATUS "Disabled pre-compiled header support")
+    endif()
+
+
 #adds the dir for src files when compiling. Allows cmake to find where header files are located
 target_include_directories(${TARGET_NAME} PUBLIC 
     "${HEADERS_DIR}/"
@@ -35,7 +46,7 @@ target_include_directories(${TARGET_NAME} PUBLIC
     #${implot_SRC_DIR}/
     "${imgui_SRC_DIR}/examples/libs/gl3w/"
     "${glfw_SRC_DIR}/include"
-    ${OpenCV_DIR}
+    #${OpenCV_DIR}
     "${OpenCV_INCLUDE_DIRS}")
 
 IF (WIN32)
@@ -51,20 +62,12 @@ IF (WIN32)
                                                     BOXERUI_ASSERT_ENABLED) #TODO set path slashes properly. i.e. // : https://cmake.org/cmake/help/v3.21/command/cmake_path.html
 
     set_target_properties(${TARGET_NAME} PROPERTIES
-                      RUNTIME_OUTPUT_DIRECTORY_DEBUG    "${PROJECT_SOURCE_DIR}/bin"
+                      RUNTIME_OUTPUT_DIRECTORY_DEBUG    "${PROJECT_SOURCE_DIR}/bin/debug"
                       DEBUG_POSTFIX                     "${CMAKE_DEBUG_POSTFIX}"
                       RUNTIME_OUTPUT_DIRECTORY_RELEASE  "${PROJECT_SOURCE_DIR}/bin/release"
                       VERSION                           "${PROJECT_VERSION}")
 
-                      # PCH support
-option(${TARGET_NAME}_BUILD_USING_PCH "Build using pre-compile header support" ON)
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.19 AND ${TARGET_NAME}_BUILD_USING_PCH) # support for PCHs in CMake was added in 3.16
-    message(STATUS "Compiling using pre-compiled header support")
-    target_precompile_headers(${TARGET_NAME} PUBLIC "${HEADERS_DIR}/Boxerpch.h") # With PUBLIC they will be used by targets using this target
-    set(CMAKE_PCH_INSTANTIATE_TEMPLATES ON)
-else()
-    message(STATUS "Disabled pre-compiled header support")
-endif()
+    
 
 
 #include(CMakePrintHelpers)
@@ -125,10 +128,10 @@ ELSE()
                                                     ${TARGET_NAME}_BIN_DIR=\"${PROJECT_SOURCE_DIR}/BoxerUI/bin/${CMAKE_BUILD_TYPE}\"
                                                     ${TARGET_NAME}_ROOT_DIR=\"${PROJECT_SOURCE_DIR}\BoxerUI\")
 
-    set_target_properties(${TARGET_NAME} PROPERTIES
-                      RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/BoxerUI/bin/debug"
-                      RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/BoxerUI/bin/release"
-    )
+    #set_target_properties(${TARGET_NAME} PROPERTIES
+    #                  RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/BoxerUI/bin/debug"
+    #                  RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/BoxerUI/bin/release"
+    #)
     # install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 ENDIF()

@@ -4,8 +4,8 @@ set(TARGET_NAME Astrolabe)
 set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/header/")#This is the dir to the root of the project.
 
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib )
-set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib )
+set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug )
+set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
 
 project("${TARGET_NAME}" 
         VERSION 0.0.0
@@ -13,8 +13,8 @@ project("${TARGET_NAME}"
         LANGUAGES CXX C
         HOMEPAGE_URL https://github.com/reindeererobotics)
                 
-                include(CMakePrintHelpers)
-               cmake_print_variables(CMAKE_BINARY_DIR CMAKE_SOURCE_DIR CMAKE_CURRENT_BINARY_DIR CMAKE_CURRENT_SOURCE_DIR)
+    include(CMakePrintHelpers)
+    cmake_print_variables(CMAKE_BINARY_DIR CMAKE_SOURCE_DIR CMAKE_CURRENT_BINARY_DIR CMAKE_CURRENT_SOURCE_DIR)
                 
 
 option (BOXERUI_TESTS "Build BoxerUI tests" OFF)
@@ -37,10 +37,10 @@ function(fetch_project_dep depName depRepo depTag)
 
     string(TOUPPER ${depName} DEPNAME_UPPERCASE)
     if (DEFINED ARGV3)
-        message("ARGV0 defined value=${ARGV3}")
         #set(BIN_DEST ${ARGV3} PARENT_SCOPE)
         #This is the per-content equivalent of FETCHCONTENT_UPDATES_DISCONNECTED. If the global option or this option is ON, then updates will be disabled for the named content
         set(FETCHCONTENT_UPDATES_DISCONNECTED_${DEPNAME_UPPERCASE} ${ARGV3})
+        message("${depName} disconnected update value=${ARGV3}")
     else()
         message("ARGV3 not defined. FETCHCONTENT_UPDATES_DISCONNECTED_${DEPNAME_UPPERCASE} is OFF")
     endif()
@@ -50,16 +50,16 @@ function(fetch_project_dep depName depRepo depTag)
     set(${depName}_SHARED_LIBS ON CACHE BOOL "" FORCE) 
     
     # Check if population has been done
-    FetchContent_GetProperties(${depName})
     if(NOT ${depName}_POPULATED)
          # Fetch content
-        FetchContent_Populate(${depName}
-        GIT_REPOSITORY ${depRepo}
-        GIT_TAG ${depTag}
-        GIT_PROGRESS        ON
-        #DOWNLOAD_DIR        "${CMAKE_CURRENT_BINARY_DIR}"
-        SOURCE_DIR          "${CMAKE_BINARY_DIR}/${depName}"
-        BINARY_DIR          "${BIN_DEST}")
+        FetchContent_Declare(${depName}
+                                        GIT_REPOSITORY ${depRepo}
+                                        GIT_TAG ${depTag}
+                                        GIT_PROGRESS        ON
+                                        SOURCE_DIR          "${CMAKE_BINARY_DIR}/${depName}")
+                                        #BINARY_DIR          "${BIN_DEST}")
+    # SET ${depName} variables here
+    FetchContent_MakeAvailable(${depName})
     endif()    
     set("${depName}_SRC_DIR" ${CMAKE_BINARY_DIR}/${depName} PARENT_SCOPE) # Parent scope sets scope of variable in scope of calling function.
 endfunction()
@@ -74,22 +74,22 @@ if(BOXERUI_TESTS)
 endif(BOXERUI_TESTS)
 
 #include(InstallRequiredSyatemLibraries)
-#    set(CPACK_RESOURCE_FILE_lICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
-#    set(CPACK_PACKAGE_VERSION_MAJOR "${${TARGET_NAME}_VERSION_MAJOR}")
-#    set(CPACK_PACKAGE_VERSION_MINOR "${${TARGET_NAME}_VERSION_MINOR}")
-#    Include(CPack)
-#    SET(CPACK_INSTALL_CMAKE_PROJECTS  "SubProject;MySub;ALL;/")
-#    
-#    # set the install/uninstall icon used for the installer itself
-#    set (CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/resource/app.ico")
-#    set (CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/resource/app.ico")
-#     #set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-#
-#     # set the add/remove programs icon using an installed executable
-#     SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\cmake-gui.exe")
-#
-#     set (CPACK_PACKAGE_INSTALL_DIRECTORY "${TARGET_NAME} ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
-#
-#     set (CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/release/app_bmp.bmp")
-#     set (CPACK_CREATE_DESKTOP_LINKS Astrolabe)
-#     set (CPACK_PACKAGE_EXECUTABLES "Astrolabe")
+    # set(CPACK_RESOURCE_FILE_lICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+    # set(CPACK_PACKAGE_VERSION_MAJOR "${${TARGET_NAME}_VERSION_MAJOR}")
+    # set(CPACK_PACKAGE_VERSION_MINOR "${${TARGET_NAME}_VERSION_MINOR}")
+    # Include(CPack)
+    # SET(CPACK_INSTALL_CMAKE_PROJECTS  "SubProject;MySub;ALL;/")
+    # 
+    # # set the install/uninstall icon used for the installer itself
+    # set (CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/resource/app.ico")
+    # set (CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/resource/app.ico")
+    #  #set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+    # 
+    #  # set the add/remove programs icon using an installed executable
+    #  SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\cmake-gui.exe")
+    # 
+    #  set (CPACK_PACKAGE_INSTALL_DIRECTORY "${TARGET_NAME} ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
+    # 
+    #  set (CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/release/app_bmp.bmp")
+    #  set (CPACK_CREATE_DESKTOP_LINKS Astrolabe)
+    #  set (CPACK_PACKAGE_EXECUTABLES "Astrolabe")

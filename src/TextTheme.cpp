@@ -3,10 +3,10 @@
 TextStyleMap TextTheme::createFontMap()
 {
 	std::map<FontStyle, std::string> textstyle_map = {
-	{FontStyle::PantonDemo_Black, BoxerUI::appendPath("BoxerUI/resource/fonts/Panton/PantonDemo-Black.otf")},
-	{FontStyle::PantonDemo_Light, BoxerUI::appendPath("BoxerUI/resource/fonts/Panton/PantonDemo-Light.otf") },
-	{FontStyle::Poppins_Regular, BoxerUI::appendPath("BoxerUI/resource/fonts/Poppins/Poppins-Regular.ttf")},
-	{FontStyle::Poppins_Medium, BoxerUI::appendPath("BoxerUI/resource/fonts/Poppins/Poppins-Medium.ttf")},
+	{FontStyle::PantonDemo_Black, BoxerUI::appendPath(" resource/fonts/Panton/PantonDemo-Black.otf")},
+	{FontStyle::PantonDemo_Light, BoxerUI::appendPath(" resource/fonts/Panton/PantonDemo-Light.otf") },
+	{FontStyle::Poppins_Regular, BoxerUI::appendPath(" resource/fonts/Poppins/Poppins-Regular.ttf")},
+	{FontStyle::Poppins_Medium, BoxerUI::appendPath(" resource/fonts/Poppins/Poppins-Medium.ttf")},
 	};
 	return textstyle_map;
 }
@@ -14,8 +14,8 @@ TextStyleMap TextTheme::createFontMap()
 IconStyleMap TextTheme::createIconMap()
 {
 	std::map<IconStyle, std::string> textstyle_map = {
-	{IconStyle::MaterialIconsOutlined_Regular, BoxerUI::appendPath("BoxerUI/resource/icons/MaterialDesignIcons/MaterialIconsOutlined-Regular.otf")},
-	{IconStyle::FontAwesome_Regular, BoxerUI::appendPath("BoxerUI/resource/icons/FontAwesome/fontawesome-free-5.15.3-desktop/otfs/FontAwesome5Free-Regular-400.otf")},
+	{IconStyle::MaterialIconsOutlined_Regular, BoxerUI::appendPath(" resource/icons/MaterialDesignIcons/MaterialIconsOutlined-Regular.otf")},
+	{IconStyle::FontAwesome_Regular, BoxerUI::appendPath(" resource/icons/FontAwesome/fontawesome-free-5.15.3-desktop/otfs/FontAwesome5Free-Regular-400.otf")},
 	};
 	
 	return textstyle_map;

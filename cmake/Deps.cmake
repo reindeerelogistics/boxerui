@@ -1,6 +1,6 @@
 
 include(CMakePrintHelpers)
-cmake_print_variables(CMAKE_BINARY_DIR CMAKE_SOURCE_DIR CMAKE_CURRENT_BINARY_DIR CMAKE_CURRENT_SOURCE_DIR)
+cmake_print_variables(CMAKE_BINARY_DIR CMAKE_SRC_DIR CMAKE_CURRENT_BINARY_DIR CMAKE_CURRENT_SRC_DIR)
 
 find_package(OpenGL REQUIRED)
 find_package(OpenMP)
@@ -9,9 +9,9 @@ if(OpenMP_CXX_FOUND)
 endif(OpenMP_CXX_FOUND)
 
 IF(OpenGL_FOUND)
-    MESSAGE(STATUS "OPENGL FOUND!!")
-ELSE()
-    MESSAGE(STATUS "OPENGL NOT FOUND")
+        MESSAGE(STATUS "OPENGL FOUND!!")
+    ELSE()
+        MESSAGE(STATUS "OPENGL NOT FOUND")
 ENDIF()
 
 if(NOT glfw_FOUND)    
@@ -19,19 +19,19 @@ if(NOT glfw_FOUND)
             set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
             set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
             set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-            FETCH_PROJECT_DEP("glfw" "https://github.com/glfw/glfw.git" "master")
+            FETCH_PROJECT_DEP("glfw" "https://github.com/glfw/glfw.git" "master" "ON")
             message("GLFW DIR: ${glfw_SRC_DIR}, ${glfw_BINARY_DIR}")
-            add_subdirectory("${glfw_SRC_DIR}" "${glfw_BINARY_DIR}")
+            #add_subdirectory("${glfw_SRC_DIR}" "${glfw_BINARY_DIR}")
 endif(NOT glfw_FOUND)
 
 
 ## IMGUI SETUP 
-    FETCH_PROJECT_DEP("imgui" "git@github.com:reindeererobotics/imgui.git" "docking" )
+    FETCH_PROJECT_DEP("imgui" "git@github.com:reindeererobotics/imgui.git" "docking" "ON")
 
-    #aux_source_directory("${imgui_SRC_DIR}" ${IMGUI_SOURCES})
+    #aux_SRC_DIRectory("${imgui_SRC_DIR}" ${IMGUI_SOURCES})
     #file(GLOB IMGUI_SOURCES  "${imgui_SRC_DIR}/*.cpp" "${imgui_SRC_DIR}/*.h")
     #message(${IMGUI_SOURCES})
-    
+    message("IMgui SOURCE DIR: ${imgui_SRC_DIR}")
     set(IMGUI_BACKENDS_SOURCES "${imgui_SRC_DIR}/backends/imgui_impl_glfw.cpp" 
                                 "${imgui_SRC_DIR}/backends/imgui_impl_glfw.h"
                                 "${imgui_SRC_DIR}/backends/imgui_impl_opengl3.h"
@@ -66,7 +66,7 @@ endif(NOT glfw_FOUND)
     LIBRARY DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
     ARCHIVE DESTINATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
 )
-     #message("WHERE IS MY DLL: ${CMAKE_SOURCE_DIR}/bin/imgui_lib.dll")
+     #message("WHERE IS MY DLL: ${CMAKE_SRC_DIR}/bin/imgui_lib.dll")
     #set_target_properties(imgui_lib PROPERTIES IMPORTED_LOCATION "C:/Users/Shenanigans/Documents/BoxerUI Project/BoxerUI/bin/imgui_lib.dll")
     #install(TARGETS imgui_lib DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
@@ -77,7 +77,8 @@ endif(NOT glfw_FOUND)
     
 
 ## IMPLOT SETUP
-     FETCH_PROJECT_DEP("implot" "git@github.com:epezent/implot.git" "master" )
+    FETCH_PROJECT_DEP("implot" "git@github.com:epezent/implot.git" "master" "ON")
+    message("IMPLOT SOURCE DIR: ${implot_SRC_DIR}")
     add_library(implot_lib  OBJECT
                                     "${implot_SRC_DIR}/implot.cpp"
                                     "${implot_SRC_DIR}/implot_internal.h"
@@ -90,19 +91,19 @@ endif(NOT glfw_FOUND)
     #set_target_properties(implot_lib PROPERTIES IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/imgui_lib.dll")
     #target_link_libraries(implot_lib PUBLIC $<TARGET_OBJECTS:imgui_lib>)
 
-#install(TARGETS imgui_lib implot_lib DESTINATION "${CMAKE_SOURCE_DIR}/bin/debug")
-#install(TARGETS imgui_lib implot_lib DESTINATION "${CMAKE_SOURCE_DIR}/bin/debug")
+#install(TARGETS imgui_lib implot_lib DESTINATION "${CMAKE_SRC_DIR}/bin/debug")
+#install(TARGETS imgui_lib implot_lib DESTINATION "${CMAKE_SRC_DIR}/bin/debug")
 
 # OpenCV set up
-    # set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/include")
+    # set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SRC_DIR}/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/include")
     message(CHECK_START "Finding BoxerUI Dependencies")
     list(APPEND CMAKE_MESSAGE_INDENT ">>")
 
     message(CHECK_START "Finding OpenCV")
 
-    #set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/BoxerUI/libs/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}")
+    #set(OpenCV_DIR "${CMAKE_CURRENT_SRC_DIR}/BoxerUI/libs/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}")
     #message("OpenCV_DIR: ${OpenCV_DIR}")
-     #find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+   # find_package(OpenCV)
     message(CHECK_PASS "found")
 
     IF(NOT OPENCV_FOUND)
@@ -127,13 +128,15 @@ endif(NOT glfw_FOUND)
     ENDIF()
 
     list(POP_BACK CMAKE_MESSAGE_INDENT)
+    #find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
+    #find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_BINARY_DIR}/opencv-build/" )
 
 ## Logging
     IF(BOXERUI_LOGGING)
         FETCH_PROJECT_DEP("spdlog" "https://github.com/gabime/spdlog.git" "v1.x" )
         #find_package(spdlog REQUIRED)
         include_directories("${spdlog_SRC_DIR}/include")
-        add_subdirectory(${spdlog_SRC_DIR} ${spdlog_BINARY_DIR})
+        #add_subdirectory(${spdlog_SRC_DIR} ${spdlog_BINARY_DIR})
          #FetchContent_MakeAvailable(spdlog)
          #find_package(spdlog REQUIRED)
         # TODO: set type of logging based on build type
