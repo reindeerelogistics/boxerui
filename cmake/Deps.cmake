@@ -74,14 +74,11 @@ endif(NOT glfw_FOUND)
 
 # OpenCV set up
     # set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SRC_DIR}/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/include")
-    message(CHECK_START "Finding BoxerUI Dependencies")
+    message(CHECK_START "Finding ${TARGET_NAME} Dependencies")
     list(APPEND CMAKE_MESSAGE_INDENT ">>")
 
     message(CHECK_START "Finding OpenCV")
-
-    #set(OpenCV_DIR "${CMAKE_CURRENT_SRC_DIR}/BoxerUI/libs/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}")
-    #message("OpenCV_DIR: ${OpenCV_DIR}")
-    # find_package(OpenCV)
+    #find_package(OpenCV)
     message(CHECK_PASS "found")
 
     IF(NOT OPENCV_FOUND)
@@ -94,8 +91,8 @@ endif(NOT glfw_FOUND)
         endif(BUILD_OPENCV_BASIC)
 
         if(BUILD_OPENCV_CUDA)
-        message("BUILD_OPENCV_CUDA Selected")
-        include("${CMAKE_SOURCE_DIR}/cmake/opencv_setup/opencv_cuda.cmake")
+            message("BUILD_OPENCV_CUDA Selected")
+            include("${CMAKE_SOURCE_DIR}/cmake/opencv_setup/opencv_cuda.cmake")
         endif(BUILD_OPENCV_CUDA)
 
         if(BUILD_OPENCV_ADVANCED)

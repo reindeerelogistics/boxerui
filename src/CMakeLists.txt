@@ -3,16 +3,6 @@
 include(CMakePrintHelpers)
 cmake_print_variables(${TARGET_NAME}_PCH CMAKE_BINARY_DIR CMAKE_SOURCE_DIR CMAKE_CURRENT_BINARY_DIR CMAKE_CURRENT_SOURCE_DIR)
 
-
-message(STATUS "Cmake build type: ${CMAKE_BUILD_TYPE}")
-
-IF (WIN32)
-     #set(OPENCV_DIR "${PROJECT_SOURCE_DIR}/BoxerUI/libs/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/x64/vc16/lib/")
-    #set(OpenCV_DIR "${PROJECT_SOURCE_DIR}/BoxerUI/libs/opencv-build/lib/")
-    #message("OPENCV INCLUDE: ${OpenCV_DIR}")
-    #message("OPENCV_DIR: ${OpenCV_DIR}")
-ENDIF()
-
 # Use aux_source_directory() to get all source files in the specified directory and apply to a variable. 
 # Does not easily reflect new files. Requires further investigation
 aux_source_directory("${HEADERS_DIR}" "${TARGET_NAME}_HEADERS") # collects all src files in the header dir
@@ -27,11 +17,12 @@ set(SOURCES
 #Executable target name and src files
 add_executable(${TARGET_NAME} "${SOURCES}" )
 
- # PCH support
+# PCH support
     option(${TARGET_NAME}_BUILD_USING_PCH "Build using pre-compile header support" ON)
+    set(CMAKE_PCH_WARN_INVALID ON)
     if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.19 AND ${TARGET_NAME}_BUILD_USING_PCH) # support for PCHs in CMake was added in 3.16
         message(STATUS "Compiling using pre-compiled header support")
-        target_precompile_headers(${TARGET_NAME} PUBLIC "${HEADERS_DIR}/Boxerpch.h") # With PUBLIC they will be used by targets using this target
+        target_precompile_headers(${TARGET_NAME} PUBLIC "${HEADERS_DIR}Boxerpch.h") # With PUBLIC they will be used by targets using this target
         set(CMAKE_PCH_INSTANTIATE_TEMPLATES ON)
     else()
         message(STATUS "Disabled pre-compiled header support")
@@ -50,10 +41,8 @@ target_include_directories(${TARGET_NAME} PUBLIC
     "${OpenCV_INCLUDE_DIRS}")
 
 IF (WIN32)
-    #set(IMGUI_LIB_DIR ${CMAKE_SOURCE_DIR}/bin/imgui_lib)
-    #find_library(IMGUI_LIB NAMES imgui_lib PATHS "C:\\Users\\Shenanigans\\Documents\\BoxerUI Project\\BoxerUI\\bin")
     message("BUILD_LIBRARIES ARE: ${BUILD_SHARED_LIBS}")
-    target_link_libraries(${TARGET_NAME} PUBLIC  ${OpenCV_LIBS} OpenMP::OpenMP_CXX $<TARGET_OBJECTS:imgui> $<TARGET_OBJECTS:implot> OpenGL::GL glfw)
+    target_link_libraries(${TARGET_NAME} PUBLIC  ${OpenCV_LIBS} OpenMP::OpenMP_CXX $<TARGET_OBJECTS:imgui> OpenGL::GL glfw)
     target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17)
     target_compile_definitions(${TARGET_NAME} PUBLIC   BOXERUI_VERSION=\"${PROJECT_VERSION}\" 
                                                     BOXERUI_BIN_DIR=\"${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}\"
@@ -62,7 +51,7 @@ IF (WIN32)
                                                     BOXERUI_ASSERT_ENABLED) #TODO set path slashes properly. i.e. // : https://cmake.org/cmake/help/v3.21/command/cmake_path.html
 
     set_target_properties(${TARGET_NAME} PROPERTIES
-                      RUNTIME_OUTPUT_DIRECTORY_DEBUG    "${PROJECT_SOURCE_DIR}/bin/debug"
+                      #RUNTIME_OUTPUT_DIRECTORY_DEBUG    "${PROJECT_SOURCE_DIR}/bin/debug"
                       DEBUG_POSTFIX                     "${CMAKE_DEBUG_POSTFIX}"
                       RUNTIME_OUTPUT_DIRECTORY_RELEASE  "${PROJECT_SOURCE_DIR}/bin/release"
                       VERSION                           "${PROJECT_VERSION}")
@@ -70,8 +59,9 @@ IF (WIN32)
     
 
 
-#include(CMakePrintHelpers)
-#cmake_print_variables(${TARGET_NAME}_PCH)
+include(CMakePrintHelpers)
+cmake_print_variables(${TARGET_NAME}_BUILD_USING_PCH )
+cmake_print_properties(TARGETS ${TARGET_NAME} PROPERTIES PRECOMPILE_HEADERS)
     #install(DIRECTORY "${CMAKE_BINARY_DIR}/opencv-build/libs/debug/" DESTINATION "${PROJECT_SOURCE_DIR}/bin/debug" FILES_MATCHING PATTERN "*.dll")
     #install(FILES "${CMAKE_BINARY_DIR}/opencv-build/libs/${CMAKE_BUILD_TYPE}/*.lib" DESTINATION "${PROJECT_SOURCE_DIR}/bin/release")
 

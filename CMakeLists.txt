@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.20)
 set(TARGET_NAME Astrolabe)
 set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/header/")#This is the dir to the root of the project.
 
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug )
-set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
+set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+#set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug )
 
 project("${TARGET_NAME}" 
         VERSION 0.0.0
@@ -22,8 +22,8 @@ option (${TARGET_NAME}_BUILD_USING_PCH "Build BoxerUI tests" ON)
 option (BUILD_SHARED_LIBS "Builds BoxerUI with shared libraries. Turned ON by default" ON)
 option (BOXERUI_LOGGING "Build BoxerUI with logging" ON)
 
-option (BUILD_OPENCV_BASIC "Build the SDL implementation (only if supported)" ON)
-option (BUILD_OPENCV_CUDA "Build OpenCV with CUDA (only if the CUDA-toolkit is available)" OFF)
+option (BUILD_OPENCV_BASIC "Build the SDL implementation (only if supported)" OFF)
+option (BUILD_OPENCV_CUDA "Build OpenCV with CUDA (only if the CUDA-toolkit is available)" ON)
 option (BUILD_OPENCV_ADVANCED "Build OpenCV with advanced features)" OFF)
 
 

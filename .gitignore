@@ -4,24 +4,8 @@ Debug/
 Release/
 **/out
 bin/
-
 libs/*
-
-#Implot
-libs/implot/LICENSE
-libs/implot/README.md
-
-
-# !/*build/BoxerUI_app
-
-# GLFW
-glfw
-glfw-build/
-
-src/camera_stream.cpp
-
 build/*
-Boxer_Install.sh
 
 # BoxerUI_Tests
 tests/BoxerUI_Tests/packages/
