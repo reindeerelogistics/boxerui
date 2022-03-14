@@ -27,17 +27,13 @@ option (BUILD_OPENCV_CUDA "Build OpenCV with CUDA (only if the CUDA-toolkit is a
 option (BUILD_OPENCV_ADVANCED "Build OpenCV with advanced features)" OFF)
 
 
-#set(CMAKE_DEBUG_POSTFIX d)
-
-
-
+set(CMAKE_DEBUG_POSTFIX d)
 
 function(fetch_project_dep depName depRepo depTag)
     include(FetchContent)
 
     string(TOUPPER ${depName} DEPNAME_UPPERCASE)
     if (DEFINED ARGV3)
-        #set(BIN_DEST ${ARGV3} PARENT_SCOPE)
         #This is the per-content equivalent of FETCHCONTENT_UPDATES_DISCONNECTED. If the global option or this option is ON, then updates will be disabled for the named content
         set(FETCHCONTENT_UPDATES_DISCONNECTED_${DEPNAME_UPPERCASE} ${ARGV3})
         message("${depName} disconnected update value=${ARGV3}")
@@ -57,8 +53,7 @@ function(fetch_project_dep depName depRepo depTag)
                                         GIT_TAG ${depTag}
                                         GIT_PROGRESS        ON
                                         SOURCE_DIR          "${CMAKE_BINARY_DIR}/${depName}")
-                                        #BINARY_DIR          "${BIN_DEST}")
-    # SET ${depName} variables here
+    # SET ${depName} variables and other required properties here
     FetchContent_MakeAvailable(${depName})
     endif()    
     set("${depName}_SRC_DIR" ${CMAKE_BINARY_DIR}/${depName} PARENT_SCOPE) # Parent scope sets scope of variable in scope of calling function.

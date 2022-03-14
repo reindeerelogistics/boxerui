@@ -8,7 +8,7 @@ message(CHECK_START "Finding CUDA Toolkit")
 
 if(NOT CUDAToolkit_FOUND)
     message(CHECK_FAIL "not found")
-    # Get from internet...
+    # TODO: Get from internet...
 
 else()
     # CUDA Toolkit found.

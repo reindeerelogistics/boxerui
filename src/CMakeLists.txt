@@ -53,7 +53,7 @@ IF (WIN32)
     #set(IMGUI_LIB_DIR ${CMAKE_SOURCE_DIR}/bin/imgui_lib)
     #find_library(IMGUI_LIB NAMES imgui_lib PATHS "C:\\Users\\Shenanigans\\Documents\\BoxerUI Project\\BoxerUI\\bin")
     message("BUILD_LIBRARIES ARE: ${BUILD_SHARED_LIBS}")
-    target_link_libraries(${TARGET_NAME} PUBLIC  ${OpenCV_LIBS} OpenMP::OpenMP_CXX $<TARGET_OBJECTS:imgui> OpenGL::GL glfw)
+    target_link_libraries(${TARGET_NAME} PUBLIC  ${OpenCV_LIBS} OpenMP::OpenMP_CXX $<TARGET_OBJECTS:imgui> $<TARGET_OBJECTS:implot> OpenGL::GL glfw)
     target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17)
     target_compile_definitions(${TARGET_NAME} PUBLIC   BOXERUI_VERSION=\"${PROJECT_VERSION}\" 
                                                     BOXERUI_BIN_DIR=\"${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}\"
