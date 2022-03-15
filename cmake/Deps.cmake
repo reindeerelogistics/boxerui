@@ -78,28 +78,26 @@ endif(NOT glfw_FOUND)
     list(APPEND CMAKE_MESSAGE_INDENT ">>")
 
     message(CHECK_START "Finding OpenCV")
-    #find_package(OpenCV)
-    message(CHECK_PASS "found")
 
-    IF(NOT OPENCV_FOUND)
+    IF(NOT OpenCV_FOUND)
         #WIP: build opencv from source if not found
         message(CHECK_FAIL "not found: Proceeding to build from source...")
-
-        if(BUILD_OPENCV_BASIC)
-            message("BUILD_OPENCV_BASIC Selected")
-            include("${CMAKE_SOURCE_DIR}/cmake/opencv_setup/opencv_basic.cmake")
-        endif(BUILD_OPENCV_BASIC)
 
         if(BUILD_OPENCV_CUDA)
             message("BUILD_OPENCV_CUDA Selected")
             include("${CMAKE_SOURCE_DIR}/cmake/opencv_setup/opencv_cuda.cmake")
-        endif(BUILD_OPENCV_CUDA)
 
-        if(BUILD_OPENCV_ADVANCED)
-        message("BUILD_OPENCV_ADVANCED Selected")
+        elseif(BUILD_OPENCV_ADVANCED)
+            message("BUILD_OPENCV_ADVANCED Selected")
             include(opencv_setup/opencv_advanced.cmake)
-        endif(BUILD_OPENCV_ADVANCED)
 
+        else()
+            message("BUILD_OPENCV_BASIC Selected")
+            include("${CMAKE_SOURCE_DIR}/cmake/opencv_setup/opencv_basic.cmake")
+            #find_package(OpenCV)
+            message(CHECK_PASS "found")
+        
+        endif(BUILD_OPENCV_CUDA)
     ENDIF()
 
     list(POP_BACK CMAKE_MESSAGE_INDENT)

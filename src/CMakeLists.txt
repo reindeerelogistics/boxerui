@@ -1,8 +1,3 @@
-#cmake_minimum_required(VERSION 3.20)
-
-include(CMakePrintHelpers)
-cmake_print_variables(${TARGET_NAME}_PCH CMAKE_BINARY_DIR CMAKE_SOURCE_DIR CMAKE_CURRENT_BINARY_DIR CMAKE_CURRENT_SOURCE_DIR)
-
 # Use aux_source_directory() to get all source files in the specified directory and apply to a variable. 
 # Does not easily reflect new files. Requires further investigation
 aux_source_directory("${HEADERS_DIR}" "${TARGET_NAME}_HEADERS") # collects all src files in the header dir
@@ -18,8 +13,6 @@ set(SOURCES
 add_executable(${TARGET_NAME} "${SOURCES}" )
 
 # PCH support
-    option(${TARGET_NAME}_BUILD_USING_PCH "Build using pre-compile header support" ON)
-    set(CMAKE_PCH_WARN_INVALID ON)
     if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.19 AND ${TARGET_NAME}_BUILD_USING_PCH) # support for PCHs in CMake was added in 3.16
         message(STATUS "Compiling using pre-compiled header support")
         target_precompile_headers(${TARGET_NAME} PUBLIC "${HEADERS_DIR}Boxerpch.h") # With PUBLIC they will be used by targets using this target
@@ -37,13 +30,12 @@ target_include_directories(${TARGET_NAME} PUBLIC
     #${implot_SRC_DIR}/
     "${imgui_SRC_DIR}/examples/libs/gl3w/"
     "${glfw_SRC_DIR}/include"
-    #${OpenCV_DIR}
     "${OpenCV_INCLUDE_DIRS}")
 
 IF (WIN32)
     message("BUILD_LIBRARIES ARE: ${BUILD_SHARED_LIBS}")
     target_link_libraries(${TARGET_NAME} PUBLIC  ${OpenCV_LIBS} OpenMP::OpenMP_CXX $<TARGET_OBJECTS:imgui> OpenGL::GL glfw)
-    target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17)
+    #target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17) # This has been set globally
     target_compile_definitions(${TARGET_NAME} PUBLIC   BOXERUI_VERSION=\"${PROJECT_VERSION}\" 
                                                     BOXERUI_BIN_DIR=\"${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}\"
                                                     BOXERUI_ROOT_DIR="${PROJECT_SOURCE_DIR}"
@@ -55,7 +47,9 @@ IF (WIN32)
                       DEBUG_POSTFIX                     "${CMAKE_DEBUG_POSTFIX}"
                       RUNTIME_OUTPUT_DIRECTORY_RELEASE  "${PROJECT_SOURCE_DIR}/bin/release"
                       VERSION                           "${PROJECT_VERSION}")
-
+    
+    # Set compile time property for target only
+    #set_property(TARGET ${TARGET_NAME} PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
     
 
 

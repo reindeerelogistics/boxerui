@@ -1,4 +1,3 @@
-//Fix for profiling in VS: https://developercommunity.visualstudio.com/t/profiling-cpu-still-states-no-user-code-was-runnin/607535
 #include "Application.h"
 
 

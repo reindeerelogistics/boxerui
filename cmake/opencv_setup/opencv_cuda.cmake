@@ -7,7 +7,7 @@ set(CMAKE_BUILD_PARALLEL_LEVEL ${NUM_PROC})
 include("${CMAKE_SOURCE_DIR}/cmake/find_cuda.cmake")         # Download the cuda toolkit
 include("${CMAKE_SOURCE_DIR}/cmake/opencv_setup/fetch_xfeatures.cmake")   # Get opencv_contrib from source
 
-set(OPENCV_CACHE_ARGS   -DBUILD_LIST=core,imgproc,imgcodecs,videoio,calib3d,stitching
+set(OPENCV_CACHE_ARGS   -DBUILD_LIST=core,imgproc,imgcodecs,videoio,calib3d,stitching,cudev
                         -DBUILD_opencv_python2=OFF
                         -DBUILD_opencv_python3=OFF
                         -DWITH_OPENEXR=OFF
