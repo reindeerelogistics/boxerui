@@ -1,7 +1,4 @@
 
-include(CMakePrintHelpers)
-cmake_print_variables(CMAKE_BINARY_DIR CMAKE_SRC_DIR CMAKE_CURRENT_BINARY_DIR CMAKE_CURRENT_SRC_DIR)
-
 find_package(OpenGL REQUIRED)
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
@@ -105,7 +102,7 @@ endif(NOT glfw_FOUND)
     #find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_BINARY_DIR}/opencv-build/" )
 
 ## Logging
-    IF(BOXERUI_LOGGING)
+    IF(${TARGET_NAME}_LOGGING)
         FETCH_PROJECT_DEP("spdlog" "https://github.com/gabime/spdlog.git" "v1.x" )
         include_directories("${spdlog_SRC_DIR}/include")
          #find_package(spdlog REQUIRED)

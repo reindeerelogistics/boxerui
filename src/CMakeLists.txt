@@ -7,7 +7,6 @@ message("Headers: ${TARGET_NAME}_HEADERS")
 set(SOURCES 
             "${${TARGET_NAME}_HEADERS}" 
             "${${TARGET_NAME}_SOURCES}")
-       # message("SOURCE DIRECTORY: ${imgui_SRC_DIR}/imgui.h")
 
 #Executable target name and src files
 add_executable(${TARGET_NAME} "${SOURCES}" )
@@ -32,8 +31,8 @@ target_include_directories(${TARGET_NAME} PUBLIC
     "${glfw_SRC_DIR}/include"
     "${OpenCV_INCLUDE_DIRS}")
 
-IF (WIN32)
-    message("BUILD_LIBRARIES ARE: ${BUILD_SHARED_LIBS}")
+
+    
     target_link_libraries(${TARGET_NAME} PUBLIC  ${OpenCV_LIBS} OpenMP::OpenMP_CXX $<TARGET_OBJECTS:imgui> OpenGL::GL glfw)
     #target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17) # This has been set globally
     target_compile_definitions(${TARGET_NAME} PUBLIC   BOXERUI_VERSION=\"${PROJECT_VERSION}\" 
@@ -45,7 +44,7 @@ IF (WIN32)
     set_target_properties(${TARGET_NAME} PROPERTIES
                       #RUNTIME_OUTPUT_DIRECTORY_DEBUG    "${PROJECT_SOURCE_DIR}/bin/debug"
                       DEBUG_POSTFIX                     "${CMAKE_DEBUG_POSTFIX}"
-                      RUNTIME_OUTPUT_DIRECTORY_RELEASE  "${PROJECT_SOURCE_DIR}/bin/release"
+                      #RUNTIME_OUTPUT_DIRECTORY_RELEASE  "${PROJECT_SOURCE_DIR}/bin/release"
                       VERSION                           "${PROJECT_VERSION}")
     
     # Set compile time property for target only
@@ -56,6 +55,8 @@ IF (WIN32)
 include(CMakePrintHelpers)
 cmake_print_variables(${TARGET_NAME}_BUILD_USING_PCH )
 cmake_print_properties(TARGETS ${TARGET_NAME} PROPERTIES PRECOMPILE_HEADERS)
+
+
     #install(DIRECTORY "${CMAKE_BINARY_DIR}/opencv-build/libs/debug/" DESTINATION "${PROJECT_SOURCE_DIR}/bin/debug" FILES_MATCHING PATTERN "*.dll")
     #install(FILES "${CMAKE_BINARY_DIR}/opencv-build/libs/${CMAKE_BUILD_TYPE}/*.lib" DESTINATION "${PROJECT_SOURCE_DIR}/bin/release")
 
@@ -80,42 +81,3 @@ cmake_print_properties(TARGETS ${TARGET_NAME} PROPERTIES PRECOMPILE_HEADERS)
     # set (CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/release/app_bmp.bmp")
     # set (CPACK_CREATE_DESKTOP_LINKS Astrolabe)
     # set (CPACK_PACKAGE_EXECUTABLES "Astrolabe")
-ELSE()
-    #Links the libraries to build target set in add_executable command
-    find_package(OpenGL REQUIRED)
-    find_package(OpenMP)
-    if(OpenMP_FOUND)
-        add_compile_definitions(HAVE_OPENMP=\"${OpenMP_FOUND}\")
-    endif(OpenMP_FOUND)
-    
-
-    if(NOT glfw_FOUND)    
-        include(FetchContent)
-            FetchContent_Declare(
-                glfw
-                GIT_REPOSITORY https://github.com/glfw/glfw.git            
-            )
-            # For Windows: Prevent overriding the parent project's compiler/linker settings
-            set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
-            set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
-            set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-            set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-            FetchContent_MakeAvailable(glfw)
-    endif(NOT glfw_FOUND)
-    
-    add_library(opengl32 STATIC "${GL_DIR}GL/gl3w.h" "${GL_DIR}GL/gl3w.c" "${GL_DIR}GL/glcorearb.h")
-    # add_library(glfw3 STATIC  "${GLFW_DIR}/GLFW/glfw3.h" "${GLFW_DIR}/GLFW/glfw3native.h" )
-    target_link_libraries(${TARGET_NAME} PUBLIC ${OpenCV_LIBS} spdlog::spdlog )# Threads::Threads )
-
-    target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17)
-    target_compile_definitions(${TARGET_NAME} PUBLIC   ${TARGET_NAME}_VERSION=\"${PROJECT_VERSION}\" 
-                                                    ${TARGET_NAME}_BIN_DIR=\"${PROJECT_SOURCE_DIR}/BoxerUI/bin/${CMAKE_BUILD_TYPE}\"
-                                                    ${TARGET_NAME}_ROOT_DIR=\"${PROJECT_SOURCE_DIR}\BoxerUI\")
-
-    #set_target_properties(${TARGET_NAME} PROPERTIES
-    #                  RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/BoxerUI/bin/debug"
-    #                  RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/BoxerUI/bin/release"
-    #)
-    # install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin)
-
-ENDIF()

@@ -13,14 +13,14 @@ message(STATUS "${TARGET_NAME} version: ${PROJECT_VERSION}") # Project version
 set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/header/")#This is the dir to the root of the project.
 set(CMAKE_PCH_WARN_INVALID ON)
 set(CMAKE_DEBUG_POSTFIX d)
+set(CMAKE_RELEASE_POSTFIX "")
 option(${TARGET_NAME}_BUILD_USING_PCH "Build using pre-compile header support" ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 #set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug )
 set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time") # Set global property (all targets are impacted)
 set(CMAKE_CXX_STANDARD 17)
-#include(CMakePrintHelpers)
-#cmake_print_variables(CMAKE_BINARY_DIR CMAKE_SOURCE_DIR CMAKE_CURRENT_BINARY_DIR CMAKE_CURRENT_SOURCE_DIR)
+# TODO: Use CMAKE_SIZEOF_VOID_P to check for arch type. https://stackoverflow.com/questions/39258250/how-to-detect-if-64-bit-msvc-with-cmake
                 
 
 option (${TARGET_NAME}_TESTS "Build ${TARGET_NAME} tests" OFF)
@@ -74,23 +74,29 @@ if(${TARGET_NAME}_TESTS)
     include(cmake/boxerui_tests.cmake)
 endif(${TARGET_NAME}_TESTS)
 
-#include(InstallRequiredSyatemLibraries)
-    # set(CPACK_RESOURCE_FILE_lICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
-    # set(CPACK_PACKAGE_VERSION_MAJOR "${${TARGET_NAME}_VERSION_MAJOR}")
-    # set(CPACK_PACKAGE_VERSION_MINOR "${${TARGET_NAME}_VERSION_MINOR}")
-    # Include(CPack)
-    # SET(CPACK_INSTALL_CMAKE_PROJECTS  "SubProject;MySub;ALL;/")
-    # 
-    # # set the install/uninstall icon used for the installer itself
-    # set (CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/resource/app.ico")
-    # set (CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/resource/app.ico")
-    #  #set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-    # 
-    #  # set the add/remove programs icon using an installed executable
-    #  SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\cmake-gui.exe")
-    # 
-    #  set (CPACK_PACKAGE_INSTALL_DIRECTORY "${TARGET_NAME} ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
-    # 
-    #  set (CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/release/app_bmp.bmp")
-    #  set (CPACK_CREATE_DESKTOP_LINKS Astrolabe)
-    #  set (CPACK_PACKAGE_EXECUTABLES "Astrolabe")
+include(InstallRequiredSystemLibraries)
+     set(CPACK_PACKAGE_NAME ${TARGET_NAME})
+     set(CPACK_RESOURCE_FILE_lICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+     set(CPACK_PACKAGE_VERSION_MAJOR "${${TARGET_NAME}_VERSION_MAJOR}")
+     set(CPACK_PACKAGE_VERSION_MINOR "${${TARGET_NAME}_VERSION_MINOR}")
+     SET(CPACK_INSTALL_CMAKE_PROJECTS  "release;${CPACK_PACKAGE_NAME};ALL;/")
+     set(CPACK_PACKAGE_DESCRIPTION ${PROJECT_DESCRIPTION})# can also use CPACK_PACKAGE_DESCRIPTION_FILE.
+     set(CPACK_PACKAGE_HOMEPAGE_URL ${PROJECT_HOMEPAGE_URL})
+     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
+     set(CPACK_PACKAGE_FILE_NAME "${CPACK_SYSTEM_NAME}-${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
+     #set(CPACK_SOURCE_GENERATOR "NSIS64")
+     # set the install/uninstall icon used for the installer itself
+     #set (CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/resource/app.ico")
+     #set (CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/resource/app.ico")
+     #set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+     
+      # set the add/remove programs icon using an installed executable
+      #SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\cmake-gui.exe")
+     
+
+     set (CPACK_PACKAGE_INSTALL_DIRECTORY "${TARGET_NAME} ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MAJOR}")
+     set(CPACK_THREADS 2)
+     #set (CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/release/app_bmp.bmp")
+     set (CPACK_CREATE_DESKTOP_LINKS "Astrolabe")
+     set (CPACK_PACKAGE_EXECUTABLES "Astrolabe")
+     Include(CPack)
