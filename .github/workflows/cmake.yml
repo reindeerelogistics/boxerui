@@ -6,7 +6,9 @@ on:
 #   pull_request:
 #     branches: [ master ]
   push:
-    branches: [task/*, develop ]
+    branches: 
+    - task/*
+    - develop
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
