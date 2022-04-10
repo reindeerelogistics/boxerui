@@ -23,6 +23,7 @@ bool CameraStream::destroyCamThreads()
 		}
 		i++;
 	}
+	BOXER_INFO_LOGGER("Num of active threads after joining: "+ cam_threads.size());
 	std::cout << "Num of active threads after joining: " << cam_threads.size() << std::endl;
 
 	//BOXERUI_ASSERT(cam_threads.size() == 0);
@@ -422,6 +423,7 @@ void CameraStream::cameraView()
 			}
 		}
 		cam_threads.clear();
+		BOXER_TRACE_LOGGER("Num of active threads after joining: ",cam_threads.size());
 		std::cout << "Num of active threads after joining: " << cam_threads.size() << std::endl;
 		//if (CameraStream_Model::destroyCamThreads(&camera_stream.cam_threads))
 		{
@@ -451,4 +453,83 @@ void CameraStream::setCamContext(int context)
 	{
 		ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 0.5f), "Buffering %c", "|/-\\"[(int)(ImGui::GetTime() / 0.25f) & 3]);
 	}
+}
+
+int CameraStream::stitchingTest() {
+		cv::Mat pano;
+	if (ImGui::Button("Stitch Images")) {
+		BOXER_INFO_LOGGER("Trying to stitch image");
+
+		cv::samples::addSamplesDataSearchPath(BOXERUI_ROOT_DIR);
+
+		bool divide_images = true;
+		cv::Stitcher::Mode mode = cv::Stitcher::PANORAMA;
+		std::vector<cv::Mat> imgs;
+		std::string result_name = "result.jpg";
+
+		cv::Mat img = cv::imread(cv::samples::findFile("stitchtest.jpg"));
+		if (img.empty())
+		{
+			std::cout << "Can't read image '" << "'\n";
+			return EXIT_FAILURE;
+		}
+		if (divide_images)
+		{
+			cv::Rect rect(0, 0, img.cols / 2, img.rows);
+			imgs.push_back(img(rect).clone());
+			rect.x = img.cols / 3;
+			imgs.push_back(img(rect).clone());
+			rect.x = img.cols / 2;
+			imgs.push_back(img(rect).clone());
+		}
+		else
+			imgs.push_back(img);
+		//cv::Stitcher::Mode mode = cv::Stitcher::PANORAMA;
+
+		//for (size_t i = 0; i < imgs.size(); i++)
+		{
+		cv::imwrite("StitchTestimage0.png", imgs[0]);
+		cv::imwrite("StitchTestimage1.png", imgs[1]);
+		cv::imwrite("StitchTestimage2.png", imgs[2]);
+
+		}
+
+		cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(mode);
+		cv::Stitcher::Status status = stitcher->stitch(imgs, pano);
+		if (status != cv::Stitcher::OK)
+		{
+			std::cout << "Can't stitch images, error code = " << int(status) << std::endl;
+			return EXIT_FAILURE;
+		}
+
+		cv::imwrite("StitchTestimage.png", pano);
+
+		
+
+	}
+	ImGui::BeginChild("Camera_Viewport##cam_viewport", ImVec2((ImGui::GetCurrentWindow()->ContentSize.x) * 0.75f, 0.0f), true);
+
+		bindCVMat2GLTexture(pano);
+
+		ImGui::EndChild();
+	//std::vector<cv::Mat> imgs;
+	//std::string result_name = "result.jpg";
+
+	//cv::Mat img = cv::imread(cv::samples::findFile(argv[i]));
+	//if (img.empty())
+	//{
+	//	std::cout << "Can't read image '" << argv[i] << "'\n";
+	//	//return EXIT_FAILURE;
+	//}
+	//if (divide_images)
+	//{
+	//	cv::Rect rect(0, 0, img.cols / 2, img.rows);
+	//	imgs.push_back(img(rect).clone());
+	//	rect.x = img.cols / 3;
+	//	imgs.push_back(img(rect).clone());
+	//	rect.x = img.cols / 2;
+	//	imgs.push_back(img(rect).clone());
+	//}
+	//else
+	//	imgs.push_back(img);
 }

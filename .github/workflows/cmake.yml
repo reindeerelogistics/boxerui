@@ -6,7 +6,7 @@ on:
 #   pull_request:
 #     branches: [ master ]
   push:
-    branches: [task/* ]
+    branches: [task/*, develop ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -14,26 +14,31 @@ env:
 #   BUILD_TYPE_DEBUG: Debug
 
 jobs:
+  # Project-Build:
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, windows-latest, macos-latest]
+  #   runs-on: ${{ matrix.os }}
   Windows-Build:
     runs-on: windows-latest
-    
+
     steps:
     - name: Step 1 - Get it together!!
       run: |
             get-date
             Write-Output ${{runner.os}} impl is still WIP
       shell: powershell
-      
+
   Windows-Test:
     runs-on: windows-latest
     needs: [Windows-Build]
-    
+
     steps:
     - name: Step 1 - Test BoxerUI_app
       run: |
             Write-Output ${{runner.os}} artifact will be built upon successful test
-  
-        
+
+
   Linux-Build:
     # The CMake configure and build commands are platform agnostic and should work equally
     # well on Windows or Mac.  You can convert this to a matrix build if you need
@@ -46,34 +51,73 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: true
-    
+
     - name: Step 2 - Get CMake
       uses: lukka/get-cmake@v3.21.1
-      
-    - name: Step 3 - Cache OpenCV
-      id: opencv-cache
-      uses: actions/cache@v2.1.6
+
+    # - name: Step 3 - Cache OpenCV
+    #   id: opencv-cache
+    #   uses: actions/cache@v2.1.6
+    #   env:
+    #     cache-name: cache-opencv
+    #   with:
+    #     path: opencv-master
+    #     key: ${{ runner.os }}-opencv-cache
+    #     restore-keys: |
+    #                   ${{ runner.os }}-opencv
+    #                   ${{ runner.os }}-
+
+    - name: cuda-toolkit
+      # You may pin to the exact commit or the version.
+      # uses: Jimver/cuda-toolkit@2db19f456fc785238a96a48d3082d8e5c25d9d09
+      uses: Jimver/cuda-toolkit@v0.2.5
+    - run: |
+            echo "Installed cuda version is: ${{steps.cuda-toolkit.outputs.cuda}}"
+            echo "Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
+            nvcc -V
+      #with:
+        # Cuda version
+        #cuda: # optional, default is 11.5.1
+        # Only installs specified subpackages, must be in the form of a JSON array. For example, if you only want to install nvcc and visual studio integration: ["nvcc", "visual_studio_integration"] double quotes required! Note that if you want to use this on Linux, 'network' method MUST be used.
+        #sub-packages: # optional, default is []
+        # Installation method, can be either 'local' or 'network'. 'local' downloads the entire installer with all packages and runs that (you can still only install certain packages with sub-packages on Windows). 'network' downloads a smaller executable which only downloads necessary packages which you can define in subPackages
+        #method: # optional, default is local
+        # (Linux and 'local' method only) override arguments for the linux .run installer. For example if you don't want samples use ["--toolkit"] double quotes required!
+        #linux-local-args: # optional, default is ["--toolkit", "--samples"]
+
+    - name: Step 3 - Cache Output
+      id: build-cache
+      uses: actions/cache@v3
       env:
-        cache-name: cache-opencv
+        cache-name: cache-build
       with:
-        path: opencv-master
-        key: ${{ runner.os }}-opencv-cache
-        restore-keys: |
-                      ${{ runner.os }}-opencv
-                      ${{ runner.os }}-
-            
-    - name: Step 3.5 - Load Cached OpenCV
-#       if:  steps.opencv-cache.outputs.cache-hit != 'true'
-      uses: rayandrews/with-opencv-action@v1
+        path: |
+          ~/build
+          ~/out
+        key: ${{ runner.os }}-build-cache
+
+    - name: Step 3.1 - Cache CUDA
+      id: cuda-cache
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-cuda
       with:
-        dir: opencv-master
-        cached:  ${{ steps.opencv-cache.outputs.cache-hit }} 
-        opencv-version: master
-        opencv-extra-modules: OFF
-#         CMAKE_BUILD_TYPE: ${{env.BUILD_TYPE}}
-        BUILD_NEW_PYTHON_SUPPORT: OFF
-        WITH_V4L: ON
-        WITH_OPENGL: ON
+        path: |
+              ${{steps.cuda-toolkit.outputs.CUDA_PATH}}
+        key: ${{ runner.os }}-cuda-cache
+
+#     - name: Step 3.5 - Load Cached OpenCV
+# #       if:  steps.opencv-cache.outputs.cache-hit != 'true'
+#       uses: rayandrews/with-opencv-action@v1
+#       with:
+#         dir: opencv-master
+#         cached:  ${{ steps.opencv-cache.outputs.cache-hit }}
+#         opencv-version: master
+#         opencv-extra-modules: OFF
+# #         CMAKE_BUILD_TYPE: ${{env.BUILD_TYPE}}
+#         BUILD_NEW_PYTHON_SUPPORT: OFF
+#         WITH_V4L: ON
+#         WITH_OPENGL: ON
 
     - name: Step 4 - Configure BoxerUI
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -86,11 +130,11 @@ jobs:
       # Build your program with the given configuration
       run: |
             ls -al
-            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j 4
-       
+            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j 14 --target package_source
+
     - name: Step 6 - Test BoxerUI
       working-directory: ${{github.workspace}}/build/BoxerUI/tests
-      # Execute tests defined by the CMake configuration.  
+      # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       #ctest -C BoxerUI/tests ${{env.BUILD_TYPE}}
       run: |
@@ -103,27 +147,35 @@ jobs:
             tree ${{github.workspace}}
 #     - id: test-result
 #       run: echo "::set-output name=test::pass"
-    
+
+    # Execute CPack seperately from build
+    # - name: Step 7 - Run Cpack
+    #   run: |
+    #         ls -al
+    #         cpack --config CPackSourceConfig.cmake
+    #         cpack
+
     - name: Step 7 - Download a Build Artifact
       # if: ${{needs.Linux-Build.outputs.test-output}} == 'pass'
       uses: actions/upload-artifact@v2.2.4
       with:
         # Artifact name
-        name: BoxerUI_app
+        name: Astrolabe
         # Destination path
-        path: |              
-              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}/BoxerUI_app
-              ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}    
+        path: |
+              ${{github.workspace}}/build/${{env.BUILD_TYPE}}/Astrolabe
+              ${{github.workspace}}/build/${{env.BUILD_TYPE}}/
+              ${{github.workspace}}/build/${{env.BUILD_TYPE}}/BoxerUI_app
         if-no-files-found: error
-        retention-days: 20 
-        
-    
+        retention-days: 20
+
+
 #   Linux-Test:
 #     needs: Linux-Build
 #     runs-on: ubuntu-latest
 # #     outputs:
 # #       test-output:  ${{ steps.step1.outputs.test }}
-#     steps: 
+#     steps:
 #     - name: Step 1 - Checkout branch
 #       uses: actions/checkout@v2
 #       with:
@@ -131,7 +183,7 @@ jobs:
 
 #     - name: Step 2 - Get CMake
 #       uses: lukka/get-cmake@v3.21.1
-      
+
 #     - name: Step 3 - Cache OpenCV
 #       id: opencv-cache
 #       uses: actions/cache@v2.1.6
@@ -143,29 +195,29 @@ jobs:
 #         restore-keys: |
 #                       ${{ runner.os }}-opencv
 #                       ${{ runner.os }}-
-            
+
 #     - name: Step 3.5 - Load Cached OpenCV
 # #       if:  steps.opencv-cache.outputs.cache-hit != 'true'
 #       uses: rayandrews/with-opencv-action@v1
 #       with:
 #         dir: opencv-master
-#         cached:  ${{ steps.opencv-cache.outputs.cache-hit }} 
+#         cached:  ${{ steps.opencv-cache.outputs.cache-hit }}
 #         opencv-version: master
 #         opencv-extra-modules: OFF
 # #         CMAKE_BUILD_TYPE: ${{env.BUILD_TYPE}}
 #         BUILD_NEW_PYTHON_SUPPORT: OFF
 #         WITH_V4L: ON
 #         WITH_OPENGL: ON
-    
+
 #     - name: Step 4 - Setup Glfw
 #       run: |
 #             pwd
 #             ls -al
 #             git clone https://github.com/glfw/glfw.git
-        
+
 #     - name: Test
 # #       working-directory: ${{github.workspace}}/build/BoxerUI/tests
-#       # Execute tests defined by the CMake configuration.  
+#       # Execute tests defined by the CMake configuration.
 #       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
 #       #ctest -C BoxerUI/tests ${{env.BUILD_TYPE}}
 #       run: |
@@ -181,7 +233,7 @@ jobs:
 #             cd ..
 # #     - id: test-result
 # #       run: echo "::set-output name=test::pass"
-    
+
 #     - name: Download a Build Artifact
 #       if: ${{needs.Linux-Build.outputs.test-output}} == 'pass'
 #       uses: actions/upload-artifact@v2.2.4
@@ -190,11 +242,11 @@ jobs:
 #         name: BoxerUI_app
 #         # Destination path
 #         path: |
-#               ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}    
+#               ${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}
 # #         error: BoxerUI_app not found in "${{github.workspace}}/BoxerUI/bin/${{env.BUILD_TYPE}}"
-#         retention-days: 20  
-        
-        
+#         retention-days: 20
+
+
   Discord-CI:
     runs-on: ubuntu-latest
     env:

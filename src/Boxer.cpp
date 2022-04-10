@@ -1,6 +1,5 @@
 #include "Boxer.h"
-#include "Boxerpch.h"
-
+//#include "Window.h"
 BoxerUI_Monitor* BoxerUI_Monitor::s_monitorInstance = 0;
 
 BoxerUI_Monitor* BoxerUI_Monitor::Get()

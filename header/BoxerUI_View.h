@@ -3,9 +3,6 @@
 #include "Inputs_Model.h"
 #include "Components_View.h"
 #include "CameraStream_View.h"
-#include <Windows.h>
-#include <Commdlg.h>
-#include <shobjidl_core.h>
 
 
 #include "../resource/icons/IconFontCppHeaders/IconsFontAwesome5.h"
@@ -16,12 +13,8 @@ namespace BoxerUI {
 	class BoxerUI_View : public Components_View
 	{
 
-	
 	private:
 		static void mainMenuBar();
-		HRESULT getFontFile();
-
-		void fontFile();
 
 		void inputs(bool* keyboard);
 	public:

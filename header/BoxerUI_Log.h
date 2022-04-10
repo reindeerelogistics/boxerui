@@ -13,9 +13,9 @@ namespace BoxerUI {
 		static void initLogger();
 		static void logFile();
 	private:
-		static std::shared_ptr<spdlog::logger> s_boxerLogger;// = std::make_shared<spdlog::logger>();
+		//static std::shared_ptr<spdlog::logger> s_boxerLogger;// = std::make_shared<spdlog::logger>();
 		static std::shared_ptr<spdlog::logger> s_boxerUILogger;// = std::make_shared<spdlog::logger>();
-		static std::shared_ptr<spdlog::logger> s_boxerNetLogger;// = std::make_shared<spdlog::logger>();
+		//static std::shared_ptr<spdlog::logger> s_boxerNetLogger;// = std::make_shared<spdlog::logger>();
 	};
 }
 
@@ -25,3 +25,4 @@ namespace BoxerUI {
 #define BOXER_WARN_LOGGER(...)		::BoxerUI::Boxer_Log::boxerUILogger()->warn(__VA_ARGS__)
 #define BOXER_INFO_LOGGER(...)		::BoxerUI::Boxer_Log::boxerUILogger()->info(__VA_ARGS__)
 #define BOXER_TRACE_LOGGER(...)		::BoxerUI::Boxer_Log::boxerUILogger()->trace(__VA_ARGS__)
+#define BOXER_FILE_LOGGER		::BoxerUI::Boxer_Log::logFile() //BOXER_TRACE_LOGGER(std::filesystem::path(__FILE__).filename().string(), __LINE__)

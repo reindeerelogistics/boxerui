@@ -6,15 +6,12 @@ i.e. Don't be tempted to use this file to bypass the Controller. Messages/data p
 **/
 
 
-#include "imgui.h"
-#include "imgui_internal.h"
 
-#include <GL/gl3w.h>
-#include <GLFW/glfw3.h>
 
-#include "opencv2/opencv.hpp"
-#include "opencv2/core/cuda.hpp"
-#include <opencv2/core.hpp>
+#include "Boxerpch.h"
+//#include "opencv2/opencv.hpp"
+//#include "opencv2/core/cuda.hpp"
+//#include <opencv2/core.hpp>
 
 
 #define BOXER_UI

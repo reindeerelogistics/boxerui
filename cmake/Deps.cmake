@@ -1,4 +1,5 @@
 
+
 find_package(OpenGL REQUIRED)
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
@@ -11,17 +12,24 @@ IF(OpenGL_FOUND)
         MESSAGE(STATUS "OPENGL NOT FOUND")
 ENDIF()
 
-if(NOT glfw_FOUND)
-            set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
-            set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-            set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-            FETCH_PROJECT_DEP("glfw" "https://github.com/glfw/glfw.git" "master" "ON")
-            message("GLFW DIR: ${glfw_SRC_DIR}, ${glfw_BINARY_DIR}")
-endif(NOT glfw_FOUND)
+# FETCH DEPS FORM GITHUB
+    if(NOT glfw_FOUND)
+                set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) 
+                set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+                set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+                FETCH_PROJECT_DEP("glfw" "https://github.com/glfw/glfw.git" "master" "ON")
+                message("GLFW DIR: ${glfw_SRC_DIR}, ${glfw_BINARY_DIR}")
+    endif(NOT glfw_FOUND)
+    FETCH_PROJECT_DEP("imgui" "git@github.com:reindeererobotics/imgui.git" "docking" "ON")
+    FETCH_PROJECT_DEP("implot" "git@github.com:epezent/implot.git" "master" "ON")
+    IF(${TARGET_NAME}_LOGGING)
+        FETCH_PROJECT_DEP("spdlog" "https://github.com/gabime/spdlog.git" "v1.x" )
+    ENDIF()
 
+    FetchContent_MakeAvailable(glfw imgui implot spdlog)
 
 # IMGUI SETUP 
-    FETCH_PROJECT_DEP("imgui" "git@github.com:reindeererobotics/imgui.git" "docking" "ON")
+    #FETCH_PROJECT_DEP("imgui" "git@github.com:reindeererobotics/imgui.git" "docking" "ON")
     message("IMgui SOURCE DIR: ${imgui_SRC_DIR}")
     set(IMGUI_BACKENDS_SOURCES "${imgui_SRC_DIR}/backends/imgui_impl_glfw.cpp" 
                                 "${imgui_SRC_DIR}/backends/imgui_impl_glfw.h"
@@ -42,23 +50,17 @@ endif(NOT glfw_FOUND)
                                 "${imgui_SRC_DIR}/imgui_draw.cpp"
                                 "${imgui_SRC_DIR}/imgui_demo.cpp"
                                 "${imgui_SRC_DIR}/imgui_tables.cpp"
-                                "${imgui_SRC_DIR}/imgui_widgets.cpp"
-                                )
-    target_include_directories(imgui PUBLIC ${imgui_SRC_DIR} 
+                                "${imgui_SRC_DIR}/imgui_widgets.cpp")
+    target_include_directories(imgui PRIVATE ${imgui_SRC_DIR} 
                                                "${imgui_SRC_DIR}/backends" 
                                                "${imgui_SRC_DIR}/examples/libs/gl3w"
                                                "${glfw_SRC_DIR}/include")
-    target_link_libraries(imgui PUBLIC OpenGL::GL glfw  opengl32)
+    target_link_libraries(imgui PRIVATE OpenGL::GL glfw  opengl32)
 
-    install(
-    TARGETS ${imgui}
-    RUNTIME DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    LIBRARY DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
-    ARCHIVE DESTINATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
-)
+   
 
 ## IMPLOT SETUP
-    FETCH_PROJECT_DEP("implot" "git@github.com:epezent/implot.git" "master" "ON")
+    #FETCH_PROJECT_DEP("implot" "git@github.com:epezent/implot.git" "master" "ON")
     message("IMPLOT SOURCE DIR: ${implot_SRC_DIR}")
     add_library(implot_lib  OBJECT
                                     "${implot_SRC_DIR}/implot.cpp"
@@ -67,7 +69,7 @@ endif(NOT glfw_FOUND)
                                     "${implot_SRC_DIR}/implot_items.cpp"
                                     #"${imgui_SRC_DIR}/imgui.h"
                                     "${implot_SRC_DIR}/implot.h")
-    target_include_directories(implot_lib PUBLIC "${imgui_SRC_DIR}/" ${implot_SRC_DIR})
+    target_include_directories(implot_lib PRIVATE "${imgui_SRC_DIR}/" ${implot_SRC_DIR})
 
 # OpenCV set up
     # set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SRC_DIR}/opencv/sources/out/install/x64-${CMAKE_BUILD_TYPE}/include")
@@ -77,7 +79,7 @@ endif(NOT glfw_FOUND)
     message(CHECK_START "Finding OpenCV")
 
     IF(NOT OpenCV_FOUND)
-        #WIP: build opencv from source if not found
+        #WIP: build opencv from source if not found. Note do not use FetchContent and ExternalProject together in a interdependency relationship
         message(CHECK_FAIL "not found: Proceeding to build from source...")
 
         if(BUILD_OPENCV_CUDA)
@@ -88,11 +90,13 @@ endif(NOT glfw_FOUND)
             message("BUILD_OPENCV_ADVANCED Selected")
             include(opencv_setup/opencv_advanced.cmake)
 
-        else()
+        elseif(BUILD_OPENCV_ADVANCED)
             message("BUILD_OPENCV_BASIC Selected")
             include("${CMAKE_SOURCE_DIR}/cmake/opencv_setup/opencv_basic.cmake")
             #find_package(OpenCV)
             message(CHECK_PASS "found")
+        else()
+             message(FATAL_ERROR "OpenCV could not be generated.")
         
         endif(BUILD_OPENCV_CUDA)
     ENDIF()
@@ -101,9 +105,15 @@ endif(NOT glfw_FOUND)
     #find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc)#optionally include highgui & imgproc modules. Each module corresponds to a directory as indicated in the header.
     #find_package(OpenCV REQUIRED core videoio OPTIONAL_COMPONENTS highgui imgproc CONFIG NAMES OpenCV PATHS "${CMAKE_CURRENT_BINARY_DIR}/opencv-build/" )
 
+ install(
+    TARGETS ${imgui}
+    RUNTIME DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    LIBRARY DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+    ARCHIVE DESTINATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
+    COMPONENT libraries)
 ## Logging
     IF(${TARGET_NAME}_LOGGING)
-        FETCH_PROJECT_DEP("spdlog" "https://github.com/gabime/spdlog.git" "v1.x" )
+        #FETCH_PROJECT_DEP("spdlog" "https://github.com/gabime/spdlog.git" "v1.x" )
         include_directories("${spdlog_SRC_DIR}/include")
          #find_package(spdlog REQUIRED)
         # TODO: set type of logging based on build type

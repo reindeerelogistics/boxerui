@@ -9,6 +9,15 @@ FetchContent_Declare(opencv_contrib
 										SOURCE_DIR          "${CMAKE_BINARY_DIR}/opencv_contrib")
 										#DOWNLOAD_DIR        "${PROJECT_SOURCE_DIR}")
 # Fetch the content using previously declared details
-FetchContent_MakeAvailable(opencv_contrib)
+#FetchContent_MakeAvailable(opencv_contrib)
 
 #FetchContent_Populate(opencv_contrib)
+
+#include(ExternalProject)
+#ExternalProject_Add(opencv_contrib
+#							GIT_REPOSITORY      https://github.com/opencv/opencv_contrib.git
+#							GIT_TAG             master
+#							GIT_PROGRESS        ON
+#							UPDATE_DISCONNECTED  ON
+#							SOURCE_DIR          "${CMAKE_BINARY_DIR}/opencv_contrib")
+#

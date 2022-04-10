@@ -1,6 +1,5 @@
 #pragma once		
 #include "Boxer.h"
-#include "Boxerpch.h"
 
 #define NUM_CONTEXT_ITEMS 2
 

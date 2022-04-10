@@ -1,0 +1,3 @@
+namespace BoxerUI {
+	// WIP
+}

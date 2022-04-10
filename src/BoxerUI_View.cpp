@@ -374,7 +374,8 @@ namespace BoxerUI {
 
 				case NavItem::Stream:
 					/* Go to stream... */
-					camera_stream.cameraView();
+					//camera_stream.cameraView();
+					camera_stream.stitchingTest();
 					break;
 
 				case NavItem::Analytics:
@@ -457,12 +458,6 @@ namespace BoxerUI {
 				if (show_demos)
 				{
 					showdemos();
-				}
-
-				if (button("Get FOnt"))
-				{
-					//getFontFile();
-					fontFile();
 				}
 
 				if (button("Dev Analytics")) {
@@ -563,28 +558,6 @@ namespace BoxerUI {
 			}
 		}
 		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), dockspace_flags);
-	}
-
-	void BoxerUI_View::fontFile() {
-		IFileOpenDialog* dlg = NULL;
-		IShellItem* item = NULL;
-		dlg->QueryInterface(&dlg);
-		//item->QueryInterface();
-		//dlg->SetFolder(BOXERUI_BIN_DIR);
-
-	}
-	HRESULT BoxerUI_View::getFontFile() {
-		IFileDialog* getFont = NULL;
-
-		HRESULT hr = getFont->QueryInterface(&getFont);
-		//LPWSTR* pszName;
-		if (SUCCEEDED(hr))
-		{
-			//getFont->GetFileName(pszName);
-
-			getFont->Close(hr);
-		}
-		return hr;
 	}
 
 }

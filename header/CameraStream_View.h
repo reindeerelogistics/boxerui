@@ -1,9 +1,11 @@
 #pragma once
-#include "Boxer.h"
-#include "Boxerpch.h"
+//#include "Boxer.h"
 #include "Components_View.h"
-//#include "Controller_input_Header.h"
 #include "CameraStream_Model.h"
+
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/stitching.hpp"
+#include <opencv2/core/utility.hpp>
 
 //using CameraMapValue = ;
 using CameraMap = std::map <int, std::queue<cv::Mat>>;
@@ -53,7 +55,6 @@ private:
 
 	void displayCamera();
 
-
 public:
 
 	CameraStream()
@@ -86,5 +87,7 @@ public:
 	bool destroyCamThreads();
 
 	void cameraView();
+
+	int stitchingTest();
 };
 

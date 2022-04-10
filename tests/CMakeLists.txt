@@ -24,6 +24,8 @@ message("TestSrc: ${BOXERUI_SOURCE_TESTS}")
 add_executable(BoxerUI_Tests ${BOXERUI_SOURCE_TESTS})
 target_link_libraries(BoxerUI_Tests PUBLIC gtest_main )
 # add_test(NAME ${BoxerUI_Tests} COMMAND ${BoxerUI_Tests})
+set_tests_properties(${BoxerUI_Tests} TIMEOUT 1)
+
 
 # TODO: define a function to simplify adding tests
 # function(do_test target arg result)
