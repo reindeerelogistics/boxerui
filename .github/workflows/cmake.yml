@@ -105,6 +105,7 @@ jobs:
         cache-name: cache-cuda
       with:
         path: |
+              /usr/local/cuda-11.5
               ${{steps.cuda-toolkit.outputs.CUDA_PATH}}
         key: ${{ runner.os }}-cuda-cache
 
@@ -252,7 +253,7 @@ jobs:
   Discord-CI:
     runs-on: ubuntu-latest
     env:
-      DISCORD_WEBHOOK: https://discord.com/api/webhooks/879220651674730517/oTXy0XPiGOnvuFzOHEqgiA3UIu0KhyexnszLef4Ap25ARgx9gCuPYOIz4-VHjeEiObDH
+      DISCORD_WEBHOOK: ${{ secrets.boxerui_discord_secret }}
     if: always()
     needs: [Windows-Test, Linux-Build]
     steps:
